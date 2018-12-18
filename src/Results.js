@@ -1,5 +1,6 @@
 import React from 'react';
 import Inspector from 'react-inspector';
+import styles from './styles/Editor.module.css';
 
 const data = {
     apiType: 'serviceResponse',
@@ -2269,5 +2270,9 @@ const data = {
 };
 
 export default function Results() {
-    return <Inspector data={data} />;
+    return (
+        <div className={styles.wrapper}>
+            <Inspector data={data} />
+        </div>
+    );
 }

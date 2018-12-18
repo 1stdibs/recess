@@ -2,10 +2,3 @@
     display: flex;
     height: 100vh;
 }
-
-.left,
-.right {
-    border: 1px solid black;
-    overflow: scroll;
-    flex: 1;
-}

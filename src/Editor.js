@@ -59,6 +59,8 @@ export default class Editor extends React.Component {
             lineNumbers: true,
             tabSize: 2,
             mode: 'javascript',
+            height: 'auto',
+            viewportMargin: Infinity,
             theme: this.props.editorTheme || 'graphiql',
             keyMap: 'sublime',
             autoCloseBrackets: true,
@@ -153,21 +155,6 @@ export default class Editor extends React.Component {
                 }}
             />
         );
-    }
-
-    /**
-     * Public API for retrieving the CodeMirror instance from this
-     * React component.
-     */
-    getCodeMirror() {
-        return this.editor;
-    }
-
-    /**
-     * Public API for retrieving the DOM client height for this component.
-     */
-    getClientHeight() {
-        return this._node && this._node.clientHeight;
     }
 
     _onKeyUp = (cm, event) => {
