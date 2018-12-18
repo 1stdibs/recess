@@ -1,9 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import classNames from 'classnames';
 import SplitPane from 'react-split-pane';
-import ReactTable from 'react-table';
-
 import styles from './styles/Servers.module.css';
 
 const initialData = [
@@ -78,8 +74,3 @@ export default class Servers extends React.Component {
         );
     }
 }
-
-Servers.propTypes = {
-    isOpen: PropTypes.bool.isRequired,
-    onToggle: PropTypes.func.isRequired,
-};
