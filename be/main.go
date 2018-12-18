@@ -57,34 +57,41 @@ func listServicesHandler(w http.ResponseWriter, r *http.Request) {
 	jsonResponse(w, response)
 }
 
+
+type invokeRequest struct {
+	Server   string            `json:"server"`
+	Port     string            `json:"port"`
+	Service  string            `json:"service"`
+	Method   string            `json:"method"`
+	Metadata map[string]string `json:"metadata"`
+	Body     string            `json:"body"`
+}
+
 func invokeHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
 		errorResponse(w, "this endpoint only accepts POST requests")
 		return
 	}
 
-	urlParts := strings.Split(r.URL.String(), "/")[2:]
-
-	if urlParts == nil || len(urlParts) != 2 {
-		errorResponse(w, "invoke endpoint format: /invoke/<service>/<method>")
+	var request invokeRequest
+	err := json.NewDecoder(r.Body).Decode(&request)
+	if err != nil {
+		errorResponse(w, "couldn't decode POST body: %v", err)
 		return
 	}
 
-	server := r.URL.Query().Get("server")
-	port := r.URL.Query().Get("port")
-
-	if server == "" || port == "" {
-		errorResponse(w, "request must contain server and port query params")
+	if request.Server == "" || request.Port == "" || request.Service == "" || request.Method == "" {
+		errorResponse(w, "server, port, service and method are required in POST body")
 		return
 	}
 
-	client, conn, err := refclient.GetRefClient(server, port)
+	client, conn, err := refclient.GetRefClient(request.Server, request.Port)
 	if err != nil {
 		errorResponse(w, "couldn't get grpc reflection client: %v", err)
 	}
 	defer refclient.CloseConnection(conn)
 
-	resp, err := invoke.Invoke(client, conn, json.NewDecoder(r.Body), urlParts[0], urlParts[1][:strings.Index(urlParts[1], "?")])
+	resp, err := invoke.Invoke(client, conn, json.NewDecoder(strings.NewReader(request.Body)), request.Service, request.Method)
 	if err != nil {
 		errorResponse(w, "couldn't invoke method: %v", err)
 		return
@@ -93,20 +100,10 @@ func invokeHandler(w http.ResponseWriter, r *http.Request) {
 	jsonResponse(w, resp)
 }
 
-func badInvokeHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "POST" {
-		errorResponse(w, "this endpoint only accepts POST requests")
-		return
-	}
-
-	errorResponse(w, "invoke endpoint format: /invoke/<service>/<method>")
-}
-
 func main() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/services", listServicesHandler)
-	mux.HandleFunc("/invoke", badInvokeHandler)
-	mux.HandleFunc("/invoke/", invokeHandler)
+	mux.HandleFunc("/invoke", invokeHandler)
 
 	handler := cors.AllowAll().Handler(mux)
 
