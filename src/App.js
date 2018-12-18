@@ -2,7 +2,7 @@ import React from 'react';
 import SplitPane from 'react-split-pane';
 import Editor from './Editor';
 import Results from './Results';
-import Drawer from './Drawer';
+import Drawer from './drawer/Drawer';
 
 import styles from './styles/App.module.css';
 
