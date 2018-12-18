@@ -1,0 +1,14 @@
+.wrapper {
+    position: relative;
+    z-index: 100;
+    width: 0;
+    background: white;
+    border-right: 1px solid black;
+    transition: width 200ms;
+}
+
+.openButton {
+    position: absolute;
+    right: -25px;
+    top: 50%;
+}
