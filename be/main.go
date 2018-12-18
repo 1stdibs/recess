@@ -9,11 +9,12 @@ import (
 
 	"github.com/rs/cors"
 
+	"github.com/robrichard/recess/be/invoke"
 	"github.com/robrichard/recess/be/listmethods"
 	"github.com/robrichard/recess/be/listservices"
 	"github.com/robrichard/recess/be/recess"
 	"github.com/robrichard/recess/be/refclient"
-	"github.com/robrichard/recess/be/invoke"
+	"github.com/robrichard/recess/be/autocomplete"
 )
 
 func listServicesHandler(w http.ResponseWriter, r *http.Request) {
@@ -57,7 +58,6 @@ func listServicesHandler(w http.ResponseWriter, r *http.Request) {
 	jsonResponse(w, response)
 }
 
-
 type invokeRequest struct {
 	Server   string            `json:"server"`
 	Port     string            `json:"port"`
@@ -100,10 +100,42 @@ func invokeHandler(w http.ResponseWriter, r *http.Request) {
 	jsonResponse(w, resp)
 }
 
+type autocompleteDataRequest struct {
+	Server  string `json:"server"`
+	Port    string `json:"port"`
+	Service string `json:"service"`
+	Method  string `json:"method"`
+}
+
+func autocompleteDataHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != "POST" {
+		errorResponse(w, "this endpoint only accepts POST requests")
+		return
+	}
+
+	var request autocompleteDataRequest
+	json.NewDecoder(r.Body).Decode(&request)
+
+	client, conn, err := refclient.GetRefClient(request.Server, request.Port)
+	if err != nil {
+		errorResponse(w, "couldn't get grpc reflection client: %v", err)
+	}
+	defer refclient.CloseConnection(conn)
+
+	fields, err := autocomplete.GetAutocompleteData(client, request.Service, request.Method)
+	if err != nil {
+		errorResponse(w, "couldn't parse fields for %s/%s: %v", request.Service, request.Method, err)
+		return
+	}
+
+	jsonResponse(w, fields)
+}
+
 func main() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/services", listServicesHandler)
 	mux.HandleFunc("/invoke", invokeHandler)
+	mux.HandleFunc("/autocompleteData", autocompleteDataHandler)
 
 	handler := cors.AllowAll().Handler(mux)
 
