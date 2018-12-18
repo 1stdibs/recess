@@ -64,7 +64,7 @@ type invokeRequest struct {
 	Service  string            `json:"service"`
 	Method   string            `json:"method"`
 	Metadata map[string]string `json:"metadata"`
-	Body     string            `json:"body"`
+	Body     json.RawMessage   `json:"body"`
 }
 
 func invokeHandler(w http.ResponseWriter, r *http.Request) {
@@ -91,7 +91,7 @@ func invokeHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer refclient.CloseConnection(conn)
 
-	resp, err := invoke.Invoke(client, conn, json.NewDecoder(strings.NewReader(request.Body)), request.Service, request.Method)
+	resp, err := invoke.Invoke(client, conn, json.NewDecoder(strings.NewReader(string(request.Body))), request.Metadata, request.Service, request.Method)
 	if err != nil {
 		errorResponse(w, "couldn't invoke method: %v", err)
 		return

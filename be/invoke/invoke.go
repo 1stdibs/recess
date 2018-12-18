@@ -10,9 +10,10 @@ import (
 	"github.com/jhump/protoreflect/dynamic/grpcdynamic"
 	"github.com/jhump/protoreflect/grpcreflect"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/metadata"
 )
 
-func Invoke(client *grpcreflect.Client, conn *grpc.ClientConn, decoder *json.Decoder, service, method string) (interface{}, error) {
+func Invoke(client *grpcreflect.Client, conn *grpc.ClientConn, decoder *json.Decoder, metadataMap map[string]string, service, method string) (interface{}, error) {
 	fd, err := client.FileContainingSymbol(service)
 	if err != nil {
 		return nil, fmt.Errorf("couldn't find service %s: %v", service, err)
@@ -40,7 +41,9 @@ func Invoke(client *grpcreflect.Client, conn *grpc.ClientConn, decoder *json.Dec
 		return nil, fmt.Errorf("couldn't decode json request body into proto message: %v", err)
 	}
 
-	resp, err := stub.InvokeRpc(context.Background(), md, request)
+	ctx := metadata.NewOutgoingContext(context.Background(), metadata.New(metadataMap))
+
+	resp, err := stub.InvokeRpc(ctx, md, request)
 	if err != nil {
 		return nil, fmt.Errorf("grpc call for %q failed: %v", md.GetFullyQualifiedName(), err)
 	}
