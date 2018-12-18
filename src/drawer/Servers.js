@@ -15,23 +15,26 @@ export default function Servers() {
     return (
         <div>
             <table className={styles.table}>
-                <tr>
-                    <th>Servers</th>
-                </tr>
-                {servers.map(({ name, port }) => (
+                <tbody>
                     <tr>
-                        <td
-                            onClick={() => selectServer({ name, port })}
-                            className={classNames(styles.server, {
-                                [styles.isSelected]:
-                                    selectedServer.name === name && selectedServer.port === port,
-                            })}
-                        >
-                            {name}:{port}
-                            <button onClick={() => deleteServer({ name, port })}>Delete</button>
-                        </td>
+                        <th>Servers</th>
                     </tr>
-                ))}
+                    {servers.map(({ name, port }) => (
+                        <tr key={`${name}:${port}`}>
+                            <td
+                                onClick={() => selectServer({ name, port })}
+                                className={classNames(styles.server, {
+                                    [styles.isSelected]:
+                                        selectedServer.name === name &&
+                                        selectedServer.port === port,
+                                })}
+                            >
+                                {name}:{port}
+                                <button onClick={() => deleteServer({ name, port })}>Delete</button>
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
             </table>
             {isEditing && (
                 <React.Fragment>
