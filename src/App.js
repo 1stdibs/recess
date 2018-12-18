@@ -1,28 +1,20 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import SplitPane from 'react-split-pane';
+import Editor from './Editor';
+import Results from './Results';
+import styles from './styles/App.module.css';
 
-class App extends Component {
-  render() {
+export default function App() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
+        <div className={styles.wrapper}>
+            <SplitPane
+                defaultSize="50%"
+                split="vertical"
+                resizerStyle={{ backgroundColor: 'grey', width: 5, cursor: 'col-resize' }}
+            >
+                <Editor />
+                <Results />
+            </SplitPane>
+        </div>
     );
-  }
 }
-
-export default App;
