@@ -1,0 +1,8 @@
+.row {
+    cursor: pointer;
+}
+
+.isSelected {
+    background-color: blue;
+    color: white;
+}

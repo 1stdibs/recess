@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
-import classNames from 'classnames';
 import { RecessContext } from '../RecessContext';
-import styles from './styles/Servers.module.css';
+import ClickableRow from './ClickableRow';
+import Table from './Table';
 
 const defaultPort = 8443;
 
@@ -14,28 +14,25 @@ export default function Servers() {
     const [isEditing, setIsEditing] = useState(false);
     return (
         <div>
-            <table className={styles.table}>
+            <Table>
                 <tbody>
                     <tr>
                         <th>Servers</th>
                     </tr>
                     {servers.map(({ name, port }) => (
-                        <tr key={`${name}:${port}`}>
-                            <td
-                                onClick={() => selectServer({ name, port })}
-                                className={classNames(styles.server, {
-                                    [styles.isSelected]:
-                                        selectedServer.name === name &&
-                                        selectedServer.port === port,
-                                })}
-                            >
-                                {name}:{port}
-                                <button onClick={() => deleteServer({ name, port })}>Delete</button>
-                            </td>
-                        </tr>
+                        <ClickableRow
+                            key={`${name}:${port}`}
+                            onClick={() => selectServer({ name, port })}
+                            isSelected={
+                                selectedServer.name === name && selectedServer.port === port
+                            }
+                        >
+                            {name}:{port}
+                            <button onClick={() => deleteServer({ name, port })}>Delete</button>
+                        </ClickableRow>
                     ))}
                 </tbody>
-            </table>
+            </Table>
             {isEditing && (
                 <React.Fragment>
                     <input
