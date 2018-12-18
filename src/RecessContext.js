@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import useServiceData from './hooks/useServiceData';
+import useRequestData from './hooks/useRequestData';
 
 export const RecessContext = React.createContext();
 
@@ -28,6 +29,12 @@ export function RecessContextManager({ children }) {
         selectMethod,
     });
 
+    const { requestText, responseText, setRequestText, execute } = useRequestData({
+        selectedServer,
+        selectedMethod,
+        selectedService,
+    });
+
     const value = {
         serverData,
         serverDataIsLoading,
@@ -52,6 +59,10 @@ export function RecessContextManager({ children }) {
                         !(name === serverToDelete.name && port === serverToDelete.port)
                 );
             }),
+        requestText,
+        responseText,
+        setRequestText,
+        execute,
     };
 
     console.log(value);
