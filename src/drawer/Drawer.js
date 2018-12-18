@@ -10,7 +10,8 @@ export default function Drawer({ isOpen, onToggle }) {
         <div
             className={styles.wrapper}
             style={{
-                width: isOpen ? 400 : 0,
+                width: 800,
+                left: isOpen ? 0 : '-800px',
             }}
         >
             <SplitPane
@@ -19,7 +20,14 @@ export default function Drawer({ isOpen, onToggle }) {
                 resizerStyle={{ backgroundColor: 'grey', width: 5, cursor: 'col-resize' }}
             >
                 <Servers />
-                <div>bar</div>
+                <SplitPane
+                    defaultSize="50%"
+                    split="vertical"
+                    resizerStyle={{ backgroundColor: 'grey', width: 5, cursor: 'col-resize' }}
+                >
+                    <div>Services</div>
+                    <div>Methods</div>
+                </SplitPane>
             </SplitPane>
             <button onClick={onToggle} className={styles.openButton}>
                 {isOpen ? 'Close' : 'Open'}

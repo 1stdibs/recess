@@ -2,9 +2,9 @@
     position: relative;
     z-index: 100;
     width: 0;
-    background: white;
+    background: #ddd;
     border-right: 1px solid black;
-    transition: width 200ms;
+    transition: left 400ms;
 }
 
 .openButton {
