@@ -14,10 +14,13 @@ const initialServers = [
 
 export function RecessContextManager({ children }) {
     const [servers, setServers] = useState(initialServers);
+    const [selectedServer, selectServer] = useState(initialServers[0]);
     return (
         <RecessContext.Provider
             value={{
                 servers,
+                selectedServer,
+                selectServer,
                 addServer: ({ name, port }) =>
                     setServers(currentServers => [...currentServers, { name, port }]),
                 deleteServer: serverToDelete =>

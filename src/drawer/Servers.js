@@ -1,22 +1,32 @@
 import React, { useContext, useState } from 'react';
+import classNames from 'classnames';
 import { RecessContext } from '../RecessContext';
+import styles from './styles/Servers.module.css';
 
 const defaultPort = 8443;
 
 export default function Servers() {
-    const { servers, addServer, deleteServer } = useContext(RecessContext);
+    const { servers, selectedServer, selectServer, addServer, deleteServer } = useContext(
+        RecessContext
+    );
     const [editName, setEditName] = useState('');
     const [editPort, setEditPort] = useState(defaultPort);
     const [isEditing, setIsEditing] = useState(false);
     return (
         <div>
-            <table>
+            <table className={styles.table}>
                 <tr>
                     <th>Servers</th>
                 </tr>
                 {servers.map(({ name, port }) => (
                     <tr>
-                        <td>
+                        <td
+                            onClick={() => selectServer({ name, port })}
+                            className={classNames(styles.server, {
+                                [styles.isSelected]:
+                                    selectedServer.name === name && selectedServer.port === port,
+                            })}
+                        >
                             {name}:{port}
                             <button onClick={() => deleteServer({ name, port })}>Delete</button>
                         </td>

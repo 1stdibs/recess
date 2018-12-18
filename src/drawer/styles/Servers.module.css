@@ -1,0 +1,12 @@
+.table {
+    width: 100%;
+}
+
+.server {
+    cursor: pointer;
+}
+
+.isSelected {
+    background-color: blue;
+    color: white;
+}
