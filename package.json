@@ -5,6 +5,8 @@
     "dependencies": {
         "classnames": "^2.2.6",
         "codemirror": "^5.42.0",
+        "codemirror-graphql": "^0.8.3",
+        "graphql": "^14.0.2",
         "prop-types": "^15.6.2",
         "react": "^16.7.0-alpha.2",
         "react-dom": "^16.7.0-alpha.2",

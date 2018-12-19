@@ -5,6 +5,8 @@ import { RecessContextManager } from './RecessContext';
 
 import './styles/index.css';
 import 'codemirror/lib/codemirror.css';
+import 'codemirror/addon/hint/show-hint.css';
+import 'codemirror/addon/lint/lint.css';
 
 ReactDOM.render(
     <RecessContextManager>

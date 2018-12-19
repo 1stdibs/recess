@@ -1,23 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
-/**
- * Editor
- *
- * An instance of CodeMirror for editing variables defined in QueryEditor.
- *
- * Props:
- *
- *   - variableToType: A mapping of variable name to GraphQLType.
- *   - value: The text of the editor.
- *   - onEdit: A function called when the editor changes, given the edited text.
- *   - readOnly: Turns the editor to read-only mode.
- *
- */
+import getVariableToType from './codemirror/getVariableToType';
+import onHasCompletion from './codemirror/onHasCompletion';
 
 export default class Editor extends React.Component {
     static propTypes = {
-        variableToType: PropTypes.object,
+        autoCompleteData: PropTypes.array,
         value: PropTypes.string,
         onEdit: PropTypes.func,
         readOnly: PropTypes.bool,
@@ -46,22 +34,26 @@ export default class Editor extends React.Component {
         require('codemirror/addon/fold/brace-fold');
         require('codemirror/addon/fold/foldgutter');
         require('codemirror/addon/lint/lint');
+        require('codemirror/addon/lint/json-lint');
         require('codemirror/addon/search/searchcursor');
         require('codemirror/addon/search/jump-to-line');
         require('codemirror/addon/dialog/dialog');
         require('codemirror/keymap/sublime');
-        // require('codemirror-graphql/variables/hint');
-        // require('codemirror-graphql/variables/lint');
-        // require('codemirror-graphql/variables/mode');
+        // require('./codemirror/hint');
+        // require('./codemirror/lint');
+        // require('./codemirror/mode');
+        require('codemirror-graphql/variables/hint');
+        require('codemirror-graphql/variables/lint');
+        require('codemirror-graphql/variables/mode');
 
         this.editor = CodeMirror(this._node, {
             value: this.props.value || '',
             lineNumbers: true,
             tabSize: 2,
-            mode: 'javascript',
+            mode: 'graphql-variables',
             height: 'auto',
             viewportMargin: Infinity,
-            theme: this.props.editorTheme || 'graphiql',
+            // theme: this.props.editorTheme || 'solarized dark',
             keyMap: 'sublime',
             autoCloseBrackets: true,
             matchBrackets: true,
@@ -70,11 +62,10 @@ export default class Editor extends React.Component {
             foldGutter: {
                 minFoldSize: 4,
             },
-            lint: {
-                variableToType: this.props.variableToType,
-            },
+            lint: true,
             hintOptions: {
-                variableToType: this.props.variableToType,
+                // hint,
+                variableToType: getVariableToType(this.props.autoCompleteData),
                 closeOnUnfocus: false,
                 completeSingle: false,
             },
@@ -84,7 +75,6 @@ export default class Editor extends React.Component {
                 'Ctrl-Space': () => this.editor.showHint({ completeSingle: false }),
                 'Alt-Space': () => this.editor.showHint({ completeSingle: false }),
                 'Shift-Space': () => this.editor.showHint({ completeSingle: false }),
-
                 'Cmd-Enter': () => {
                     if (this.props.onRunQuery) {
                         this.props.onRunQuery();
@@ -95,18 +85,15 @@ export default class Editor extends React.Component {
                         this.props.onRunQuery();
                     }
                 },
-
                 'Shift-Ctrl-P': () => {
                     if (this.props.onPrettifyQuery) {
                         this.props.onPrettifyQuery();
                     }
                 },
-
-                // Persistent search box in Query Editor
+                //     // Persistent search box in Query Editor
                 'Cmd-F': 'findPersistent',
                 'Ctrl-F': 'findPersistent',
-
-                // Editor improvements
+                //     // Editor improvements
                 'Ctrl-Left': 'goSubwordLeft',
                 'Ctrl-Right': 'goSubwordRight',
                 'Alt-Left': 'goGroupLeft',
@@ -126,9 +113,11 @@ export default class Editor extends React.Component {
         // user-input changes which could otherwise result in an infinite
         // event loop.
         this.ignoreChangeEvent = true;
-        if (this.props.variableToType !== prevProps.variableToType) {
-            this.editor.options.lint.variableToType = this.props.variableToType;
-            this.editor.options.hintOptions.variableToType = this.props.variableToType;
+        if (this.props.autoCompleteData !== prevProps.autoCompleteData) {
+            // this.editor.options.lint.autoCompleteData = this.props.autoCompleteData;
+            this.editor.options.hintOptions.variableToType = getVariableToType(
+                this.props.autoCompleteData
+            );
             CodeMirror.signal(this.editor, 'change', this.editor);
         }
         if (this.props.value !== prevProps.value && this.props.value !== this.cachedValue) {
@@ -142,7 +131,7 @@ export default class Editor extends React.Component {
     componentWillUnmount() {
         this.editor.off('change', this._onEdit);
         this.editor.off('keyup', this._onKeyUp);
-        // this.editor.off('hasCompletion', this._onHasCompletion);
+        this.editor.off('hasCompletion', this._onHasCompletion);
         this.editor = null;
     }
 
@@ -178,7 +167,8 @@ export default class Editor extends React.Component {
         }
     };
 
-    //   _onHasCompletion = (cm, data) => {
-    //     onHasCompletion(cm, data, this.props.onHintInformationRender);
-    //   };
+    _onHasCompletion = (cm, data) => {
+        console.log('_onHasCompletion', cm, data);
+        onHasCompletion(cm, data, this.props.onHintInformationRender);
+    };
 }

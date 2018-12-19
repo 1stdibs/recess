@@ -11,6 +11,7 @@ import { RecessContext } from './RecessContext';
 
 export default function App() {
     const {
+        autoCompleteData,
         requestText,
         response,
         setRequestText,
@@ -48,6 +49,7 @@ export default function App() {
                         resizerStyle={{ backgroundColor: 'grey', height: 5, cursor: 'row-resize' }}
                     >
                         <Editor
+                            autoCompleteData={autoCompleteData}
                             value={requestText}
                             onEdit={setRequestText}
                             onRunQuery={executeRequest}
