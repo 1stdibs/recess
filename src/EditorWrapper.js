@@ -12,11 +12,13 @@ export default function EditorWrapper() {
         useCamelCase,
         setCamelCase,
         formatRequest,
+        insertMock,
     } = useContext(RecessContext);
     return (
         <div className={styles.editorWrapper}>
             <div className={styles.toolbar}>
                 <button onClick={formatRequest}>Format</button>
+                <button onClick={insertMock}>Insert Mock</button>
                 {useCamelCase ? (
                     <button onClick={() => setCamelCase(false)}>Use snake_case</button>
                 ) : (

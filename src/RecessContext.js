@@ -2,6 +2,7 @@ import React, { useReducer, useEffect } from 'react';
 import fetchServerData from './actionCreators/fetchServerData';
 import fetchAutoCompleteData from './actionCreators/fetchAutoCompleteData';
 import executeRequest from './actionCreators/executeRequest';
+import getMock from './getMock';
 import reducer, {
     initialState,
     SELECT_SERVER,
@@ -99,6 +100,12 @@ export function RecessContextManager({ children }) {
             } catch (e) {
                 // do nothing
             }
+        },
+        insertMock: () => {
+            dispatch({
+                type: EDIT_REQUEST,
+                requestText: JSON.stringify(getMock(state.autoCompleteData), null, 2),
+            });
         },
     };
 
