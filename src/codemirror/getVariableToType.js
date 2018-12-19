@@ -7,15 +7,21 @@ import {
     GraphQLInt,
     GraphQLInputObjectType,
     GraphQLList,
+    GraphQLNonNull,
     GraphQLString,
     GraphQLBoolean,
 } from 'graphql';
 
-function wrapWithArray(data, type) {
+function wrap(data, type) {
+    let resultType = type;
     if (data.isRepeated) {
-        return new GraphQLList(type);
+        resultType = new GraphQLList(type);
     }
-    return type;
+    if (data.isRequired) {
+        resultType = new GraphQLNonNull(type);
+    }
+
+    return resultType;
 }
 
 function getGraphQLTypeFromData(data) {
@@ -34,22 +40,22 @@ function getGraphQLTypeFromData(data) {
             });
         case 'TYPE_DOUBLE':
         case 'TYPE_FLOAT':
-            return wrapWithArray(data, GraphQLFloat);
+            return wrap(data, GraphQLFloat);
         case 'TYPE_INT64':
         case 'TYPE_UINT64':
         case 'TYPE_INT32':
         case 'TYPE_UINT32':
-            return wrapWithArray(data, GraphQLInt);
+            return wrap(data, GraphQLInt);
         case 'TYPE_STRING':
-            return wrapWithArray(data, GraphQLString);
+            return wrap(data, GraphQLString);
         case 'TYPE_BOOL':
-            return wrapWithArray(data, GraphQLBoolean);
+            return wrap(data, GraphQLBoolean);
         case 'TYPE_ENUM': {
             const values = {};
             for (const enumValue of data.enumValues) {
                 values[enumValue] = { value: enumValue };
             }
-            return wrapWithArray(
+            return wrap(
                 data,
                 new GraphQLEnumType({
                     name: 'Enum',
