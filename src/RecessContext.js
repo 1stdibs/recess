@@ -28,22 +28,21 @@ export function RecessContextManager({ children }) {
         [state.selectedServer]
     );
 
+    const selectedServer = state.selectedServer || {};
+    const service = state.service || {};
+    const method = state.method || {};
+
     useEffect(
         () => {
             fetchAutoCompleteData({
-                name: state.selectedServer.name,
-                port: state.selectedServer.port,
-                serviceName: state.service.serviceName,
-                methodName: state.method.name,
+                name: selectedServer.name,
+                port: selectedServer.port,
+                serviceName: service.serviceName,
+                methodName: method.name,
                 dispatch,
             });
         },
-        [
-            state.selectedServer.name,
-            state.selectedServer.port,
-            state.service.serviceName,
-            state.method.name,
-        ]
+        [selectedServer.name, selectedServer.port, service.serviceName, method.name]
     );
 
     useEffect(
@@ -54,6 +53,8 @@ export function RecessContextManager({ children }) {
                     ...state,
                     // don't store data fetched from back end
                     serverData: [],
+                    autoCompleteData: null,
+                    response: null,
                 })
             );
         },
@@ -80,6 +81,7 @@ export function RecessContextManager({ children }) {
         metadata: state.metadata,
         addMetadata: ({ key, value }) => dispatch({ type: ADD_METADATA, key, value }),
         deleteMetadata: ({ key }) => dispatch({ type: DELETE_METADATA, key }),
+        autoCompleteData: state.autoCompleteData,
     };
 
     console.log(value);
