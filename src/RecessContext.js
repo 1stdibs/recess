@@ -8,6 +8,8 @@ import reducer, {
     ADD_SERVER,
     DELETE_SERVER,
     EDIT_REQUEST,
+    ADD_METADATA,
+    DELETE_METADATA,
 } from './reducer';
 
 export const RecessContext = React.createContext();
@@ -44,11 +46,14 @@ export function RecessContextManager({ children }) {
         selectMethod: (service, method) => dispatch({ type: SELECT_METHOD, service, method }),
         reloadServerData: () => fetchServerData(state.selectedServer, dispatch),
         addServer: ({ name, port }) => dispatch({ type: ADD_SERVER, name, port }),
-        deleteServer: ({ name, port }) => dispatch({ type: DELETE_SERVER, name, port }),
+        deleteServer: i => dispatch({ type: DELETE_SERVER, i }),
         requestText: state.requestText,
         response: state.response,
         setRequestText: requestText => dispatch({ type: EDIT_REQUEST, requestText }),
         executeRequest: () => executeRequest(state, dispatch),
+        metadata: state.metadata,
+        addMetadata: ({ key, value }) => dispatch({ type: ADD_METADATA, key, value }),
+        deleteMetadata: ({ key }) => dispatch({ type: DELETE_METADATA, key }),
     };
 
     console.log(value);

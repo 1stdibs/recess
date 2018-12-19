@@ -19,7 +19,7 @@ export default function Servers() {
                     <tr>
                         <th>Servers</th>
                     </tr>
-                    {servers.map(({ name, port }) => (
+                    {servers.map(({ name, port }, i) => (
                         <ClickableRow
                             key={`${name}:${port}`}
                             onClick={() => selectServer({ name, port })}
@@ -30,7 +30,7 @@ export default function Servers() {
                             }
                         >
                             {name}:{port}
-                            <button onClick={() => deleteServer({ name, port })}>Delete</button>
+                            <button onClick={() => deleteServer(i)}>Delete</button>
                         </ClickableRow>
                     ))}
                 </tbody>

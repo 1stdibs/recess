@@ -9,6 +9,7 @@ export default async function executeRequest(state, dispatch) {
             service: state.service.serviceName,
             method: state.method.name,
             requestText: state.requestText,
+            metadata: state.metadata,
         });
         dispatch({ type: COMPLETED_REQUEST, response });
     } catch (e) {

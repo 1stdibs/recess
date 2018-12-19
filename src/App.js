@@ -4,6 +4,7 @@ import Editor from './Editor';
 import Results from './Results';
 import Servers from './drawer/Servers';
 import Services from './drawer/Services';
+import Metadata from './Metadata';
 
 import styles from './styles/App.module.css';
 import { RecessContext } from './RecessContext';
@@ -40,11 +41,19 @@ export default function App() {
                     paneStyle={{ overflow: 'auto' }}
                     resizerStyle={{ backgroundColor: 'grey', width: 5, cursor: 'col-resize' }}
                 >
-                    <Editor
-                        value={requestText}
-                        onEdit={setRequestText}
-                        onRunQuery={executeRequest}
-                    />
+                    <SplitPane
+                        defaultSize="80%"
+                        split="horizontal"
+                        paneStyle={{ overflow: 'auto' }}
+                        resizerStyle={{ backgroundColor: 'grey', height: 5, cursor: 'row-resize' }}
+                    >
+                        <Editor
+                            value={requestText}
+                            onEdit={setRequestText}
+                            onRunQuery={executeRequest}
+                        />
+                        <Metadata />
+                    </SplitPane>
                     <Results response={response} />
                 </SplitPane>
             </SplitPane>

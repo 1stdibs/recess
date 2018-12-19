@@ -8,6 +8,8 @@ export const ERROR_LOADING_SERVER_DATA = 'ERROR_LOADING_SERVER_DATA';
 export const EDIT_REQUEST = 'EDIT_REQUEST';
 export const STARTING_REQUEST = 'STARTING_REQUEST';
 export const COMPLETED_REQUEST = 'COMPLETED_REQUEST';
+export const ADD_METADATA = 'ADD_METADATA';
+export const DELETE_METADATA = 'DELETE_METADATA';
 
 function includesService(serverData, service) {
     return !!serverData.find(({ serviceName }) => serviceName === service);
@@ -28,6 +30,7 @@ export const initialState = {
     isLoadingRequest: false,
     response: '',
     requestText: '',
+    metadata: {},
 };
 
 export default function reducer(state, action) {
@@ -40,9 +43,7 @@ export default function reducer(state, action) {
         case DELETE_SERVER:
             return {
                 ...state,
-                servers: state.servers.filter(
-                    ({ name, port }) => !(name === action.name && port === action.port)
-                ),
+                servers: state.servers.filter((_, i) => i !== action.i),
             };
 
         case SELECT_SERVER:
@@ -112,6 +113,22 @@ export default function reducer(state, action) {
                 response: action.response,
             };
         }
+        case ADD_METADATA:
+            return {
+                ...state,
+                metadata: {
+                    ...state.metadata,
+                    [action.key]: action.value,
+                },
+            };
+        case DELETE_METADATA:
+            return {
+                ...state,
+                metadata: {
+                    ...state.metadata,
+                    [action.key]: undefined,
+                },
+            };
         default:
             throw new Error(`invalid action ${action.type}`);
     }
