@@ -1,67 +1,54 @@
-import React, { useState } from 'react';
-import useServiceData from './hooks/useServiceData';
-import useRequestData from './hooks/useRequestData';
+import React, { useReducer, useEffect } from 'react';
+import fetchServerData from './actionCreators/fetchServerData';
+import executeRequest from './actionCreators/executeRequest';
+import reducer, {
+    initialState,
+    SELECT_SERVER,
+    SELECT_METHOD,
+    ADD_SERVER,
+    DELETE_SERVER,
+    EDIT_REQUEST,
+} from './reducer';
 
 export const RecessContext = React.createContext();
 
-const initialServers = [
-    {
-        name: 'oathkeeper',
-        port: '50051',
-    },
-    {
-        name: 'longclaw',
-        port: '50051',
-    },
-];
-
 export function RecessContextManager({ children }) {
-    const [servers, setServers] = useState(initialServers);
-    const [selectedServer, selectServer] = useState(initialServers[0]);
-    const [selectedService, selectService] = useState(null);
-    const [selectedMethod, selectMethod] = useState(null);
-
-    const { serverDataIsLoading, serverData, serverFetchError, fetchServerData } = useServiceData({
-        selectedService,
-        selectService,
-        selectedServer,
-        selectedMethod,
-        selectMethod,
+    const [state, dispatch] = useReducer(reducer, {
+        ...initialState,
+        ...JSON.parse(localStorage.getItem('recessState')),
     });
 
-    const { requestText, responseText, setRequestText, execute } = useRequestData({
-        selectedServer,
-        selectedMethod,
-        selectedService,
-    });
+    useEffect(
+        () => {
+            fetchServerData(state.selectedServer, dispatch);
+        },
+        [state.selectedServer]
+    );
+
+    useEffect(
+        () => {
+            localStorage.setItem('recessState', JSON.stringify(state));
+        },
+        [state]
+    );
 
     const value = {
-        serverData,
-        serverDataIsLoading,
-        serverFetchError,
-        servers,
-        selectedServer,
-        selectServer,
-        selectedService,
-        selectedMethod,
-        selectMethod: (service, method) => {
-            selectService(service);
-            selectMethod(method);
-        },
-        reloadServerData: fetchServerData,
-        addServer: ({ name, port }) =>
-            setServers(currentServers => [...currentServers, { name, port }]),
-        deleteServer: serverToDelete =>
-            setServers(currentServers => {
-                return currentServers.filter(
-                    ({ name, port }) =>
-                        !(name === serverToDelete.name && port === serverToDelete.port)
-                );
-            }),
-        requestText,
-        responseText,
-        setRequestText,
-        execute,
+        serverData: state.serverData,
+        isLoadingServerData: state.isLoadingServerData,
+        serverDataError: state.serverDataError,
+        servers: state.servers,
+        selectedServer: state.selectedServer,
+        selectServer: server => dispatch({ type: SELECT_SERVER, server }),
+        selectedService: state.service,
+        selectedMethod: state.method,
+        selectMethod: (service, method) => dispatch({ type: SELECT_METHOD, service, method }),
+        reloadServerData: () => fetchServerData(state.selectedServer, dispatch),
+        addServer: ({ name, port }) => dispatch({ type: ADD_SERVER, name, port }),
+        deleteServer: ({ name, port }) => dispatch({ type: DELETE_SERVER, name, port }),
+        requestText: state.requestText,
+        response: state.response,
+        setRequestText: requestText => dispatch({ type: EDIT_REQUEST, requestText }),
+        executeRequest: () => executeRequest(state, dispatch),
     };
 
     console.log(value);

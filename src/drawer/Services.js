@@ -12,7 +12,7 @@ export default function Servers() {
                     <tr>
                         <th>Services</th>
                     </tr>
-                    {serverData.map(service => (
+                    {(serverData || []).map(service => (
                         <Service key={service.serviceName} service={service} />
                     ))}
                 </tbody>

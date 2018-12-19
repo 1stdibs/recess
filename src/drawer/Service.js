@@ -7,7 +7,7 @@ import styles from './styles/Service.module.css';
 export default function Service({ service }) {
     const { selectedService, selectedMethod, selectMethod } = useContext(RecessContext);
     const [isExpanded, setIsExpanded] = useState(
-        selectedService.serviceName === service.serviceName
+        !!selectedService && selectedService.serviceName === service.serviceName
     );
     const icon = isExpanded ? '-' : '+';
     return (
@@ -27,6 +27,7 @@ export default function Service({ service }) {
                                         selectMethod(service, method);
                                     }}
                                     isSelected={
+                                        !!selectedService &&
                                         selectedMethod.name === method.name &&
                                         selectedService.serviceName === service.serviceName
                                     }

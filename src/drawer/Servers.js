@@ -24,7 +24,9 @@ export default function Servers() {
                             key={`${name}:${port}`}
                             onClick={() => selectServer({ name, port })}
                             isSelected={
-                                selectedServer.name === name && selectedServer.port === port
+                                !!selectedServer &&
+                                selectedServer.name === name &&
+                                selectedServer.port === port
                             }
                         >
                             {name}:{port}

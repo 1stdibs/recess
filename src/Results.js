@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Inspector from 'react-inspector';
 import styles from './styles/Editor.module.css';
 
-export default function Results({ responseText }) {
+export default function Results({ response }) {
     const [isParsed, setParsed] = useState(false);
     return (
         <div className={styles.wrapper}>
@@ -14,9 +14,9 @@ export default function Results({ responseText }) {
                 )}
             </div>
             {isParsed ? (
-                <Inspector expandLevel={1} data={responseText} />
+                <Inspector expandLevel={1} data={response} />
             ) : (
-                <code className={styles.code}>{JSON.stringify(responseText, null, 2)}</code>
+                <code className={styles.code}>{JSON.stringify(response, null, 2)}</code>
             )}
         </div>
     );

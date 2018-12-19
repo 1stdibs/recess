@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useContext } from 'react';
 import SplitPane from 'react-split-pane';
 import Editor from './Editor';
 import Results from './Results';
@@ -9,9 +9,13 @@ import styles from './styles/App.module.css';
 import { RecessContext } from './RecessContext';
 
 export default function App() {
-    const { requestText, responseText, setRequestText, execute, serverDataIsLoading } = useContext(
-        RecessContext
-    );
+    const {
+        requestText,
+        response,
+        setRequestText,
+        executeRequest,
+        isLoadingServerData,
+    } = useContext(RecessContext);
     return (
         <div className={styles.wrapper}>
             <SplitPane
@@ -27,7 +31,7 @@ export default function App() {
                     resizerStyle={{ backgroundColor: 'grey', width: 5, cursor: 'col-resize' }}
                 >
                     <Servers />
-                    {serverDataIsLoading ? <div>Loading Server Data</div> : <Services />}
+                    {isLoadingServerData ? <div>Loading Server Data</div> : <Services />}
                 </SplitPane>
 
                 <SplitPane
@@ -36,8 +40,12 @@ export default function App() {
                     paneStyle={{ overflow: 'auto' }}
                     resizerStyle={{ backgroundColor: 'grey', width: 5, cursor: 'col-resize' }}
                 >
-                    <Editor value={requestText} onEdit={setRequestText} onRunQuery={execute} />
-                    <Results responseText={responseText} />
+                    <Editor
+                        value={requestText}
+                        onEdit={setRequestText}
+                        onRunQuery={executeRequest}
+                    />
+                    <Results response={response} />
                 </SplitPane>
             </SplitPane>
         </div>
