@@ -22,5 +22,11 @@ export async function invokeRPC({ name, port, service, method, requestText }) {
         }),
     });
 
-    return await res.json();
+    let responseText = await res.text();
+    try {
+        responseText = JSON.parse(responseText);
+    } catch (e) {
+        // fallback to text response
+    }
+    return responseText;
 }
