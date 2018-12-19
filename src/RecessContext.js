@@ -1,5 +1,6 @@
 import React, { useReducer, useEffect } from 'react';
 import fetchServerData from './actionCreators/fetchServerData';
+import fetchAutoCompleteData from './actionCreators/fetchAutoCompleteData';
 import executeRequest from './actionCreators/executeRequest';
 import reducer, {
     initialState,
@@ -29,7 +30,32 @@ export function RecessContextManager({ children }) {
 
     useEffect(
         () => {
-            localStorage.setItem('recessState', JSON.stringify(state));
+            fetchAutoCompleteData({
+                name: state.selectedServer.name,
+                port: state.selectedServer.port,
+                serviceName: state.service.serviceName,
+                methodName: state.method.name,
+                dispatch,
+            });
+        },
+        [
+            state.selectedServer.name,
+            state.selectedServer.port,
+            state.service.serviceName,
+            state.method.name,
+        ]
+    );
+
+    useEffect(
+        () => {
+            localStorage.setItem(
+                'recessState',
+                JSON.stringify({
+                    ...state,
+                    // don't store data fetched from back end
+                    serverData: [],
+                })
+            );
         },
         [state]
     );

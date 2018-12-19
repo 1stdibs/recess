@@ -10,6 +10,8 @@ export const STARTING_REQUEST = 'STARTING_REQUEST';
 export const COMPLETED_REQUEST = 'COMPLETED_REQUEST';
 export const ADD_METADATA = 'ADD_METADATA';
 export const DELETE_METADATA = 'DELETE_METADATA';
+export const LOADING_AUTOCOMPLETE_DATA = 'LOADING_AUTOCOMPLETE_DATA';
+export const LOADED_AUTOCOMPLETE_DATA = 'LOADED_AUTOCOMPLETE_DATA';
 
 function includesService(serverData, service) {
     return !!serverData.find(({ serviceName }) => serviceName === service);
@@ -128,6 +130,18 @@ export default function reducer(state, action) {
                     ...state.metadata,
                     [action.key]: undefined,
                 },
+            };
+        case LOADING_AUTOCOMPLETE_DATA:
+            return {
+                ...state,
+                autoCompleteData: null,
+                isLoadingAutoCompleteData: true,
+            };
+        case LOADED_AUTOCOMPLETE_DATA:
+            return {
+                ...state,
+                autoCompleteData: action.autoCompleteData,
+                isLoadingAutoCompleteData: false,
             };
         default:
             throw new Error(`invalid action ${action.type}`);

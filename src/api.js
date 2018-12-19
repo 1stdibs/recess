@@ -27,3 +27,23 @@ export async function invokeRPC({ name, port, service, method, requestText, meta
     }
     return responseText;
 }
+
+export async function fetchAutocompleteData({ name, port, service, method }) {
+    try {
+        const res = await fetch(`${baseURL}/autocompleteData`, {
+            method: 'post',
+            body: JSON.stringify({
+                server: name,
+                port,
+                service,
+                method,
+            }),
+        });
+
+        return await res.json();
+    } catch (e) {
+        return null;
+    }
+}
+
+window.fetchAutocompleteData = fetchAutocompleteData;
