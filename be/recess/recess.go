@@ -14,3 +14,6 @@ type Field struct {
 	Name     string   `json:"name"`
 	Children *[]Field `json:"children,omitempty"`
 }
+
+// IsCamelCase is used by all requests/responses that convert proto <-> json
+var IsCamelCase bool

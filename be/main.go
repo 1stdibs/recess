@@ -15,6 +15,7 @@ import (
 	"github.com/robrichard/recess/be/recess"
 	"github.com/robrichard/recess/be/refclient"
 	"github.com/robrichard/recess/be/autocomplete"
+	"github.com/robrichard/recess/be/middleware"
 )
 
 func listServicesHandler(w http.ResponseWriter, r *http.Request) {
@@ -133,9 +134,9 @@ func autocompleteDataHandler(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	mux := http.NewServeMux()
-	mux.HandleFunc("/services", listServicesHandler)
-	mux.HandleFunc("/invoke", invokeHandler)
-	mux.HandleFunc("/autocompleteData", autocompleteDataHandler)
+	mux.Handle("/services", middleware.Logging(http.HandlerFunc(listServicesHandler)))
+	mux.Handle("/invoke", middleware.Logging(middleware.CamelCaseRequest(http.HandlerFunc(invokeHandler))))
+	mux.Handle("/autocompleteData", middleware.Logging(http.HandlerFunc(autocompleteDataHandler)))
 
 	handler := cors.AllowAll().Handler(mux)
 
