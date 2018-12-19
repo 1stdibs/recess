@@ -1,4 +1,4 @@
-const baseURL = '';
+const baseURL = 'http://localhost:4444';
 
 export async function fetchServerInfo({ name, port }) {
     const params = new URLSearchParams({ server: name, port }).toString();
@@ -6,8 +6,16 @@ export async function fetchServerInfo({ name, port }) {
     return await res.json();
 }
 
-export async function invokeRPC({ name, port, service, method, requestText, metadata }) {
-    const res = await fetch(`${baseURL}/invoke`, {
+export async function invokeRPC({
+    name,
+    port,
+    service,
+    method,
+    requestText,
+    metadata,
+    useCamelCase,
+}) {
+    const res = await fetch(`${baseURL}/invoke?camelCase=${useCamelCase}`, {
         method: 'post',
         body: JSON.stringify({
             server: name,
@@ -28,9 +36,9 @@ export async function invokeRPC({ name, port, service, method, requestText, meta
     return responseText;
 }
 
-export async function fetchAutocompleteData({ name, port, service, method }) {
+export async function fetchAutocompleteData({ name, port, service, method, useCamelCase }) {
     try {
-        const res = await fetch(`${baseURL}/autocompleteData`, {
+        const res = await fetch(`${baseURL}/autocompleteData?camelCase=${useCamelCase}`, {
             method: 'post',
             body: JSON.stringify({
                 server: name,

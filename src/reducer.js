@@ -12,6 +12,7 @@ export const ADD_METADATA = 'ADD_METADATA';
 export const DELETE_METADATA = 'DELETE_METADATA';
 export const LOADING_AUTOCOMPLETE_DATA = 'LOADING_AUTOCOMPLETE_DATA';
 export const LOADED_AUTOCOMPLETE_DATA = 'LOADED_AUTOCOMPLETE_DATA';
+export const USE_CAMEL_CASE = 'USE_CAMEL_CASE';
 
 function includesService(serverData, service) {
     return !!serverData.find(({ serviceName }) => serviceName === service.serviceName);
@@ -33,6 +34,7 @@ export const initialState = {
     response: '',
     requestText: '',
     metadata: {},
+    useCamelCase: true,
 };
 
 export default function reducer(state, action) {
@@ -142,6 +144,11 @@ export default function reducer(state, action) {
                 ...state,
                 autoCompleteData: action.autoCompleteData,
                 isLoadingAutoCompleteData: false,
+            };
+        case USE_CAMEL_CASE:
+            return {
+                ...state,
+                useCamelCase: action.useCamelCase,
             };
         default:
             throw new Error(`invalid action ${action.type}`);

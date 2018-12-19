@@ -51,7 +51,7 @@ export default class Editor extends React.Component {
             mode: 'graphql-variables',
             height: 'auto',
             viewportMargin: Infinity,
-            theme: this.props.editorTheme || 'solarized dark',
+            theme: this.props.editorTheme || 'monokai',
             keyMap: 'sublime',
             autoCloseBrackets: true,
             matchBrackets: true,

@@ -10,6 +10,7 @@ export default async function executeRequest(state, dispatch) {
             method: state.method.name,
             requestText: state.requestText,
             metadata: state.metadata,
+            useCamelCase: state.useCamelCase,
         });
         dispatch({ type: COMPLETED_REQUEST, response });
     } catch (e) {

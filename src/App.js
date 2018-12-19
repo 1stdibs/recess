@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import SplitPane from 'react-split-pane';
-import Editor from './Editor';
+import EditorWrapper from './EditorWrapper';
 import Results from './Results';
 import Servers from './drawer/Servers';
 import Services from './drawer/Services';
@@ -10,14 +10,7 @@ import styles from './styles/App.module.css';
 import { RecessContext } from './RecessContext';
 
 export default function App() {
-    const {
-        autoCompleteData,
-        requestText,
-        response,
-        setRequestText,
-        executeRequest,
-        isLoadingServerData,
-    } = useContext(RecessContext);
+    const { response, isLoadingServerData } = useContext(RecessContext);
     return (
         <div className={styles.wrapper}>
             <SplitPane
@@ -48,12 +41,7 @@ export default function App() {
                         paneStyle={{ overflow: 'auto' }}
                         resizerStyle={{ backgroundColor: 'grey', height: 5, cursor: 'row-resize' }}
                     >
-                        <Editor
-                            autoCompleteData={autoCompleteData}
-                            value={requestText}
-                            onEdit={setRequestText}
-                            onRunQuery={executeRequest}
-                        />
+                        <EditorWrapper />
                         <Metadata />
                     </SplitPane>
                     <Results response={response} />

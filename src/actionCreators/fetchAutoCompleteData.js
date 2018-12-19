@@ -6,6 +6,7 @@ export default async function fetchAutoCompleteData({
     port,
     serviceName,
     methodName,
+    useCamelCase,
     dispatch,
 }) {
     if (name && port && serviceName && methodName) {
@@ -16,6 +17,7 @@ export default async function fetchAutoCompleteData({
                 port,
                 service: serviceName,
                 method: methodName,
+                useCamelCase,
             });
             dispatch({ type: LOADED_AUTOCOMPLETE_DATA, autoCompleteData });
         } catch (e) {

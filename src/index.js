@@ -7,6 +7,7 @@ import './styles/index.css';
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/addon/hint/show-hint.css';
 import 'codemirror/addon/lint/lint.css';
+import 'codemirror/theme/monokai.css';
 
 ReactDOM.render(
     <RecessContextManager>

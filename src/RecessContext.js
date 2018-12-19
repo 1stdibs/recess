@@ -11,6 +11,7 @@ import reducer, {
     EDIT_REQUEST,
     ADD_METADATA,
     DELETE_METADATA,
+    USE_CAMEL_CASE,
 } from './reducer';
 
 export const RecessContext = React.createContext();
@@ -39,10 +40,17 @@ export function RecessContextManager({ children }) {
                 port: selectedServer.port,
                 serviceName: service.serviceName,
                 methodName: method.name,
+                useCamelCase: state.useCamelCase,
                 dispatch,
             });
         },
-        [selectedServer.name, selectedServer.port, service.serviceName, method.name]
+        [
+            selectedServer.name,
+            selectedServer.port,
+            service.serviceName,
+            method.name,
+            state.useCamelCase,
+        ]
     );
 
     useEffect(
@@ -82,6 +90,16 @@ export function RecessContextManager({ children }) {
         addMetadata: ({ key, value }) => dispatch({ type: ADD_METADATA, key, value }),
         deleteMetadata: ({ key }) => dispatch({ type: DELETE_METADATA, key }),
         autoCompleteData: state.autoCompleteData,
+        useCamelCase: state.useCamelCase,
+        setCamelCase: useCamelCase => dispatch({ type: USE_CAMEL_CASE, useCamelCase }),
+        formatRequest: () => {
+            try {
+                const newRequestText = JSON.stringify(JSON.parse(state.requestText), null, 2);
+                dispatch({ type: EDIT_REQUEST, requestText: newRequestText });
+            } catch (e) {
+                // do nothing
+            }
+        },
     };
 
     console.log(value);
