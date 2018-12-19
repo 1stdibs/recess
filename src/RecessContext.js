@@ -43,12 +43,11 @@ export function RecessContextManager({ children }) {
         selectedServer,
         selectServer,
         selectedService,
-        selectService: service => {
-            selectService(service);
-            selectMethod(service.methods[0]);
-        },
         selectedMethod,
-        selectMethod,
+        selectMethod: (service, method) => {
+            selectService(service);
+            selectMethod(method);
+        },
         reloadServerData: fetchServerData,
         addServer: ({ name, port }) =>
             setServers(currentServers => [...currentServers, { name, port }]),

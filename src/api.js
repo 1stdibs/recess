@@ -1,4 +1,4 @@
-const baseURL = 'http://192.168.99.136:4444';
+const baseURL = 'http://localhost:4444';
 
 export async function fetchServerInfo({ name, port }) {
     const params = new URLSearchParams({ server: name, port }).toString();

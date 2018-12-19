@@ -1,10 +1,10 @@
 import React, { useContext } from 'react';
 import { RecessContext } from '../RecessContext';
-import ClickableRow from './ClickableRow';
+import Service from './Service';
 import Table from './Table';
 
 export default function Servers() {
-    const { serverData, selectedService, selectService } = useContext(RecessContext);
+    const { serverData } = useContext(RecessContext);
     return (
         <div>
             <Table>
@@ -13,15 +13,7 @@ export default function Servers() {
                         <th>Services</th>
                     </tr>
                     {serverData.map(service => (
-                        <ClickableRow
-                            key={service.serviceName}
-                            onClick={() => {
-                                selectService(service);
-                            }}
-                            isSelected={selectedService.serviceName === service.serviceName}
-                        >
-                            {service.serviceName}
-                        </ClickableRow>
+                        <Service key={service.serviceName} service={service} />
                     ))}
                 </tbody>
             </Table>

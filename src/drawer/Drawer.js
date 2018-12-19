@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import SplitPane from 'react-split-pane';
 import Servers from './Servers';
 import Services from './Services';
-import Methods from './Methods';
 import { RecessContext } from '../RecessContext';
 
 import styles from './styles/Drawer.module.css';
@@ -14,28 +13,17 @@ export default function Drawer({ isOpen, onToggle }) {
         <div
             className={styles.wrapper}
             style={{
-                width: 1200,
-                left: isOpen ? 0 : '-1200px',
+                width: 600,
+                left: isOpen ? 0 : '-600px',
             }}
         >
             <SplitPane
-                defaultSize="33%"
+                defaultSize="50%"
                 split="vertical"
                 resizerStyle={{ backgroundColor: 'grey', width: 5, cursor: 'col-resize' }}
             >
                 <Servers />
-                {serverDataIsLoading ? (
-                    <div>Loading Server Data</div>
-                ) : (
-                    <SplitPane
-                        defaultSize="50%"
-                        split="vertical"
-                        resizerStyle={{ backgroundColor: 'grey', width: 5, cursor: 'col-resize' }}
-                    >
-                        <Services />
-                        <Methods />
-                    </SplitPane>
-                )}
+                {serverDataIsLoading ? <div>Loading Server Data</div> : <Services />}
             </SplitPane>
             <button onClick={onToggle} className={styles.openButton}>
                 {isOpen ? 'Close' : 'Open'}
