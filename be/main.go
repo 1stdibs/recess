@@ -6,16 +6,18 @@ import (
 	"log"
 	"net/http"
 	"strings"
+	"runtime"
+	"os/exec"
 
 	"github.com/rs/cors"
 
+	"github.com/robrichard/recess/be/autocomplete"
 	"github.com/robrichard/recess/be/invoke"
 	"github.com/robrichard/recess/be/listmethods"
 	"github.com/robrichard/recess/be/listservices"
+	"github.com/robrichard/recess/be/middleware"
 	"github.com/robrichard/recess/be/recess"
 	"github.com/robrichard/recess/be/refclient"
-	"github.com/robrichard/recess/be/autocomplete"
-	"github.com/robrichard/recess/be/middleware"
 )
 
 func listServicesHandler(w http.ResponseWriter, r *http.Request) {
@@ -133,12 +135,17 @@ func autocompleteDataHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	// be server
 	mux := http.NewServeMux()
 	mux.Handle("/services", middleware.Logging(http.HandlerFunc(listServicesHandler)))
 	mux.Handle("/invoke", middleware.Logging(middleware.CamelCaseRequest(http.HandlerFunc(invokeHandler))))
 	mux.Handle("/autocompleteData", middleware.Logging(http.HandlerFunc(autocompleteDataHandler)))
+	fs := http.FileServer(http.Dir("build/"))
+	mux.Handle("/", fs)
 
 	handler := cors.AllowAll().Handler(mux)
+
+	openbrowser("http://localhost:4444")
 
 	log.Fatal(http.ListenAndServe(":4444", handler))
 }
@@ -152,4 +159,23 @@ func errorResponse(w http.ResponseWriter, message string, vars ...interface{}) {
 func jsonResponse(w http.ResponseWriter, payload interface{}) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(payload)
+}
+
+// https://gist.github.com/hyg/9c4afcd91fe24316cbf0
+func openbrowser(url string) {
+	var err error
+
+	switch runtime.GOOS {
+	case "linux":
+		err = exec.Command("xdg-open", url).Start()
+	case "windows":
+		err = exec.Command("rundll32", "url.dll,FileProtocolHandler", url).Start()
+	case "darwin":
+		err = exec.Command("open", url).Start()
+	default:
+		err = fmt.Errorf("unsupported platform")
+	}
+	if err != nil {
+		log.Fatal(err)
+	}
 }
