@@ -1,4 +1,5 @@
 import { GraphQLNonNull, GraphQLList } from 'graphql';
+import styles from './styles/onHasCompletion.module.css';
 
 /**
  * Render a custom UI for CodeMirror's hint which includes additional info
@@ -15,11 +16,14 @@ export default function onHasCompletion(cm, data, onHintInformationRender) {
         // do we create the information nodes.
         if (!information) {
             const hintsUl = el.parentNode;
+            // const hintsLi = [...hintsUl.querySelectorAll('li')];
+            // const lastLi = hintsLi[hintsLi.length - 1];
+            // lastLi.classList.add(styles.lastLi);
 
             // This "information" node will contain the additional info about the
             // highlighted typeahead option.
             information = document.createElement('div');
-            information.className = 'CodeMirror-hint-information';
+            information.className = styles.info;
             hintsUl.appendChild(information);
 
             // When CodeMirror attempts to remove the hint UI, we detect that it was
@@ -40,7 +44,7 @@ export default function onHasCompletion(cm, data, onHintInformationRender) {
         // Now that the UI has been set up, add info to information.
         const type = ctx.type ? '<span class="infoType">' + renderType(ctx.type) + '</span>' : '';
 
-        information.innerHTML = '<div class="content">' + type + '</div>';
+        information.innerHTML = `<div class="${styles.content}">${type}</div>`;
 
         // Additional rendering?
         if (onHintInformationRender) {

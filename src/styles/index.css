@@ -11,10 +11,18 @@ body {
 code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
-.codemirrorWrap {
-    height: 100%;
-    width: 100%;
-}
+
 .CodeMirror {
     height: 100% !important;
+}
+
+.CodeMirror-hints {
+    padding-bottom: 30px;
+}
+
+.CodeMirror-hints-wrapper {
+    margin-left: -6px;
+    position: absolute;
+    z-index: 10;
+    background: white;
 }

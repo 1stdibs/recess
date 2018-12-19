@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Inspector from 'react-inspector';
-import styles from './styles/Editor.module.css';
+import styles from './styles/Results.module.css';
 
 export default function Results({ response }) {
     const [isParsed, setParsed] = useState(false);

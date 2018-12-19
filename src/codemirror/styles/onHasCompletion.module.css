@@ -1,0 +1,19 @@
+.content {
+    font-weight: bold;
+}
+
+.info {
+    /* width: 100%;
+    position: absolute;
+    bottom: 0;
+    z-index: 1;
+    background-color: #ddd;
+    font-size: 14px;
+    border-top: 1px solid #ddd;
+    padding: 10px 12px; */
+    margin: 0 4px;
+}
+
+.lastLi {
+    padding-bottom: 30px !important;
+}

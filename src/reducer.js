@@ -14,11 +14,11 @@ export const LOADING_AUTOCOMPLETE_DATA = 'LOADING_AUTOCOMPLETE_DATA';
 export const LOADED_AUTOCOMPLETE_DATA = 'LOADED_AUTOCOMPLETE_DATA';
 
 function includesService(serverData, service) {
-    return !!serverData.find(({ serviceName }) => serviceName === service);
+    return !!serverData.find(({ serviceName }) => serviceName === service.serviceName);
 }
 
 function includesMethod(service, method) {
-    return !!(service.methods || []).find(({ name }) => name === method);
+    return !!(service.methods || []).find(({ name }) => name === method.name);
 }
 
 export const initialState = {

@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import getVariableToType from './codemirror/getVariableToType';
 import onHasCompletion from './codemirror/onHasCompletion';
+import styles from './styles/Editor.module.css';
 
 export default class Editor extends React.Component {
     static propTypes = {
@@ -39,9 +40,6 @@ export default class Editor extends React.Component {
         require('codemirror/addon/search/jump-to-line');
         require('codemirror/addon/dialog/dialog');
         require('codemirror/keymap/sublime');
-        // require('./codemirror/hint');
-        // require('./codemirror/lint');
-        // require('./codemirror/mode');
         require('codemirror-graphql/variables/hint');
         require('codemirror-graphql/variables/lint');
         require('codemirror-graphql/variables/mode');
@@ -53,7 +51,7 @@ export default class Editor extends React.Component {
             mode: 'graphql-variables',
             height: 'auto',
             viewportMargin: Infinity,
-            // theme: this.props.editorTheme || 'solarized dark',
+            theme: this.props.editorTheme || 'solarized dark',
             keyMap: 'sublime',
             autoCloseBrackets: true,
             matchBrackets: true,
@@ -103,7 +101,7 @@ export default class Editor extends React.Component {
 
         this.editor.on('change', this._onEdit);
         this.editor.on('keyup', this._onKeyUp);
-        // this.editor.on('hasCompletion', this._onHasCompletion);
+        this.editor.on('hasCompletion', this._onHasCompletion);
     }
 
     componentDidUpdate(prevProps) {
@@ -138,7 +136,7 @@ export default class Editor extends React.Component {
     render() {
         return (
             <div
-                className="codemirrorWrap"
+                className={styles.wrapper}
                 ref={node => {
                     this._node = node;
                 }}

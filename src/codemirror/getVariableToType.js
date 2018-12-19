@@ -29,7 +29,7 @@ function getGraphQLTypeFromData(data) {
                 };
             }
             return new GraphQLInputObjectType({
-                name: data.name,
+                name: 'Object',
                 fields,
             });
         case 'TYPE_DOUBLE':
@@ -52,7 +52,7 @@ function getGraphQLTypeFromData(data) {
             return wrapWithArray(
                 data,
                 new GraphQLEnumType({
-                    name: data.name,
+                    name: 'Enum',
                     values,
                 })
             );
