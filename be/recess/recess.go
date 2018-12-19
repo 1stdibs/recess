@@ -11,8 +11,11 @@ type Service struct {
 }
 
 type Field struct {
-	Name     string   `json:"name"`
-	Children *[]Field `json:"children,omitempty"`
+	Name       string   `json:"name"`
+	IsRepeated bool     `json:"isRepeated"`
+	Type       string   `json:"type"`
+	EnumValues []string `json:"enumValues,omitempty"`
+	Children   *[]Field `json:"children,omitempty"`
 }
 
 // IsCamelCase is used by all requests/responses that convert proto <-> json

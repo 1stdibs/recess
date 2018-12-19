@@ -6,6 +6,8 @@ import (
 	"github.com/jhump/protoreflect/desc"
 	"github.com/jhump/protoreflect/grpcreflect"
 	"github.com/robrichard/recess/be/recess"
+
+	"github.com/golang/protobuf/protoc-gen-go/descriptor"
 )
 
 func GetAutocompleteData(client *grpcreflect.Client, service, method string) (*[]recess.Field, error) {
@@ -37,13 +39,25 @@ func processMessageDescriptor(messageDescriptor *desc.MessageDescriptor) *[]rece
 	for i, field := range fields {
 		message := field.GetMessageType()
 
-		if message == nil {
-			result[i] = recess.Field{Name: field.GetName()}
-		} else {
-			result[i] = recess.Field{
-				Name:     field.GetName(),
-				Children: processMessageDescriptor(message),
+		result[i] = recess.Field{
+			Name:       field.GetName(),
+			IsRepeated: field.IsRepeated(),
+			Type:       field.GetType().String(),
+		}
+
+		if field.GetType() == descriptor.FieldDescriptorProto_TYPE_ENUM {
+			valueDescriptors := field.GetEnumType().GetValues()
+
+			valueStrings := make([]string, len(valueDescriptors))
+			for i, v := range valueDescriptors {
+				valueStrings[i] = v.GetName()
 			}
+
+			result[i].EnumValues = valueStrings
+		}
+
+		if message != nil {
+			result[i].Children = processMessageDescriptor(message)
 		}
 	}
 
