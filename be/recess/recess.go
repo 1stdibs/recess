@@ -13,6 +13,7 @@ type Service struct {
 type Field struct {
 	Name       string   `json:"name"`
 	IsRepeated bool     `json:"isRepeated"`
+	IsRequired bool     `json:"isRequired"`
 	Type       string   `json:"type"`
 	EnumValues []string `json:"enumValues,omitempty"`
 	Children   *[]Field `json:"children,omitempty"`

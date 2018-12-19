@@ -43,6 +43,7 @@ func processMessageDescriptor(messageDescriptor *desc.MessageDescriptor) *[]rece
 			Name:       field.GetName(),
 			IsRepeated: field.IsRepeated(),
 			Type:       field.GetType().String(),
+			IsRequired: field.IsRequired(),
 		}
 
 		if field.GetType() == descriptor.FieldDescriptorProto_TYPE_ENUM {
