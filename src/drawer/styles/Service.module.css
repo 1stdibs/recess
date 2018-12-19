@@ -1,3 +1,7 @@
 .indent {
     padding-left: 12px;
 }
+
+.name {
+    white-space: nowrap;
+}

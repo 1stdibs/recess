@@ -1,3 +1,7 @@
 .wrapper {
     padding: 9px;
 }
+
+.code {
+    white-space: pre-wrap;
+}

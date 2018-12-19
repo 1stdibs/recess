@@ -13,7 +13,7 @@ export default function Service({ service }) {
     return (
         <tr>
             <td onClick={() => setIsExpanded(state => !state)}>
-                <div>
+                <div className={styles.name}>
                     {icon} {service.serviceName}
                 </div>
                 {isExpanded && (

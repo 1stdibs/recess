@@ -27,8 +27,12 @@ export default function useServiceData({
                 const newServerData = await fetchServerInfo(selectedServer);
                 setServerData(newServerData);
                 if (!selectedService || !includesService(newServerData, selectedServer)) {
-                    selectService(newServerData[0]);
-                    selectMethod(newServerData[0].methods[0]);
+                    // select the first non-reflection service
+                    const initialService = newServerData.filter(
+                        s => s.serviceName !== 'grpc.reflection.v1alpha.ServerReflection'
+                    )[0];
+                    selectService(initialService);
+                    selectMethod(initialService.methods[0]);
                 } else if (!includesMethod(serverData, selectedServer, selectedMethod)) {
                     selectMethod(selectedService.methods[0]);
                 }

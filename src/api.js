@@ -6,7 +6,7 @@ export async function fetchServerInfo({ name, port }) {
     return await res.json();
 }
 
-export async function invokeRPC({ name, port, service, method, body }) {
+export async function invokeRPC({ name, port, service, method, requestText }) {
     const res = await fetch(`${baseURL}/invoke`, {
         method: 'post',
         body: JSON.stringify({
@@ -18,7 +18,7 @@ export async function invokeRPC({ name, port, service, method, body }) {
                 userToken:
                     '10224243_34064c666b3a18a2c414192e3b5956f05937b0697d33e0c0110cea41247f0a69',
             },
-            body,
+            body: JSON.parse(requestText),
         }),
     });
 
