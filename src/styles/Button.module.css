@@ -7,4 +7,9 @@
     color: var(--color-text);
     font-size: 13px;
     line-height: 20px;
+    cursor: pointer;
+}
+
+.button:hover {
+    background: var(--color-hover);
 }

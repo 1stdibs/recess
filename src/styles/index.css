@@ -18,6 +18,7 @@ body {
     --color-text: #fff;
     --color-shadow: #adadad;
     --color-body-text: #222;
+    --color-hover: #000;
 }
 
 code {
@@ -37,4 +38,8 @@ code {
     position: absolute;
     z-index: 10;
     background: white;
+}
+
+.cm-s-monokai.CodeMirror {
+    background: var(--color-request-bg) !important;
 }

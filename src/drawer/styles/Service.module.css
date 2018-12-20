@@ -7,6 +7,10 @@
     padding: 15px 10px;
 }
 
+.name:hover {
+    background: var(--color-hover);
+}
+
 .wrapper {
     width: 100%;
     display: flex;

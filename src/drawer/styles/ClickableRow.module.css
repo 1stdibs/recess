@@ -5,6 +5,10 @@
     color: white;
 }
 
+.row:hover:not(.isSelected) {
+    background: var(--color-hover);
+}
+
 .isSelected {
     background-color: var(--color-highlight);
 }
