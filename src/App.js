@@ -1,16 +1,21 @@
 import React, { useContext } from 'react';
 import SplitPane from 'react-split-pane';
-import EditorWrapper from './EditorWrapper';
+import EditorToolbar from './EditorToolbar';
+import Editor from './Editor';
 import Results from './Results';
 import Servers from './drawer/Servers';
 import Services from './drawer/Services';
+import ServiceToolbar from './drawer/ServiceToolbar';
 import Metadata from './Metadata';
+import { RecessContext } from './RecessContext';
+import ToolbarWrapper from './ToolbarWrapper';
 
 import styles from './styles/App.module.css';
-import { RecessContext } from './RecessContext';
 
 export default function App() {
-    const { response, isLoadingServerData } = useContext(RecessContext);
+    const { response, autoCompleteData, requestText, setRequestText, executeRequest } = useContext(
+        RecessContext
+    );
     return (
         <div className={styles.wrapper}>
             <SplitPane
@@ -23,19 +28,21 @@ export default function App() {
                     cursor: 'col-resize',
                 }}
             >
-                <SplitPane
-                    defaultSize="40%"
-                    split="vertical"
-                    paneStyle={{ overflow: 'auto' }}
-                    resizerStyle={{
-                        backgroundColor: 'var(--color-dividers)',
-                        width: 4,
-                        cursor: 'col-resize',
-                    }}
-                >
-                    <Servers />
-                    <Services />
-                </SplitPane>
+                <ToolbarWrapper toolbar={<ServiceToolbar />}>
+                    <SplitPane
+                        defaultSize="40%"
+                        split="vertical"
+                        paneStyle={{ overflow: 'auto' }}
+                        resizerStyle={{
+                            backgroundColor: 'var(--color-dividers)',
+                            width: 4,
+                            cursor: 'col-resize',
+                        }}
+                    >
+                        <Servers />
+                        <Services />
+                    </SplitPane>
+                </ToolbarWrapper>
 
                 <SplitPane
                     defaultSize="50%"
@@ -47,20 +54,29 @@ export default function App() {
                         cursor: 'col-resize',
                     }}
                 >
-                    <SplitPane
-                        defaultSize="80%"
-                        split="horizontal"
-                        paneStyle={{ overflow: 'auto' }}
-                        resizerStyle={{
-                            backgroundColor: 'var(--color-dividers)',
-                            height: 4,
-                            cursor: 'row-resize',
-                        }}
-                    >
-                        <EditorWrapper />
-                        <Metadata />
-                    </SplitPane>
-                    <Results response={response} />
+                    <ToolbarWrapper toolbar={<EditorToolbar />}>
+                        <SplitPane
+                            defaultSize="80%"
+                            split="horizontal"
+                            paneStyle={{ overflow: 'auto' }}
+                            resizerStyle={{
+                                backgroundColor: 'var(--color-dividers)',
+                                height: 4,
+                                cursor: 'row-resize',
+                            }}
+                        >
+                            <Editor
+                                autoCompleteData={autoCompleteData}
+                                value={requestText}
+                                onEdit={setRequestText}
+                                onRunQuery={executeRequest}
+                            />
+                            <Metadata />
+                        </SplitPane>
+                    </ToolbarWrapper>
+                    <ToolbarWrapper toolbar={<ServiceToolbar />}>
+                        <Results response={response} />
+                    </ToolbarWrapper>
                 </SplitPane>
             </SplitPane>
         </div>

@@ -1,6 +1,7 @@
 body {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
         'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -12,6 +13,7 @@ body {
     --color-services-bg: #373737;
     --color-method-bg: #2e2e2e;
     --color-request-bg: #222;
+    --color-button-bg: #808080;
     --color-highlight: #6fa67c;
     --color-text: #fff;
     --color-shadow: #adadad;
