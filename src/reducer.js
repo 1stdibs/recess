@@ -126,12 +126,13 @@ export default function reducer(state, action) {
                 },
             };
         case DELETE_METADATA:
+            const newMetadata = {
+                ...state.metadata,
+            };
+            delete newMetadata[action.key];
             return {
                 ...state,
-                metadata: {
-                    ...state.metadata,
-                    [action.key]: undefined,
-                },
+                metadata: newMetadata,
             };
         case LOADING_AUTOCOMPLETE_DATA:
             return {
