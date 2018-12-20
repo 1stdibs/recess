@@ -14,7 +14,7 @@ function getMockTypeFromData(data) {
             for (const child of data.children) {
                 fields[child.name] = getMockTypeFromData(child);
             }
-            return wrap(fields);
+            return wrap(data, fields);
         case 'TYPE_DOUBLE':
         case 'TYPE_FLOAT':
             return wrap(data, 3.14);
