@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import Editor from './Editor';
+import classNames from 'classnames';
 import { RecessContext } from './RecessContext';
 import ResultsToolbar from './ResultsToolbar';
 import Results from './Results';
@@ -9,13 +9,15 @@ import { ReactComponent as PlayButton } from './icons/play.svg';
 import styles from './styles/ResultsWrapper.module.css';
 
 export default function EditorToolbar() {
-    const { response, executeRequest } = useContext(RecessContext);
+    const { response, executeRequest, isLoadingRequest } = useContext(RecessContext);
     return (
         <div className={styles.wrapper}>
             <PlayButton
                 title="Execute Query (Ctrl-Enter)"
                 onClick={executeRequest}
-                className={styles.play}
+                className={classNames(styles.play, {
+                    [styles.isLoading]: isLoadingRequest,
+                })}
             />
 
             <ToolbarWrapper toolbar={<ResultsToolbar />}>

@@ -16,9 +16,17 @@
 }
 
 .play :global(.st0) {
-    fill: #6fa67c;
+    fill: var(--color-highlight);
 }
 
 .play :global(.st1) {
-    fill: #ffffff;
+    fill: var(--color-text);
+}
+
+.play.isLoading :global(.st0) {
+    fill: var(--color-button-bg);
+}
+
+.play.isLoading :global(.st1) {
+    fill: var(--color-button-bg);
 }

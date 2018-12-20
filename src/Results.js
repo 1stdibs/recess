@@ -18,8 +18,6 @@ const inspectorTheme = {
     OBJECT_VALUE_STRING_COLOR: 'var(--color-code-string)',
 };
 
-console.log(inspectorTheme);
-
 export default function Results({ response }) {
     const { viewParsed } = useContext(RecessContext);
     return (

@@ -5,19 +5,21 @@ import { ReactComponent as ClosedIcon } from '../icons/dropdown-closed.svg';
 import { ReactComponent as OpenIcon } from '../icons/dropdown-open.svg';
 
 import styles from './styles/Service.module.css';
-import { getMatchingMethods } from '../MatchingServiceDataHelper'
+import { getMatchingMethods } from '../MatchingServiceDataHelper';
 
 export default function Service({ service }) {
-    const { selectedService, selectedMethod, selectMethod, setRequestText, methodSearchText } = useContext(RecessContext);
+    const { selectedService, selectedMethod, selectMethod, methodSearchText } = useContext(
+        RecessContext
+    );
     const [isExpanded, setIsExpanded] = useState(
         !!selectedService && selectedService.serviceName === service.serviceName
     );
     const icon = !isExpanded ? (
         <OpenIcon className={styles.icon} />
     ) : (
-            <ClosedIcon className={styles.icon} />
-        );
-    const matchingMethods = getMatchingMethods(service, methodSearchText)
+        <ClosedIcon className={styles.icon} />
+    );
+    const matchingMethods = getMatchingMethods(service, methodSearchText);
 
     return (
         <div className={styles.wrapper} onClick={() => setIsExpanded(state => !state)}>

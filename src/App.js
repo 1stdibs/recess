@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
 import SplitPane from 'react-split-pane';
-import ResultsToolbar from './ResultsToolbar';
 import EditorToolbar from './EditorToolbar';
 import Editor from './Editor';
 import ResultsWrapper from './ResultsWrapper';
@@ -15,7 +14,6 @@ import styles from './styles/App.module.css';
 
 export default function App() {
     const {
-        response,
         autoCompleteData,
         requestText,
         setRequestText,

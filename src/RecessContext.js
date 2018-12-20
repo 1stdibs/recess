@@ -88,6 +88,7 @@ export function RecessContextManager({ children }) {
         requestText: state.requestText,
         response: state.response,
         setRequestText: requestText => dispatch({ type: EDIT_REQUEST, requestText }),
+        isLoadingRequest: state.isLoadingRequest,
         executeRequest: () => executeRequest(state, dispatch),
         metadata: state.metadata,
         addMetadata: ({ key, value }) => dispatch({ type: ADD_METADATA, key, value }),
