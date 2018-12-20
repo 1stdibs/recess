@@ -66,6 +66,8 @@ export function RecessContextManager({ children }) {
                     serverData: [],
                     autoCompleteData: null,
                     response: null,
+                    requestText: '',
+                    requestTextByMethod: {},
                 })
             );
         },

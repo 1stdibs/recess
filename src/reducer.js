@@ -1,3 +1,5 @@
+import { toSnakeCase, toCamelCase } from './changeCase';
+
 export const ADD_SERVER = 'ADD_SERVER';
 export const DELETE_SERVER = 'DELETE_SERVER';
 export const SELECT_METHOD = 'SELECT_METHOD';
@@ -165,6 +167,16 @@ export default function reducer(state, action) {
             return {
                 ...state,
                 useCamelCase: action.useCamelCase,
+                requestText: action.useCamelCase
+                    ? toCamelCase(state.requestText)
+                    : toSnakeCase(state.requestText),
+                requestTextByMethod: Object.entries(state.requestTextByMethod).reduce(
+                    (acc, [key, val]) => ({
+                        ...acc,
+                        [key]: action.useCamelCase ? toCamelCase(val) : toSnakeCase(val),
+                    }),
+                    {}
+                ),
             };
         case EDIT_METHOD_SEARCH:
             return {
