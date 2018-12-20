@@ -46,10 +46,7 @@ code {
     background: white;
 }
 
-.cm-s-monokai.CodeMirror {
-    background: var(--color-request-bg) !important;
-}
-
+.cm-s-monokai.CodeMirror,
 .cm-s-monokai .CodeMirror-gutters {
-    background: var(--color-method-bg) !important;
+    background: var(--color-request-bg) !important;
 }
