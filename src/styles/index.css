@@ -6,6 +6,15 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     font-size: 13px;
+
+    --color-dividers: #555;
+    --color-servers-bg: #444;
+    --color-services-bg: #373737;
+    --color-request-bg: #222;
+    --color-highlight: #6fa67c;
+    --color-text: #fff;
+    --color-shadow: #adadad;
+    --color-body-text: #222;
 }
 
 code {

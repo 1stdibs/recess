@@ -1,15 +1,12 @@
-.row {
-    cursor: pointer;
+.wrapper {
     display: flex;
     padding: 10px;
-    color: white;
+    border-bottom: 1px solid var(--color-dividers);
 }
 
-.isSelected {
-    background-color: var(--color-highlight);
-}
-
-.label {
+.title {
+    color: var(--color-text);
+    font-weight: bold;
     flex: 1;
 }
 

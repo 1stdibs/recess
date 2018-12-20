@@ -1,15 +1,28 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styles from './styles/ClickableRow.module.css';
 import classNames from 'classnames';
 
-export default function ClickableRow({ children, onClick, isSelected }) {
+import styles from './styles/ClickableRow.module.css';
+
+export default function ClickableRow({ children, ActionIcon, onActionClick, onClick, isSelected }) {
     return (
-        <tr className={styles.row}>
-            <td className={classNames({ [styles.isSelected]: isSelected })} onClick={onClick}>
-                {children}
-            </td>
-        </tr>
+        <div
+            className={classNames(styles.row, { [styles.isSelected]: isSelected })}
+            onClick={onClick}
+        >
+            <div className={styles.label}>{children}</div>
+            {!!ActionIcon && (
+                <div
+                    className={styles.action}
+                    onClick={e => {
+                        e.stopPropagation();
+                        onActionClick();
+                    }}
+                >
+                    <ActionIcon className={styles.icon} />
+                </div>
+            )}
+        </div>
     );
 }
 

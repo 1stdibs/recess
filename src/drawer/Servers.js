@@ -1,7 +1,11 @@
 import React, { useContext, useState } from 'react';
 import { RecessContext } from '../RecessContext';
 import ClickableRow from './ClickableRow';
-import Table from './Table';
+import SectionTitle from './SectionTitle';
+import { ReactComponent as PlusIcon } from '../icons/plus-icon.svg';
+import { ReactComponent as TrashIcon } from '../icons/trashcan.svg';
+
+import styles from './styles/Servers.module.css';
 
 const defaultPort = 8443;
 
@@ -13,28 +17,27 @@ export default function Servers() {
     const [editPort, setEditPort] = useState(defaultPort);
     const [isEditing, setIsEditing] = useState(false);
     return (
-        <div>
-            <Table>
-                <tbody>
-                    <tr>
-                        <th>Servers</th>
-                    </tr>
-                    {servers.map(({ name, port }, i) => (
-                        <ClickableRow
-                            key={`${name}:${port}`}
-                            onClick={() => selectServer({ name, port })}
-                            isSelected={
-                                !!selectedServer &&
-                                selectedServer.name === name &&
-                                selectedServer.port === port
-                            }
-                        >
-                            {name}:{port}
-                            <button onClick={() => deleteServer(i)}>Delete</button>
-                        </ClickableRow>
-                    ))}
-                </tbody>
-            </Table>
+        <div className={styles.wrapper}>
+            <SectionTitle
+                title="Servers"
+                onClickAction={() => setIsEditing(true)}
+                ActionIcon={PlusIcon}
+            />
+            {servers.map(({ name, port }, i) => (
+                <ClickableRow
+                    key={`${name}:${port}`}
+                    onClick={() => selectServer({ name, port })}
+                    isSelected={
+                        !!selectedServer &&
+                        selectedServer.name === name &&
+                        selectedServer.port === port
+                    }
+                    ActionIcon={TrashIcon}
+                    onClickAction={() => deleteServer(i)}
+                >
+                    {name}:{port}
+                </ClickableRow>
+            ))}
             {isEditing && (
                 <React.Fragment>
                     <input
@@ -60,11 +63,6 @@ export default function Servers() {
                     <button onClick={deleteServer}>Cancel</button>
                 </React.Fragment>
             )}
-            <div>
-                <button disabled={isEditing} onClick={() => setIsEditing(true)}>
-                    Add Server
-                </button>
-            </div>
         </div>
     );
 }
