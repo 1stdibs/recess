@@ -4,7 +4,7 @@ import classNames from 'classnames';
 
 import styles from './styles/ClickableRow.module.css';
 
-export default function ClickableRow({ children, ActionIcon, onActionClick, onClick, isSelected }) {
+export default function ClickableRow({ children, ActionIcon, onClickAction, onClick, isSelected }) {
     return (
         <div
             className={classNames(styles.row, { [styles.isSelected]: isSelected })}
@@ -16,7 +16,7 @@ export default function ClickableRow({ children, ActionIcon, onActionClick, onCl
                     className={styles.action}
                     onClick={e => {
                         e.stopPropagation();
-                        onActionClick();
+                        onClickAction();
                     }}
                 >
                     <ActionIcon className={styles.icon} />
@@ -29,5 +29,7 @@ export default function ClickableRow({ children, ActionIcon, onActionClick, onCl
 ClickableRow.propTypes = {
     children: PropTypes.node.isRequired,
     onClick: PropTypes.func.isRequired,
+    onClickAction: PropTypes.func,
+    ActionIcon: PropTypes.object,
     isSelected: PropTypes.bool.isRequired,
 };
