@@ -15,6 +15,9 @@ export async function invokeRPC({
     metadata,
     useCamelCase,
 }) {
+    if (!requestText) {
+        requestText = "{}";
+    }
     const res = await fetch(`${baseURL}/invoke?camelCase=${useCamelCase}`, {
         method: 'post',
         body: JSON.stringify({

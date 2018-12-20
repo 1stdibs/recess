@@ -13,7 +13,7 @@ import ToolbarWrapper from './ToolbarWrapper';
 import styles from './styles/App.module.css';
 
 export default function App() {
-    const { response, autoCompleteData, requestText, setRequestText, executeRequest } = useContext(
+    const { response, autoCompleteData, requestText, setRequestText, executeRequest, setMethodSearchText } = useContext(
         RecessContext
     );
     return (
@@ -28,7 +28,7 @@ export default function App() {
                     cursor: 'col-resize',
                 }}
             >
-                <ToolbarWrapper toolbar={<ServiceToolbar />}>
+                <ToolbarWrapper toolbar={<ServiceToolbar onChange={setMethodSearchText} />}>
                     <SplitPane
                         defaultSize="40%"
                         split="vertical"

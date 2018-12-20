@@ -13,6 +13,7 @@ import reducer, {
     ADD_METADATA,
     DELETE_METADATA,
     USE_CAMEL_CASE,
+    EDIT_METHOD_SEARCH,
 } from './reducer';
 
 export const RecessContext = React.createContext();
@@ -107,6 +108,8 @@ export function RecessContextManager({ children }) {
                 requestText: JSON.stringify(getMock(state.autoCompleteData), null, 2),
             });
         },
+        setMethodSearchText: searchText => dispatch({ type: EDIT_METHOD_SEARCH, searchText }),
+        methodSearchText: state.methodSearchText,
     };
 
     console.log(value);

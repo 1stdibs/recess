@@ -13,6 +13,7 @@ export const DELETE_METADATA = 'DELETE_METADATA';
 export const LOADING_AUTOCOMPLETE_DATA = 'LOADING_AUTOCOMPLETE_DATA';
 export const LOADED_AUTOCOMPLETE_DATA = 'LOADED_AUTOCOMPLETE_DATA';
 export const USE_CAMEL_CASE = 'USE_CAMEL_CASE';
+export const EDIT_METHOD_SEARCH = 'EDIT_METHOD_SEARCH';
 
 function includesService(serverData, service) {
     return !!serverData.find(({ serviceName }) => serviceName === service.serviceName);
@@ -35,6 +36,8 @@ export const initialState = {
     requestText: '',
     metadata: {},
     useCamelCase: true,
+    requestTextByMethod: {},
+    methodSearchText: "",
 };
 
 export default function reducer(state, action) {
@@ -82,6 +85,7 @@ export default function reducer(state, action) {
                 method: newMethod,
                 isLoadingServerData: false,
                 serverDataError: null,
+                requestText: state.requestTextByMethod[newService + "/" + newMethod.name],
             };
         }
         case ERROR_LOADING_SERVER_DATA: {
@@ -97,11 +101,16 @@ export default function reducer(state, action) {
                 ...state,
                 service: action.service,
                 method: action.method,
+                requestText: state.requestTextByMethod[action.service + "/" + action.method.name],
             };
         case EDIT_REQUEST: {
             return {
                 ...state,
                 requestText: action.requestText,
+                requestTextByMethod: {
+                    ...state.requestTextByMethod,
+                    [state.service + "/" + state.method.name]: action.requestText,
+                }
             };
         }
         case STARTING_REQUEST: {
@@ -151,6 +160,11 @@ export default function reducer(state, action) {
                 ...state,
                 useCamelCase: action.useCamelCase,
             };
+        case EDIT_METHOD_SEARCH:
+            return {
+                ...state,
+                methodSearchText: action.searchText,
+            }
         default:
             throw new Error(`invalid action ${action.type}`);
     }
