@@ -53,6 +53,7 @@ export function RecessContextManager({ children }) {
             selectedServer.port,
             service.serviceName,
             method.name,
+            state.serverData,
             state.useCamelCase,
         ]
     );
