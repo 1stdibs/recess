@@ -30,6 +30,6 @@ ClickableRow.propTypes = {
     children: PropTypes.node.isRequired,
     onClick: PropTypes.func.isRequired,
     onClickAction: PropTypes.func,
-    ActionIcon: PropTypes.object,
+    ActionIcon: PropTypes.func,
     isSelected: PropTypes.bool.isRequired,
 };

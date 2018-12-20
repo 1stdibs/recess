@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styles from './styles/SectionTitle.module.css';
 
-export default function SecitonTitle({ title, ActionIcon, onClickAction }) {
+export default function SectionTitle({ title, ActionIcon, onClickAction }) {
     return (
         <div className={styles.wrapper}>
             <div className={styles.title}>{title}</div>
@@ -13,8 +13,8 @@ export default function SecitonTitle({ title, ActionIcon, onClickAction }) {
     );
 }
 
-SecitonTitle.propTypes = {
+SectionTitle.propTypes = {
     title: PropTypes.node.isRequired,
-    ActionIcon: PropTypes.object.isRequired,
+    ActionIcon: PropTypes.func.isRequired,
     onClickAction: PropTypes.func.isRequired,
 };

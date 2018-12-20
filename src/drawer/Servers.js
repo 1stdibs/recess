@@ -1,21 +1,31 @@
 import React, { useContext, useState } from 'react';
 import { RecessContext } from '../RecessContext';
 import ClickableRow from './ClickableRow';
+import Input from '../Input';
 import SectionTitle from './SectionTitle';
 import { ReactComponent as PlusIcon } from '../icons/plus-icon.svg';
 import { ReactComponent as TrashIcon } from '../icons/trashcan.svg';
 
 import styles from './styles/Servers.module.css';
 
-const defaultPort = 8443;
-
 export default function Servers() {
     const { servers, selectedServer, selectServer, addServer, deleteServer } = useContext(
         RecessContext
     );
     const [editName, setEditName] = useState('');
-    const [editPort, setEditPort] = useState(defaultPort);
+    const [editPort, setEditPort] = useState('');
     const [isEditing, setIsEditing] = useState(false);
+
+    function onKeyDown(e) {
+        if (e.code !== 13) {
+            return;
+        }
+        e.preventDefault();
+        addServer({ name: editName, port: editPort });
+        setEditName('');
+        setEditPort('');
+        setIsEditing(false);
+    }
     return (
         <div className={styles.wrapper}>
             <SectionTitle
@@ -39,29 +49,21 @@ export default function Servers() {
                 </ClickableRow>
             ))}
             {isEditing && (
-                <React.Fragment>
-                    <input
+                <form className={styles.form}>
+                    <Input
+                        onKeyDown={onKeyDown}
+                        autoFocus
                         placeholder="Host Name"
                         value={editName}
                         onChange={e => setEditName(e.target.value)}
                     />
-                    <input
+                    <Input
+                        onKeyDown={onKeyDown}
                         placeholder="Port"
                         value={editPort}
                         onChange={e => setEditPort(e.target.value)}
                     />
-                    <button
-                        onClick={() => {
-                            addServer({ name: editName, port: editPort });
-                            setEditName('');
-                            setEditPort(defaultPort);
-                            setIsEditing(false);
-                        }}
-                    >
-                        Save
-                    </button>
-                    <button onClick={deleteServer}>Cancel</button>
-                </React.Fragment>
+                </form>
             )}
         </div>
     );
