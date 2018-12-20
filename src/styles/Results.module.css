@@ -1,7 +1,13 @@
 .wrapper {
     padding: 9px;
+    background: var(--color-request-bg);
+    flex: 1;
+    overflow: auto;
+    border-right: 10px solid var(--color-dividers);
 }
 
 .code {
+    font-size: 13px;
     white-space: pre-wrap;
+    color: var(--color-code-text);
 }

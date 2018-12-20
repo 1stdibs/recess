@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import SplitPane from 'react-split-pane';
+import ResultsToolbar from './ResultsToolbar';
 import EditorToolbar from './EditorToolbar';
 import Editor from './Editor';
 import Results from './Results';
@@ -13,9 +14,14 @@ import ToolbarWrapper from './ToolbarWrapper';
 import styles from './styles/App.module.css';
 
 export default function App() {
-    const { response, autoCompleteData, requestText, setRequestText, executeRequest, setMethodSearchText } = useContext(
-        RecessContext
-    );
+    const {
+        response,
+        autoCompleteData,
+        requestText,
+        setRequestText,
+        executeRequest,
+        setMethodSearchText,
+    } = useContext(RecessContext);
     return (
         <div className={styles.wrapper}>
             <SplitPane
@@ -47,7 +53,6 @@ export default function App() {
                 <SplitPane
                     defaultSize="50%"
                     split="vertical"
-                    paneStyle={{ overflow: 'auto' }}
                     resizerStyle={{
                         backgroundColor: 'var(--color-dividers)',
                         width: 4,
@@ -74,7 +79,7 @@ export default function App() {
                             <Metadata />
                         </SplitPane>
                     </ToolbarWrapper>
-                    <ToolbarWrapper toolbar={<ServiceToolbar />}>
+                    <ToolbarWrapper toolbar={<ResultsToolbar />}>
                         <Results response={response} />
                     </ToolbarWrapper>
                 </SplitPane>

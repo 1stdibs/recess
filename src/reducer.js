@@ -14,6 +14,7 @@ export const LOADING_AUTOCOMPLETE_DATA = 'LOADING_AUTOCOMPLETE_DATA';
 export const LOADED_AUTOCOMPLETE_DATA = 'LOADED_AUTOCOMPLETE_DATA';
 export const USE_CAMEL_CASE = 'USE_CAMEL_CASE';
 export const EDIT_METHOD_SEARCH = 'EDIT_METHOD_SEARCH';
+export const VIEW_PARSED = 'VIEW_PARSED';
 
 function includesService(serverData, service) {
     return !!serverData.find(({ serviceName }) => serviceName === service.serviceName);
@@ -36,8 +37,9 @@ export const initialState = {
     requestText: '',
     metadata: {},
     useCamelCase: true,
+    viewParsed: true,
     requestTextByMethod: {},
-    methodSearchText: "",
+    methodSearchText: '',
 };
 
 export default function reducer(state, action) {
@@ -85,7 +87,7 @@ export default function reducer(state, action) {
                 method: newMethod,
                 isLoadingServerData: false,
                 serverDataError: null,
-                requestText: state.requestTextByMethod[newService + "/" + newMethod.name],
+                requestText: state.requestTextByMethod[newService + '/' + newMethod.name],
             };
         }
         case ERROR_LOADING_SERVER_DATA: {
@@ -101,7 +103,7 @@ export default function reducer(state, action) {
                 ...state,
                 service: action.service,
                 method: action.method,
-                requestText: state.requestTextByMethod[action.service + "/" + action.method.name],
+                requestText: state.requestTextByMethod[action.service + '/' + action.method.name],
             };
         case EDIT_REQUEST: {
             return {
@@ -109,8 +111,8 @@ export default function reducer(state, action) {
                 requestText: action.requestText,
                 requestTextByMethod: {
                     ...state.requestTextByMethod,
-                    [state.service + "/" + state.method.name]: action.requestText,
-                }
+                    [state.service + '/' + state.method.name]: action.requestText,
+                },
             };
         }
         case STARTING_REQUEST: {
@@ -164,7 +166,12 @@ export default function reducer(state, action) {
             return {
                 ...state,
                 methodSearchText: action.searchText,
-            }
+            };
+        case VIEW_PARSED:
+            return {
+                ...state,
+                viewParsed: action.viewParsed,
+            };
         default:
             throw new Error(`invalid action ${action.type}`);
     }
