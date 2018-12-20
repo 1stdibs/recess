@@ -22,6 +22,7 @@ import (
 )
 
 var nofe = flag.Bool("nofe", false, "set to true if you don't want to load the front end")
+var port = flag.String("port", "4444", "set the port")
 
 func listServicesHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "GET" {
@@ -150,12 +151,12 @@ func main() {
 	if !*nofe {
 		fs := http.FileServer(http.Dir("build/"))
 		mux.Handle("/", fs)
-		openbrowser("http://localhost:4444")
+		openbrowser("http://localhost:" + *port)
 	}
 
 	handler := cors.AllowAll().Handler(mux)
 
-	log.Fatal(http.ListenAndServe(":4444", handler))
+	log.Fatal(http.ListenAndServe(":" + *port, handler))
 }
 
 func errorResponse(w http.ResponseWriter, message string, vars ...interface{}) {
