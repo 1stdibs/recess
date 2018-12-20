@@ -1,7 +1,8 @@
 .wrapper {
-    height: 100%;
+    height: calc(100% - 10px);
     display: flex;
     flex-direction: column;
+    border-bottom: 10px solid var(--color-dividers);
 }
 
 .toolbar {
