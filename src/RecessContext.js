@@ -14,6 +14,7 @@ import reducer, {
     DELETE_METADATA,
     USE_CAMEL_CASE,
     EDIT_METHOD_SEARCH,
+    VIEW_PARSED,
 } from './reducer';
 
 export const RecessContext = React.createContext();
@@ -110,9 +111,9 @@ export function RecessContextManager({ children }) {
         },
         setMethodSearchText: searchText => dispatch({ type: EDIT_METHOD_SEARCH, searchText }),
         methodSearchText: state.methodSearchText,
+        viewParsed: state.viewParsed,
+        setViewParsed: viewParsed => dispatch({ type: VIEW_PARSED, viewParsed }),
     };
-
-    console.log(value);
 
     return <RecessContext.Provider value={value}>{children}</RecessContext.Provider>;
 }

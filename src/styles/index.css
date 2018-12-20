@@ -19,10 +19,16 @@ body {
     --color-shadow: #adadad;
     --color-body-text: #222;
     --color-hover: #000;
+
+    /* from monokai codemirror theme */
+    --color-code-text: #f8f8f2;
+    --color-code-string: #e6db74;
+
+    background: var(--color-dividers);
 }
 
 code {
-    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+    font-family: monospace;
 }
 
 .CodeMirror {

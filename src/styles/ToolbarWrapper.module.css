@@ -11,6 +11,10 @@
 }
 
 .containerWrapper {
-    flex: 1;
     position: relative;
+    flex-grow: 1;
+    flex-basis: 0;
+    flex-shrink: 1;
+    overflow: auto;
+    display: flex;
 }
