@@ -5,9 +5,11 @@ import SectionTitle from './SectionTitle';
 import { ReactComponent as ReloadIcon } from '../icons/reload.svg';
 
 import styles from './styles/Services.module.css';
+import { getMatchingServices } from '../MatchingServiceDataHelper';
 
 export default function Servers() {
-    const { serverData, reloadServerData } = useContext(RecessContext);
+    const { serverData, reloadServerData, methodSearchText } = useContext(RecessContext);
+    const matchingServiceData = getMatchingServices(serverData, methodSearchText)
     return (
         <div className={styles.wrapper}>
             <SectionTitle
@@ -15,7 +17,7 @@ export default function Servers() {
                 onClickAction={reloadServerData}
                 ActionIcon={ReloadIcon}
             />
-            {(serverData || []).map(service => (
+            {matchingServiceData.map(service => (
                 <Service key={service.serviceName} service={service} />
             ))}
         </div>

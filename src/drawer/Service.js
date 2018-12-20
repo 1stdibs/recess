@@ -6,6 +6,7 @@ import { ReactComponent as OpenIcon } from '../icons/dropdown-open.svg';
 import classNames from 'classnames';
 
 import styles from './styles/Service.module.css';
+import { getMatchingMethods } from '../MatchingServiceDataHelper'
 
 export default function Service({ service }) {
     const { selectedService, selectedMethod, selectMethod, setRequestText, methodSearchText } = useContext(RecessContext);
@@ -15,24 +16,18 @@ export default function Service({ service }) {
     const icon = !isExpanded ? (
         <OpenIcon className={styles.icon} />
     ) : (
-        <ClosedIcon className={styles.icon} />
-    );
-
-    let serviceContainsSearchMatch = false;
-    (service.methods || []).forEach(method => {
-        if (methodSearchText === "" || method.name.toLowerCase().includes(methodSearchText.toLowerCase())) {
-            serviceContainsSearchMatch = true;
-        }
-    });
+            <ClosedIcon className={styles.icon} />
+        );
+    const matchingMethods = getMatchingMethods(service, methodSearchText)
 
     return (
         <div className={styles.wrapper} onClick={() => setIsExpanded(state => !state)}>
-            <div className={classNames(styles.name, { [styles.isGreyed]: !serviceContainsSearchMatch })}>
+            <div className={styles.name}>
                 {icon} {service.serviceName}
             </div>
             {isExpanded && (
                 <div className={styles.methods}>
-                    {(service.methods || []).map(method => (
+                    {matchingMethods.map(method => (
                         <ClickableRow
                             key={method.name}
                             onClick={e => {
@@ -43,10 +38,6 @@ export default function Service({ service }) {
                                 !!selectedService &&
                                 selectedMethod.name === method.name &&
                                 selectedService.serviceName === service.serviceName
-                            }
-                            isGreyed={
-                                methodSearchText !== "" &&
-                                !method.name.toLowerCase().includes(methodSearchText.toLowerCase())
                             }
                         >
                             <span className={styles.indent}>{method.name}</span>
