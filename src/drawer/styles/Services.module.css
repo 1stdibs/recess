@@ -1,0 +1,6 @@
+.wrapper {
+    background: var(--color-services-bg);
+    color: var(--color-text);
+    height: 100%;
+    overflow-x: hidden;
+}

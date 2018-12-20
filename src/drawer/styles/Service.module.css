@@ -1,7 +1,26 @@
 .indent {
-    padding-left: 12px;
+    padding-left: 20px;
 }
 
 .name {
     white-space: nowrap;
+    padding: 15px 10px;
+}
+
+.wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.methods {
+    background: var(--color-method-bg);
+}
+.icon {
+    vertical-align: middle;
+    padding-right: 10px;
+    fill: var(--color-text);
+    width: 10px;
+    height: 10px;
 }

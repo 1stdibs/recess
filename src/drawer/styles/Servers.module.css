@@ -3,4 +3,5 @@
     background: var(--color-servers-bg);
     color: var(--color-text);
     height: 100%;
+    overflow-x: hidden;
 }

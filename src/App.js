@@ -17,29 +17,45 @@ export default function App() {
                 defaultSize="30%"
                 split="vertical"
                 paneStyle={{ overflow: 'auto' }}
-                resizerStyle={{ backgroundColor: 'grey', width: 5, cursor: 'col-resize' }}
+                resizerStyle={{
+                    backgroundColor: 'var(--color-dividers)',
+                    width: 4,
+                    cursor: 'col-resize',
+                }}
             >
                 <SplitPane
                     defaultSize="40%"
                     split="vertical"
                     paneStyle={{ overflow: 'auto' }}
-                    resizerStyle={{ backgroundColor: 'grey', width: 5, cursor: 'col-resize' }}
+                    resizerStyle={{
+                        backgroundColor: 'var(--color-dividers)',
+                        width: 4,
+                        cursor: 'col-resize',
+                    }}
                 >
                     <Servers />
-                    {isLoadingServerData ? <div>Loading Server Data</div> : <Services />}
+                    <Services />
                 </SplitPane>
 
                 <SplitPane
                     defaultSize="50%"
                     split="vertical"
                     paneStyle={{ overflow: 'auto' }}
-                    resizerStyle={{ backgroundColor: 'grey', width: 5, cursor: 'col-resize' }}
+                    resizerStyle={{
+                        backgroundColor: 'var(--color-dividers)',
+                        width: 4,
+                        cursor: 'col-resize',
+                    }}
                 >
                     <SplitPane
                         defaultSize="80%"
                         split="horizontal"
                         paneStyle={{ overflow: 'auto' }}
-                        resizerStyle={{ backgroundColor: 'grey', height: 5, cursor: 'row-resize' }}
+                        resizerStyle={{
+                            backgroundColor: 'var(--color-dividers)',
+                            height: 4,
+                            cursor: 'row-resize',
+                        }}
                     >
                         <EditorWrapper />
                         <Metadata />
