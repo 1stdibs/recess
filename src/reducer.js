@@ -83,6 +83,7 @@ export default function reducer(state, action) {
                 method: newMethod,
                 isLoadingServerData: false,
                 serverDataError: null,
+                requestText: state.requestTextByMethod[newService + "/" + newMethod.name],
             };
         }
         case ERROR_LOADING_SERVER_DATA: {
