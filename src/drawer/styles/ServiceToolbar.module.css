@@ -6,3 +6,12 @@
     margin-left: 10px;
     flex: 1;
 }
+
+.icon {
+    position: absolute;
+    right: 4px;
+    top: 15px;
+    z-index: 1;
+    height: 20px;
+    fill: #555;
+}

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 
 import styles from './styles/ServiceToolbar.module.css';
+import { ReactComponent as SearchIcon } from '../icons/filter.svg'
+import { ReactComponent as ClearIcon } from '../icons/clear filter.svg'
 
 export default function Service({ service, onChange }) {
     const [searchText, setSearchText] = useState("");
@@ -12,5 +14,14 @@ export default function Service({ service, onChange }) {
         [searchText]
     )
 
-    return <input className={styles.wrapper} placeholder="Search" value={searchText} onChange={e => setSearchText(e.target.value)} />;
+    const icon = searchText ? (
+        <ClearIcon className={styles.icon} onClick={() => setSearchText("")}></ClearIcon>
+    ) : (
+            <SearchIcon className={styles.icon}></SearchIcon>
+        )
+
+    return <>
+        <input className={styles.wrapper} placeholder="Search" value={searchText} onChange={e => setSearchText(e.target.value)} />
+        {icon}
+    </>
 }
