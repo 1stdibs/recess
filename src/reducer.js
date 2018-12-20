@@ -87,7 +87,7 @@ export default function reducer(state, action) {
                 method: newMethod,
                 isLoadingServerData: false,
                 serverDataError: null,
-                requestText: state.requestTextByMethod[newService + '/' + newMethod.name],
+                requestText: state.requestTextByMethod[newService.serviceName + '/' + newMethod.name],
             };
         }
         case ERROR_LOADING_SERVER_DATA: {
@@ -99,11 +99,13 @@ export default function reducer(state, action) {
             };
         }
         case SELECT_METHOD:
+            console.log("request text by method")
+            console.log(state.requestTextByMethod)
             return {
                 ...state,
                 service: action.service,
                 method: action.method,
-                requestText: state.requestTextByMethod[action.service + '/' + action.method.name],
+                requestText: state.requestTextByMethod[action.service.serviceName + '/' + action.method.name],
             };
         case EDIT_REQUEST: {
             return {
@@ -111,7 +113,7 @@ export default function reducer(state, action) {
                 requestText: action.requestText,
                 requestTextByMethod: {
                     ...state.requestTextByMethod,
-                    [state.service + '/' + state.method.name]: action.requestText,
+                    [state.service.serviceName + '/' + state.method.name]: action.requestText,
                 },
             };
         }
