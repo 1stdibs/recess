@@ -1,8 +1,8 @@
 .wrapper {
     display: flex;
     height: 26px;
-    width: calc(100% - 14px);
     padding: 0 10px;
     font-size: 15px;
     margin-left: 10px;
+    flex: 1;
 }

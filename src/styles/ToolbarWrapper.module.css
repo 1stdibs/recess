@@ -9,6 +9,7 @@
 .toolbar {
     background: var(--color-dividers);
     padding: 10px 0;
+    display: flex;
 }
 
 .containerWrapper {
