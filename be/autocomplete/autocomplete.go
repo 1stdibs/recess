@@ -5,6 +5,7 @@ import (
 
 	"github.com/jhump/protoreflect/desc"
 	"github.com/jhump/protoreflect/grpcreflect"
+	"github.com/robrichard/recess/be/camel"
 	"github.com/robrichard/recess/be/recess"
 
 	"github.com/golang/protobuf/protoc-gen-go/descriptor"
@@ -39,8 +40,15 @@ func processMessageDescriptor(messageDescriptor *desc.MessageDescriptor) *[]rece
 	for i, field := range fields {
 		message := field.GetMessageType()
 
+		var name string
+		if recess.IsCamelCase {
+			name = camel.Camel(field.GetName())
+		} else {
+			name = field.GetName()
+		}
+
 		result[i] = recess.Field{
-			Name:       field.GetName(),
+			Name:       name,
 			IsRepeated: field.IsRepeated(),
 			Type:       field.GetType().String(),
 			IsRequired: field.IsRequired(),

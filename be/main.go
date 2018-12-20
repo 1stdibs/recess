@@ -2,12 +2,13 @@ package main
 
 import (
 	"encoding/json"
+	"flag"
 	"fmt"
 	"log"
 	"net/http"
-	"strings"
-	"runtime"
 	"os/exec"
+	"runtime"
+	"strings"
 
 	"github.com/rs/cors"
 
@@ -19,6 +20,8 @@ import (
 	"github.com/robrichard/recess/be/recess"
 	"github.com/robrichard/recess/be/refclient"
 )
+
+var nofe = flag.Bool("nofe", false, "set to true if you don't want to load the front end")
 
 func listServicesHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "GET" {
@@ -135,17 +138,22 @@ func autocompleteDataHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	flag.Parse()
+
 	// be server
 	mux := http.NewServeMux()
 	mux.Handle("/services", middleware.Logging(http.HandlerFunc(listServicesHandler)))
 	mux.Handle("/invoke", middleware.Logging(middleware.CamelCaseRequest(http.HandlerFunc(invokeHandler))))
-	mux.Handle("/autocompleteData", middleware.Logging(http.HandlerFunc(autocompleteDataHandler)))
-	fs := http.FileServer(http.Dir("build/"))
-	mux.Handle("/", fs)
+	mux.Handle("/autocompleteData", middleware.Logging(middleware.CamelCaseFlag(http.HandlerFunc(autocompleteDataHandler))))
+
+	// fe server
+	if !*nofe {
+		fs := http.FileServer(http.Dir("build/"))
+		mux.Handle("/", fs)
+		openbrowser("http://localhost:4444")
+	}
 
 	handler := cors.AllowAll().Handler(mux)
-
-	openbrowser("http://localhost:4444")
 
 	log.Fatal(http.ListenAndServe(":4444", handler))
 }
