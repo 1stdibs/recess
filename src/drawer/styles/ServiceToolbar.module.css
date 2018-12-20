@@ -1,4 +1,6 @@
 .wrapper {
     display: flex;
-    line-height: 30px;
+    height: 26px;
+    width: calc(100% - 14px);
+    padding: 0 10px;
 }

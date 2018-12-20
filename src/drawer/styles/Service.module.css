@@ -11,6 +11,10 @@
     background: var(--color-hover);
 }
 
+.isGreyed {
+    color: #aaa;
+}
+
 .wrapper {
     width: 100%;
     display: flex;
