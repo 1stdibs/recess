@@ -129,7 +129,13 @@ func autocompleteDataHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer refclient.CloseConnection(conn)
 
-	fields, err := autocomplete.GetAutocompleteData(client, request.Service, request.Method)
+	camelQuery := r.URL.Query().Get("camelCase")
+	var isCamel bool
+	if camelQuery == "y" || camelQuery == "Y" || camelQuery == "true" {
+		isCamel = true
+	}
+
+	fields, err := autocomplete.GetAutocompleteData(client, request.Service, request.Method, isCamel)
 	if err != nil {
 		errorResponse(w, "couldn't parse fields for %s/%s: %v", request.Service, request.Method, err)
 		return
@@ -145,7 +151,7 @@ func main() {
 	mux := http.NewServeMux()
 	mux.Handle("/services", middleware.Logging(http.HandlerFunc(listServicesHandler)))
 	mux.Handle("/invoke", middleware.Logging(middleware.CamelCaseRequest(http.HandlerFunc(invokeHandler))))
-	mux.Handle("/autocompleteData", middleware.Logging(middleware.CamelCaseFlag(http.HandlerFunc(autocompleteDataHandler))))
+	mux.Handle("/autocompleteData", middleware.Logging(http.HandlerFunc(autocompleteDataHandler)))
 
 	// fe server
 	if !*nofe {

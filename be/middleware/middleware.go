@@ -65,18 +65,6 @@ func CamelCaseRequest(h http.Handler) http.Handler {
 	})
 }
 
-func CamelCaseFlag(h http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		camel := r.URL.Query().Get("camelCase")
-
-		if camel == "true" || camel == "y" || camel == "Y" {
-			recess.IsCamelCase = true
-		}
-
-		h.ServeHTTP(w, r)
-	})
-}
-
 func camelCaseFieldNames(v interface{}, underscore bool) interface{} {
 	object, ok := v.(map[string]interface{})
 	if !ok {
