@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 const baseURL = process.env.REACT_APP_API || '';
+=======
+const baseURL = '';
+>>>>>>> default to {} for requests without body
 
 export async function fetchServerInfo({ name, port }) {
     const params = new URLSearchParams({ server: name, port }).toString();
@@ -15,6 +19,9 @@ export async function invokeRPC({
     metadata,
     useCamelCase,
 }) {
+    if (!requestText) {
+        requestText = "{}";
+    }
     const res = await fetch(`${baseURL}/invoke?camelCase=${useCamelCase}`, {
         method: 'post',
         body: JSON.stringify({
