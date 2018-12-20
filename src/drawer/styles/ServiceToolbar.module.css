@@ -15,3 +15,7 @@
     height: 20px;
     fill: #555;
 }
+
+.clear {
+    cursor: pointer;
+}

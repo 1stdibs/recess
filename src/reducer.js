@@ -1,4 +1,5 @@
 import { toSnakeCase, toCamelCase } from './changeCase';
+import { includesMethod, includesService } from './helpers/includesService';
 
 export const ADD_SERVER = 'ADD_SERVER';
 export const DELETE_SERVER = 'DELETE_SERVER';
@@ -17,14 +18,6 @@ export const LOADED_AUTOCOMPLETE_DATA = 'LOADED_AUTOCOMPLETE_DATA';
 export const USE_CAMEL_CASE = 'USE_CAMEL_CASE';
 export const EDIT_METHOD_SEARCH = 'EDIT_METHOD_SEARCH';
 export const VIEW_PARSED = 'VIEW_PARSED';
-
-function includesService(serverData, service) {
-    return !!serverData.find(({ serviceName }) => serviceName === service.serviceName);
-}
-
-function includesMethod(service, method) {
-    return !!(service.methods || []).find(({ name }) => name === method.name);
-}
 
 export const initialState = {
     servers: [],
@@ -61,6 +54,7 @@ export default function reducer(state, action) {
             return {
                 ...state,
                 selectedServer: action.server,
+                serverData: null,
             };
         case LOADING_SERVER_DATA: {
             return {

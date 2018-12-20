@@ -41,9 +41,10 @@ export function RecessContextManager({ children }) {
             fetchAutoCompleteData({
                 name: selectedServer.name,
                 port: selectedServer.port,
-                serviceName: service.serviceName,
-                methodName: method.name,
+                service,
+                method,
                 useCamelCase: state.useCamelCase,
+                serverData: state.serverData,
                 dispatch,
             });
         },
