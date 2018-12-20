@@ -3,7 +3,6 @@ import { RecessContext } from '../RecessContext';
 import ClickableRow from './ClickableRow';
 import { ReactComponent as ClosedIcon } from '../icons/dropdown-closed.svg';
 import { ReactComponent as OpenIcon } from '../icons/dropdown-open.svg';
-import classNames from 'classnames';
 
 import styles from './styles/Service.module.css';
 import { getMatchingMethods } from '../MatchingServiceDataHelper'
