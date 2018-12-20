@@ -1,9 +1,9 @@
 .wrapper {
-    padding: 9px;
+    padding: 15px;
     background: var(--color-request-bg);
     flex: 1;
     overflow: auto;
-    border-right: 10px solid var(--color-dividers);
+    width: 100%;
 }
 
 .code {

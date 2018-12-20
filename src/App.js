@@ -3,7 +3,7 @@ import SplitPane from 'react-split-pane';
 import ResultsToolbar from './ResultsToolbar';
 import EditorToolbar from './EditorToolbar';
 import Editor from './Editor';
-import Results from './Results';
+import ResultsWrapper from './ResultsWrapper';
 import Servers from './drawer/Servers';
 import Services from './drawer/Services';
 import ServiceToolbar from './drawer/ServiceToolbar';
@@ -79,9 +79,7 @@ export default function App() {
                             <Metadata />
                         </SplitPane>
                     </ToolbarWrapper>
-                    <ToolbarWrapper toolbar={<ResultsToolbar />}>
-                        <Results response={response} />
-                    </ToolbarWrapper>
+                    <ResultsWrapper />
                 </SplitPane>
             </SplitPane>
         </div>

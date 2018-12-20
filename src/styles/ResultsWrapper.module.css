@@ -1,0 +1,24 @@
+.wrapper {
+    display: flex;
+    flex: 1;
+    height: 100%;
+    border-right: 10px solid var(--color-dividers);
+}
+
+.play {
+    cursor: pointer;
+    position: absolute;
+    z-index: 100;
+    left: -35px;
+    top: 25%;
+    width: 70px;
+    height: 70px;
+}
+
+.play :global(.st0) {
+    fill: #6fa67c;
+}
+
+.play :global(.st1) {
+    fill: #ffffff;
+}
