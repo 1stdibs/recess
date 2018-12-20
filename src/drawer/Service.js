@@ -7,7 +7,7 @@ import { ReactComponent as OpenIcon } from '../icons/dropdown-open.svg';
 import styles from './styles/Service.module.css';
 
 export default function Service({ service }) {
-    const { selectedService, selectedMethod, selectMethod } = useContext(RecessContext);
+    const { selectedService, selectedMethod, selectMethod, setRequestText } = useContext(RecessContext);
     const [isExpanded, setIsExpanded] = useState(
         !!selectedService && selectedService.serviceName === service.serviceName
     );
@@ -29,6 +29,7 @@ export default function Service({ service }) {
                             onClick={e => {
                                 e.stopPropagation();
                                 selectMethod(service, method);
+                                setRequestText("");
                             }}
                             isSelected={
                                 !!selectedService &&

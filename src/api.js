@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 const baseURL = process.env.REACT_APP_API || '';
-=======
-const baseURL = '';
->>>>>>> default to {} for requests without body
 
 export async function fetchServerInfo({ name, port }) {
     const params = new URLSearchParams({ server: name, port }).toString();
