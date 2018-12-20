@@ -29,7 +29,6 @@ export default function Service({ service }) {
                             onClick={e => {
                                 e.stopPropagation();
                                 selectMethod(service, method);
-                                setRequestText("");
                             }}
                             isSelected={
                                 !!selectedService &&

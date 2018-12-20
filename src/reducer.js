@@ -35,6 +35,7 @@ export const initialState = {
     requestText: '',
     metadata: {},
     useCamelCase: true,
+    requestTextByMethod: {},
 };
 
 export default function reducer(state, action) {
@@ -97,11 +98,16 @@ export default function reducer(state, action) {
                 ...state,
                 service: action.service,
                 method: action.method,
+                requestText: state.requestTextByMethod[action.service + "/" + action.method.name],
             };
         case EDIT_REQUEST: {
             return {
                 ...state,
                 requestText: action.requestText,
+                requestTextByMethod: {
+                    ...state.requestTextByMethod,
+                    [state.service + "/" + state.method.name]: action.requestText,
+                }
             };
         }
         case STARTING_REQUEST: {
