@@ -17,14 +17,20 @@ export default function Servers() {
     const [isEditing, setIsEditing] = useState(false);
 
     function onKeyDown(e) {
-        if (e.code !== 13) {
-            return;
+        if (e.keyCode === 13) {
+            // enter
+            e.preventDefault();
+            addServer({ name: editName, port: editPort });
+            setEditName('');
+            setEditPort('');
+            setIsEditing(false);
+        } else if (e.keyCode === 27) {
+            // escape
+            e.preventDefault();
+            setEditName('');
+            setEditPort('');
+            setIsEditing(false);
         }
-        e.preventDefault();
-        addServer({ name: editName, port: editPort });
-        setEditName('');
-        setEditPort('');
-        setIsEditing(false);
     }
     return (
         <div className={styles.wrapper}>
