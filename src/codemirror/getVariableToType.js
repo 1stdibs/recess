@@ -12,26 +12,27 @@ import {
     GraphQLBoolean,
 } from 'graphql';
 
-
-function getGrpcDisplayType(type) {
-    return (type.split('_')[1] || '').toLowerCase();
-}
-
-function wrap(data, type) {
-    let resultType = type;
-    let displayType = getGrpcDisplayType(data.type);
+function getGrpcDisplayType(data) {
+    let displayType = (data.type.split('_')[1] || '').toLowerCase();
     if (data.isRepeated) {
-        resultType = new GraphQLList(type);
         displayType = `repeated ${displayType}`;
     } else if (data.isRequired) {
-        resultType = new GraphQLNonNull(type);
         displayType = `required ${displayType}`;
     } else {
         displayType = `optional ${displayType}`;
     }
+    return displayType;
+}
 
-    resultType.grpcDisplayType = displayType;
+function wrap(data, type) {
+    let resultType = type;
+    if (data.isRepeated) {
+        resultType = new GraphQLList(type);
+    } else if (data.isRequired) {
+        resultType = new GraphQLNonNull(type);
+    }
 
+    resultType.grpcDisplayType = getGrpcDisplayType(data);
     return resultType;
 }
 
@@ -48,7 +49,7 @@ function getGraphQLTypeFromData(data) {
             return wrap(
                 data,
                 new GraphQLInputObjectType({
-                    name: 'Object',
+                    name: getGrpcDisplayType(data),
                     fields,
                 })
             );
@@ -76,7 +77,7 @@ function getGraphQLTypeFromData(data) {
             return wrap(
                 data,
                 new GraphQLEnumType({
-                    name: 'Enum',
+                    name: getGrpcDisplayType(data),
                     values,
                 })
             );
