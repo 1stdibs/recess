@@ -12,14 +12,25 @@ import {
     GraphQLBoolean,
 } from 'graphql';
 
+
+function getGrpcDisplayType(type) {
+    return (type.split('_')[1] || '').toLowerCase();
+}
+
 function wrap(data, type) {
     let resultType = type;
+    let displayType = getGrpcDisplayType(data.type);
     if (data.isRepeated) {
         resultType = new GraphQLList(type);
-    }
-    if (data.isRequired) {
+        displayType = `repeated ${displayType}`;
+    } else if (data.isRequired) {
         resultType = new GraphQLNonNull(type);
+        displayType = `required ${displayType}`;
+    } else {
+        displayType = `optional ${displayType}`;
     }
+
+    resultType.grpcDisplayType = displayType;
 
     return resultType;
 }
@@ -34,17 +45,24 @@ function getGraphQLTypeFromData(data) {
                     type: getGraphQLTypeFromData(child),
                 };
             }
-            return new GraphQLInputObjectType({
-                name: 'Object',
-                fields,
-            });
+            return wrap(
+                data,
+                new GraphQLInputObjectType({
+                    name: 'Object',
+                    fields,
+                })
+            );
         case 'TYPE_DOUBLE':
         case 'TYPE_FLOAT':
             return wrap(data, GraphQLFloat);
-        case 'TYPE_INT64':
-        case 'TYPE_UINT64':
         case 'TYPE_INT32':
+        case 'TYPE_INT64':
         case 'TYPE_UINT32':
+        case 'TYPE_UINT64':
+        case 'TYPE_SINT32':
+        case 'TYPE_SINT64':
+        case 'TYPE_FIXED32':
+        case 'TYPE_FIXED64':
             return wrap(data, GraphQLInt);
         case 'TYPE_STRING':
             return wrap(data, GraphQLString);

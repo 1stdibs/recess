@@ -54,11 +54,7 @@ export default function onHasCompletion(cm, data, onHintInformationRender) {
 }
 
 function renderType(type) {
-    if (type instanceof GraphQLNonNull) {
-        return `${renderType(type.ofType)}!`;
+    if (type.grpcDisplayType) {
+        return type.grpcDisplayType;
     }
-    if (type instanceof GraphQLList) {
-        return `[${renderType(type.ofType)}]`;
-    }
-    return `<a class="typeName">${type.name}</a>`;
 }
