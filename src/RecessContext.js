@@ -56,7 +56,7 @@ export function RecessContextManager({ children }) {
         selectedService: state.service,
         selectedMethod: state.method,
         selectMethod: (service, method) => dispatch({ type: SELECT_METHOD, service, method }),
-        reloadServerData: () => fetchServerData(state.selectedServer, dispatch),
+        reloadServerData: () => fetchServerData(state.selectedServer, state.useCamelCase, dispatch),
         addServer: ({ name, port }) => dispatch({ type: ADD_SERVER, name, port }),
         deleteServer: i => dispatch({ type: DELETE_SERVER, i }),
         requestText: state.requestText,
