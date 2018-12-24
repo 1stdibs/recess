@@ -62,6 +62,26 @@ func listServicesHandler(w http.ResponseWriter, r *http.Request) {
 		response[i].Methods = methods
 	}
 
+	autocompleteData := r.URL.Query().Get("autocompleteData")
+	if autocompleteData == "y" || autocompleteData == "Y" || autocompleteData == "true" {
+		camelQuery := r.URL.Query().Get("camelCase")
+		var isCamel bool
+		if camelQuery == "y" || camelQuery == "Y" || camelQuery == "true" {
+			isCamel = true
+		}
+		for _, service := range response {
+			for _, method := range service.Methods {
+				fields, err := autocomplete.GetAutocompleteData(client, service.Name, method.Name, isCamel)
+				if err != nil {
+					errorResponse(w, "couldn't get autocomplete data: %v", err)
+					return
+				}
+
+				method.Fields = fields
+			}
+		}
+	}
+
 	jsonResponse(w, response)
 }
 
@@ -162,7 +182,7 @@ func main() {
 
 	handler := cors.AllowAll().Handler(mux)
 
-	log.Fatal(http.ListenAndServe(":" + *port, handler))
+	log.Fatal(http.ListenAndServe(":"+*port, handler))
 }
 
 func errorResponse(w http.ResponseWriter, message string, vars ...interface{}) {

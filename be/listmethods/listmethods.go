@@ -7,7 +7,7 @@ import (
 	"github.com/robrichard/recess/be/recess"
 )
 
-func ListMethods(client *grpcreflect.Client, service string) (*[]recess.Method, error) {
+func ListMethods(client *grpcreflect.Client, service string) ([]*recess.Method, error) {
 	fd, err := client.FileContainingSymbol(service)
 	if err != nil {
 		return nil, fmt.Errorf("couldn't find service %s: %v", service, err)
@@ -21,15 +21,15 @@ func ListMethods(client *grpcreflect.Client, service string) (*[]recess.Method, 
 
 	methods := serviceDescriptor.GetMethods()
 
-	result := make([]recess.Method, len(methods))
+	result := make([]*recess.Method, len(methods))
 	for i, m := range methods {
-		result[i] = recess.Method{
+		result[i] = &recess.Method{
 			Name: m.GetName(),
 			Type: getTypeName(m.IsClientStreaming(), m.IsServerStreaming()),
 		}
 	}
 
-	return &result, nil
+	return result, nil
 }
 
 func getTypeName(isClientStreaming, isServerStreaming bool) string {

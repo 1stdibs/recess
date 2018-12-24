@@ -11,7 +11,7 @@ import (
 	"github.com/golang/protobuf/protoc-gen-go/descriptor"
 )
 
-func GetAutocompleteData(client *grpcreflect.Client, service, method string, isCamel bool) (*[]recess.Field, error) {
+func GetAutocompleteData(client *grpcreflect.Client, service, method string, isCamel bool) ([]*recess.Field, error) {
 	fd, err := client.FileContainingSymbol(service)
 	if err != nil {
 		return nil, fmt.Errorf("couldn't find service %s: %v", service, err)
@@ -33,10 +33,10 @@ func GetAutocompleteData(client *grpcreflect.Client, service, method string, isC
 	return fields, nil
 }
 
-func processMessageDescriptor(messageDescriptor *desc.MessageDescriptor, isCamel bool) *[]recess.Field {
+func processMessageDescriptor(messageDescriptor *desc.MessageDescriptor, isCamel bool) []*recess.Field {
 	fields := messageDescriptor.GetFields()
 
-	result := make([]recess.Field, len(fields))
+	result := make([]*recess.Field, len(fields))
 	for i, field := range fields {
 		message := field.GetMessageType()
 
@@ -47,7 +47,7 @@ func processMessageDescriptor(messageDescriptor *desc.MessageDescriptor, isCamel
 			name = field.GetName()
 		}
 
-		result[i] = recess.Field{
+		result[i] = &recess.Field{
 			Name:       name,
 			IsRepeated: field.IsRepeated(),
 			Type:       field.GetType().String(),
@@ -70,5 +70,5 @@ func processMessageDescriptor(messageDescriptor *desc.MessageDescriptor, isCamel
 		}
 	}
 
-	return &result
+	return result
 }
