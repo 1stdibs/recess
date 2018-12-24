@@ -1,6 +1,5 @@
 import React, { useReducer, useEffect } from 'react';
 import fetchServerData from './actionCreators/fetchServerData';
-import fetchAutoCompleteData from './actionCreators/fetchAutoCompleteData';
 import executeRequest from './actionCreators/executeRequest';
 import getMock from './getMock';
 import reducer, {
@@ -27,35 +26,9 @@ export function RecessContextManager({ children }) {
 
     useEffect(
         () => {
-            fetchServerData(state.selectedServer, dispatch);
+            fetchServerData(state.selectedServer, state.useCamelCase, dispatch);
         },
-        [state.selectedServer]
-    );
-
-    const selectedServer = state.selectedServer || {};
-    const service = state.service || {};
-    const method = state.method || {};
-
-    useEffect(
-        () => {
-            fetchAutoCompleteData({
-                name: selectedServer.name,
-                port: selectedServer.port,
-                service,
-                method,
-                useCamelCase: state.useCamelCase,
-                serverData: state.serverData,
-                dispatch,
-            });
-        },
-        [
-            selectedServer.name,
-            selectedServer.port,
-            service.serviceName,
-            method.name,
-            state.serverData,
-            state.useCamelCase,
-        ]
+        [state.selectedServer, state.useCamelCase]
     );
 
     useEffect(
@@ -66,10 +39,7 @@ export function RecessContextManager({ children }) {
                     ...state,
                     // don't store data fetched from back end
                     serverData: [],
-                    autoCompleteData: null,
                     response: null,
-                    requestText: '',
-                    requestTextByMethod: {},
                 })
             );
         },
@@ -97,7 +67,6 @@ export function RecessContextManager({ children }) {
         metadata: state.metadata,
         addMetadata: ({ key, value }) => dispatch({ type: ADD_METADATA, key, value }),
         deleteMetadata: ({ key }) => dispatch({ type: DELETE_METADATA, key }),
-        autoCompleteData: state.autoCompleteData,
         useCamelCase: state.useCamelCase,
         setCamelCase: useCamelCase => dispatch({ type: USE_CAMEL_CASE, useCamelCase }),
         formatRequest: () => {
@@ -111,7 +80,7 @@ export function RecessContextManager({ children }) {
         insertMock: () => {
             dispatch({
                 type: EDIT_REQUEST,
-                requestText: JSON.stringify(getMock(state.autoCompleteData), null, 2),
+                requestText: JSON.stringify(getMock(state.method.fields), null, 2),
             });
         },
         setMethodSearchText: searchText => dispatch({ type: EDIT_METHOD_SEARCH, searchText }),

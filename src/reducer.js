@@ -13,8 +13,6 @@ export const STARTING_REQUEST = 'STARTING_REQUEST';
 export const COMPLETED_REQUEST = 'COMPLETED_REQUEST';
 export const ADD_METADATA = 'ADD_METADATA';
 export const DELETE_METADATA = 'DELETE_METADATA';
-export const LOADING_AUTOCOMPLETE_DATA = 'LOADING_AUTOCOMPLETE_DATA';
-export const LOADED_AUTOCOMPLETE_DATA = 'LOADED_AUTOCOMPLETE_DATA';
 export const USE_CAMEL_CASE = 'USE_CAMEL_CASE';
 export const EDIT_METHOD_SEARCH = 'EDIT_METHOD_SEARCH';
 export const VIEW_PARSED = 'VIEW_PARSED';
@@ -74,7 +72,15 @@ export default function reducer(state, action) {
                 )[0];
                 newMethod = newService.methods[0];
             } else if (!includesMethod(newService, newMethod)) {
+                newService = action.serverData.find(
+                    s => s.serviceName === state.service.serviceName
+                );
                 newMethod = newService.methods[0];
+            } else {
+                newService = action.serverData.find(
+                    s => s.serviceName === state.service.serviceName
+                );
+                newMethod = newService.methods.find(m => m.name === state.method.name);
             }
             return {
                 ...state,
@@ -144,18 +150,6 @@ export default function reducer(state, action) {
             return {
                 ...state,
                 metadata: newMetadata,
-            };
-        case LOADING_AUTOCOMPLETE_DATA:
-            return {
-                ...state,
-                autoCompleteData: null,
-                isLoadingAutoCompleteData: true,
-            };
-        case LOADED_AUTOCOMPLETE_DATA:
-            return {
-                ...state,
-                autoCompleteData: action.autoCompleteData,
-                isLoadingAutoCompleteData: false,
             };
         case USE_CAMEL_CASE:
             return {

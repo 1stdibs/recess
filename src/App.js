@@ -14,11 +14,11 @@ import styles from './styles/App.module.css';
 
 export default function App() {
     const {
-        autoCompleteData,
         requestText,
         setRequestText,
         executeRequest,
         setMethodSearchText,
+        selectedMethod,
     } = useContext(RecessContext);
     return (
         <div className={styles.wrapper}>
@@ -69,7 +69,7 @@ export default function App() {
                             }}
                         >
                             <Editor
-                                autoCompleteData={autoCompleteData}
+                                autoCompleteData={selectedMethod.fields || []}
                                 value={requestText}
                                 onEdit={setRequestText}
                                 onRunQuery={executeRequest}

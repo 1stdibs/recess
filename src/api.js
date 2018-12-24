@@ -1,7 +1,12 @@
 const baseURL = process.env.REACT_APP_API || '';
 
-export async function fetchServerInfo({ name, port }) {
-    const params = new URLSearchParams({ server: name, port }).toString();
+export async function fetchServerInfo({ name, port, useCamelCase }) {
+    const params = new URLSearchParams({
+        server: name,
+        port,
+        autocompleteData: true,
+        camelCase: useCamelCase,
+    }).toString();
     const res = await fetch(`${baseURL}/services?${params}`);
     return await res.json();
 }
@@ -16,7 +21,7 @@ export async function invokeRPC({
     useCamelCase,
 }) {
     if (!requestText) {
-        requestText = "{}";
+        requestText = '{}';
     }
     const res = await fetch(`${baseURL}/invoke?camelCase=${useCamelCase}`, {
         method: 'post',
@@ -38,23 +43,3 @@ export async function invokeRPC({
     }
     return responseText;
 }
-
-export async function fetchAutocompleteData({ name, port, service, method, useCamelCase }) {
-    try {
-        const res = await fetch(`${baseURL}/autocompleteData?camelCase=${useCamelCase}`, {
-            method: 'post',
-            body: JSON.stringify({
-                server: name,
-                port,
-                service,
-                method,
-            }),
-        });
-
-        return await res.json();
-    } catch (e) {
-        return null;
-    }
-}
-
-window.fetchAutocompleteData = fetchAutocompleteData;
