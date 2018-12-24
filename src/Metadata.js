@@ -34,8 +34,7 @@ export default function Metadata() {
         <div className={styles.wrapper}>
             <SectionTitle
                 title="Metadata"
-                onClickAction={() => setIsEditing(true)}
-                ActionIcon={PlusIcon}
+                action={<PlusIcon onClick={() => setIsEditing(true)} />}
             />
             {Object.entries(metadata).map(([key, value]) => (
                 <div key={key} className={styles.row}>

@@ -36,8 +36,7 @@ export default function Servers() {
         <div className={styles.wrapper}>
             <SectionTitle
                 title="Servers"
-                onClickAction={() => setIsEditing(true)}
-                ActionIcon={PlusIcon}
+                action={<PlusIcon onClick={() => setIsEditing(true)} />}
             />
             {servers.map(({ name, port }, i) => (
                 <ClickableRow

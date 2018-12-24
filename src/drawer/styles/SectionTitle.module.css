@@ -2,6 +2,7 @@
     display: flex;
     padding: 10px;
     border-bottom: 1px solid var(--color-dividers);
+    align-items: center;
 }
 
 .title {
@@ -12,10 +13,8 @@
 
 .action {
     cursor: pointer;
-}
-
-.icon {
     width: 13px;
+    height: 13px;
     fill: var(--color-text);
     vertical-align: middle;
 }
