@@ -23,6 +23,7 @@ import (
 
 var nofe = flag.Bool("nofe", false, "set to true if you don't want to load the front end")
 var port = flag.String("port", "4444", "set the port")
+var serverOnly = flag.Bool("server-only", false, "set to true if you don't want to automatically load the browser")
 
 func listServicesHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "GET" {
@@ -177,7 +178,9 @@ func main() {
 	if !*nofe {
 		fs := http.FileServer(http.Dir("build/"))
 		mux.Handle("/", fs)
-		openbrowser("http://localhost:" + *port)
+		if !*serverOnly {
+			openbrowser("http://localhost:" + *port)
+		}
 	}
 
 	handler := cors.AllowAll().Handler(mux)
