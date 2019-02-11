@@ -69,7 +69,7 @@ export default function App() {
                             }}
                         >
                             <Editor
-                                autoCompleteData={selectedMethod.fields || []}
+                                autoCompleteData={(selectedMethod && selectedMethod.fields) || []}
                                 value={requestText}
                                 onEdit={setRequestText}
                                 onRunQuery={executeRequest}
