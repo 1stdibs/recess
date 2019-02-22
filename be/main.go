@@ -22,7 +22,7 @@ import (
 )
 
 var nofe = flag.Bool("nofe", false, "set to true if you don't want to load the front end")
-var port = flag.String("port", "4444", "set the port")
+var port = flag.String("port", "80", "set the port")
 var serverOnly = flag.Bool("server-only", false, "set to true if you don't want to automatically load the browser")
 
 func listServicesHandler(w http.ResponseWriter, r *http.Request) {
@@ -116,6 +116,7 @@ func invokeHandler(w http.ResponseWriter, r *http.Request) {
 	client, conn, err := refclient.GetRefClient(request.Server, request.Port)
 	if err != nil {
 		errorResponse(w, "couldn't get grpc reflection client: %v", err)
+		return
 	}
 	defer refclient.CloseConnection(conn)
 
@@ -165,6 +166,10 @@ func autocompleteDataHandler(w http.ResponseWriter, r *http.Request) {
 	jsonResponse(w, fields)
 }
 
+func healthCheckHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintln(w, "200")
+}
+
 func main() {
 	flag.Parse()
 
@@ -173,6 +178,7 @@ func main() {
 	mux.Handle("/services", middleware.Logging(http.HandlerFunc(listServicesHandler)))
 	mux.Handle("/invoke", middleware.Logging(middleware.CamelCaseRequest(http.HandlerFunc(invokeHandler))))
 	mux.Handle("/autocompleteData", middleware.Logging(http.HandlerFunc(autocompleteDataHandler)))
+	mux.Handle("/health", middleware.Logging(http.HandlerFunc(healthCheckHandler)))
 
 	// fe server
 	if !*nofe {
@@ -189,9 +195,13 @@ func main() {
 }
 
 func errorResponse(w http.ResponseWriter, message string, vars ...interface{}) {
+	log.Printf(message, vars...)
 	w.WriteHeader(http.StatusInternalServerError)
-	fmt.Fprintf(w, message, vars...)
-	fmt.Fprintln(w)
+	jsonResponse(w, struct {
+		Message string `json:"message"`
+	}{
+		Message: fmt.Sprintf(message, vars...),
+	})
 }
 
 func jsonResponse(w http.ResponseWriter, payload interface{}) {
