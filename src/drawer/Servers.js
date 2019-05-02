@@ -24,6 +24,7 @@ export default function Servers() {
             setEditName('');
             setEditPort('');
             setIsEditing(false);
+            selectServer({ name: editName, port: editPort });
         } else if (e.keyCode === 27) {
             // escape
             e.preventDefault();

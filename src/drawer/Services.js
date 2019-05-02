@@ -9,9 +9,13 @@ import styles from './styles/Services.module.css';
 import { getMatchingServices } from '../MatchingServiceDataHelper';
 
 export default function Servers() {
-    const { serverData, reloadServerData, isLoadingServerData, methodSearchText } = useContext(
-        RecessContext
-    );
+    const {
+        serverData,
+        serverDataError,
+        reloadServerData,
+        isLoadingServerData,
+        methodSearchText,
+    } = useContext(RecessContext);
     const matchingServiceData = getMatchingServices(serverData, methodSearchText);
     return (
         <div className={styles.wrapper}>
@@ -26,9 +30,13 @@ export default function Servers() {
                 onClickAction={reloadServerData}
                 ActionIcon={ReloadIcon}
             />
-            {matchingServiceData.map(service => (
-                <Service key={service.serviceName} service={service} />
-            ))}
+            {!!serverDataError ? (
+                <div className={styles.textWrapper}>{serverDataError}</div>
+            ) : (
+                matchingServiceData.map(service => (
+                    <Service key={service.serviceName} service={service} />
+                ))
+            )}
         </div>
     );
 }

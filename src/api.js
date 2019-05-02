@@ -8,6 +8,10 @@ export async function fetchServerInfo({ name, port, useCamelCase }) {
         camelCase: useCamelCase,
     }).toString();
     const res = await fetch(`${baseURL}/services?${params}`);
+    if (!res.ok) {
+        throw Error(res.statusText);
+    }
+
     return await res.json();
 }
 

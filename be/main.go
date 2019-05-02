@@ -47,7 +47,7 @@ func listServicesHandler(w http.ResponseWriter, r *http.Request) {
 
 	services, err := listservices.ListServices(client)
 	if err != nil {
-		errorResponse(w, "couldn't list services: %v", err)
+		errorResponseWithStatusCode(w, http.StatusNotFound, "couldn't list services: %v", err)
 		return
 	}
 
@@ -195,8 +195,12 @@ func main() {
 }
 
 func errorResponse(w http.ResponseWriter, message string, vars ...interface{}) {
+	errorResponseWithStatusCode(w, http.StatusInternalServerError, message, vars...)
+}
+
+func errorResponseWithStatusCode(w http.ResponseWriter, statusCode int, message string, vars ...interface{}) { 
 	log.Printf(message, vars...)
-	w.WriteHeader(http.StatusInternalServerError)
+	w.WriteHeader(statusCode)
 	jsonResponse(w, struct {
 		Message string `json:"message"`
 	}{

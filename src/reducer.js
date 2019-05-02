@@ -67,10 +67,16 @@ export default function reducer(state, action) {
             let newMethod = state.method;
             if (!state.service || !includesService(action.serverData, state.service)) {
                 // select the first non-reflection service
-                newService = action.serverData.filter(
-                    s => s.serviceName !== 'grpc.reflection.v1alpha.ServerReflection'
-                )[0];
-                newMethod = newService.methods[0];
+                // unless the reflection service is the only rpc
+                if (action.serverData.length === 1) {
+                    newService = action.serverData[0];
+                    newMethod = newService.methods[0];
+                } else {
+                    newService = action.serverData.filter(
+                        s => s.serviceName !== 'grpc.reflection.v1alpha.ServerReflection'
+                    )[0];
+                    newMethod = newService.methods[0];
+                }
             } else if (!includesMethod(newService, newMethod)) {
                 newService = action.serverData.find(
                     s => s.serviceName === state.service.serviceName
