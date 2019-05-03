@@ -7,3 +7,18 @@
 .toolbar {
     background-color: blue;
 }
+
+.responseTime {
+    color: white;
+    line-height: 30px;
+}
+
+.timeValue {
+    font-weight: bold;
+}
+
+.toolbarWrapper {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}

@@ -20,8 +20,12 @@ export default function EditorToolbar() {
                 })}
             />
 
-            <ToolbarWrapper toolbar={<ResultsToolbar />}>
-                <Results response={response} />
+            <ToolbarWrapper
+                toolbar={
+                    <ResultsToolbar grpcRequestTime={response ? response.grpcRequestTime : null} />
+                }
+            >
+                <Results response={response ? response.response : null} />
             </ToolbarWrapper>
         </div>
     );

@@ -120,13 +120,21 @@ func invokeHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer refclient.CloseConnection(conn)
 
-	resp, err := invoke.Invoke(client, conn, json.NewDecoder(strings.NewReader(string(request.Body))), request.Metadata, request.Service, request.Method)
+	resp, duration, err := invoke.Invoke(client, conn, json.NewDecoder(strings.NewReader(string(request.Body))), request.Metadata, request.Service, request.Method)
 	if err != nil {
 		errorResponse(w, "couldn't invoke method: %v", err)
 		return
 	}
 
-	jsonResponse(w, resp)
+	respWithDuration := struct {
+		Response        interface{} `json:"response"`
+		GRPCRequestTime int64       `json:"grpcRequestTime"`
+	}{
+		Response:        resp,
+		GRPCRequestTime: duration.Nanoseconds() / 1e6,
+	}
+
+	jsonResponse(w, respWithDuration)
 }
 
 type autocompleteDataRequest struct {
@@ -198,7 +206,7 @@ func errorResponse(w http.ResponseWriter, message string, vars ...interface{}) {
 	errorResponseWithStatusCode(w, http.StatusInternalServerError, message, vars...)
 }
 
-func errorResponseWithStatusCode(w http.ResponseWriter, statusCode int, message string, vars ...interface{}) { 
+func errorResponseWithStatusCode(w http.ResponseWriter, statusCode int, message string, vars ...interface{}) {
 	log.Printf(message, vars...)
 	w.WriteHeader(statusCode)
 	jsonResponse(w, struct {
