@@ -17,6 +17,15 @@
     font-weight: bold;
 }
 
+.responseSize {
+    color: white;
+    line-height: 30px;
+}
+
+.sizeValue {
+    font-weight: bold;
+}
+
 .toolbarWrapper {
     display: flex;
     justify-content: space-between;
