@@ -22,7 +22,10 @@ export default function EditorToolbar() {
 
             <ToolbarWrapper
                 toolbar={
-                    <ResultsToolbar grpcRequestTime={response ? response.grpcRequestTime : null} />
+                    <ResultsToolbar
+                        grpcRequestTime={response ? response.grpcRequestTime : null}
+                        protoMessageSize={response ? response.protoMessageSize : null}
+                    />
                 }
             >
                 <Results response={response ? response.response : null} />

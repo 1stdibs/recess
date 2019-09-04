@@ -1,10 +1,10 @@
-import React, { useContext } from 'react';
+import React, { useContext, Fragment } from 'react';
 import { RecessContext } from './RecessContext';
 import Button from './Button';
 
 import styles from './styles/ResultsToolbar.module.css';
 
-export default function ResultsToolbar({ service, onChange, grpcRequestTime }) {
+export default function ResultsToolbar({ service, onChange, grpcRequestTime, protoMessageSize }) {
     const { viewParsed, setViewParsed } = useContext(RecessContext);
     return (
         <div className={styles.toolbarWrapper}>
@@ -15,9 +15,16 @@ export default function ResultsToolbar({ service, onChange, grpcRequestTime }) {
                     <Button onClick={() => setViewParsed(true)}>View Parsed</Button>
                 )}
                 {!!grpcRequestTime && (
-                    <div className={styles.responseTime}>
-                        Response Time: <span className={styles.timeValue}>{grpcRequestTime}ms</span>
-                    </div>
+                    <Fragment>
+                        <div className={styles.responseSize}>
+                            Proto Message Size:{' '}
+                            <span className={styles.sizeValue}>{protoMessageSize} bytes</span>
+                        </div>
+                        <div className={styles.responseTime}>
+                            Response Time:{' '}
+                            <span className={styles.timeValue}>{grpcRequestTime}ms</span>
+                        </div>
+                    </Fragment>
                 )}
             </React.Fragment>
         </div>

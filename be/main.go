@@ -120,18 +120,20 @@ func invokeHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer refclient.CloseConnection(conn)
 
-	resp, duration, err := invoke.Invoke(client, conn, json.NewDecoder(strings.NewReader(string(request.Body))), request.Metadata, request.Service, request.Method)
+	resp, duration, size, err := invoke.Invoke(client, conn, json.NewDecoder(strings.NewReader(string(request.Body))), request.Metadata, request.Service, request.Method)
 	if err != nil {
 		errorResponse(w, "couldn't invoke method: %v", err)
 		return
 	}
 
 	respWithDuration := struct {
-		Response        interface{} `json:"response"`
-		GRPCRequestTime int64       `json:"grpcRequestTime"`
+		Response         interface{} `json:"response"`
+		GRPCRequestTime  int64       `json:"grpcRequestTime"`
+		ProtoMessageSize int         `json:"protoMessageSize"`
 	}{
-		Response:        resp,
-		GRPCRequestTime: duration.Nanoseconds() / 1e6,
+		Response:         resp,
+		GRPCRequestTime:  duration.Nanoseconds() / 1e6,
+		ProtoMessageSize: size,
 	}
 
 	jsonResponse(w, respWithDuration)
