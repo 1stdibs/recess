@@ -7,6 +7,7 @@ import (
 	"io"
 	"time"
 
+	"github.com/golang/protobuf/proto"
 	"github.com/jhump/protoreflect/dynamic"
 	"github.com/jhump/protoreflect/dynamic/grpcdynamic"
 	"github.com/jhump/protoreflect/grpcreflect"
@@ -35,8 +36,6 @@ func Invoke(client *grpcreflect.Client, conn *grpc.ClientConn, decoder *json.Dec
 
 	stub := grpcdynamic.NewStubWithMessageFactory(conn, messageFactory)
 
-	// invoke unary
-
 	err = decoder.Decode(request)
 	if err != nil && err != io.EOF {
 		return nil, time.Second, fmt.Errorf("couldn't decode json request body into proto message: %v", err)
@@ -44,10 +43,36 @@ func Invoke(client *grpcreflect.Client, conn *grpc.ClientConn, decoder *json.Dec
 
 	ctx := metadata.NewOutgoingContext(context.Background(), metadata.New(metadataMap))
 
+	// only implementing unary and server-streaming for now
 	start := time.Now()
-	resp, err := stub.InvokeRpc(ctx, md, request)
-	if err != nil {
-		return nil, time.Second, fmt.Errorf("grpc call for %q failed: %v", md.GetFullyQualifiedName(), err)
+	var resp interface{}
+	if !md.AsMethodDescriptorProto().GetServerStreaming() {
+		// unary
+		var err error
+		resp, err = stub.InvokeRpc(ctx, md, request)
+		if err != nil {
+			return nil, time.Second, fmt.Errorf("unary grpc call for %q failed: %v", md.GetFullyQualifiedName(), err)
+		}
+	} else {
+		// server-streaming
+		stream, err := stub.InvokeRpcServerStream(ctx, md, request)
+		if err != nil {
+			return nil, time.Second, fmt.Errorf("server-streaming grpc call for %q failed: %v", md.GetFullyQualifiedName(), err)
+		}
+
+		var resps []proto.Message
+		for {
+			protoResp, err := stream.RecvMsg()
+			if err == io.EOF {
+				break
+			} else if err != nil {
+				return nil, time.Second, fmt.Errorf("server-streaming grpc call for %q failed while receiving messages: %v", md.GetFullyQualifiedName(), err)
+			}
+
+			resps = append(resps, protoResp)
+		}
+
+		resp = resps
 	}
 
 	elapsed := time.Since(start)
