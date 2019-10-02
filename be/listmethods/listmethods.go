@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/jhump/protoreflect/grpcreflect"
-	"github.com/robrichard/recess/be/recess"
+	"github.com/1stdibs/recess/be/recess"
 )
 
 func ListMethods(client *grpcreflect.Client, service string) ([]*recess.Method, error) {

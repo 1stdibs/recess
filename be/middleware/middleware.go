@@ -9,8 +9,8 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/robrichard/recess/be/camel"
-	"github.com/robrichard/recess/be/recess"
+	"github.com/1stdibs/recess/be/camel"
+	"github.com/1stdibs/recess/be/recess"
 )
 
 func Logging(h http.Handler) http.Handler {
