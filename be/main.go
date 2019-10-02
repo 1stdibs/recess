@@ -12,13 +12,13 @@ import (
 
 	"github.com/rs/cors"
 
-	"github.com/robrichard/recess/be/autocomplete"
-	"github.com/robrichard/recess/be/invoke"
-	"github.com/robrichard/recess/be/listmethods"
-	"github.com/robrichard/recess/be/listservices"
-	"github.com/robrichard/recess/be/middleware"
-	"github.com/robrichard/recess/be/recess"
-	"github.com/robrichard/recess/be/refclient"
+	"github.com/1stdibs/recess/be/autocomplete"
+	"github.com/1stdibs/recess/be/invoke"
+	"github.com/1stdibs/recess/be/listmethods"
+	"github.com/1stdibs/recess/be/listservices"
+	"github.com/1stdibs/recess/be/middleware"
+	"github.com/1stdibs/recess/be/recess"
+	"github.com/1stdibs/recess/be/refclient"
 )
 
 var nofe = flag.Bool("nofe", false, "set to true if you don't want to load the front end")

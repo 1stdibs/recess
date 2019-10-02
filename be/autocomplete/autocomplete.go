@@ -5,8 +5,8 @@ import (
 
 	"github.com/jhump/protoreflect/desc"
 	"github.com/jhump/protoreflect/grpcreflect"
-	"github.com/robrichard/recess/be/camel"
-	"github.com/robrichard/recess/be/recess"
+	"github.com/1stdibs/recess/be/camel"
+	"github.com/1stdibs/recess/be/recess"
 
 	"github.com/golang/protobuf/protoc-gen-go/descriptor"
 )
