@@ -7,12 +7,9 @@ import { ReactComponent as ClearIcon } from '../icons/clear filter.svg';
 export default function Service({ service, onChange }) {
     const [searchText, setSearchText] = useState('');
 
-    useEffect(
-        () => {
-            onChange(searchText);
-        },
-        [searchText]
-    );
+    useEffect(() => {
+        onChange(searchText);
+    }, [searchText, onChange]);
 
     const icon = searchText ? (
         <ClearIcon className={`${styles.icon} ${styles.clear}`} onClick={() => setSearchText('')} />
