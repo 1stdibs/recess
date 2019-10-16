@@ -89,7 +89,7 @@ export function RecessContextManager({ children }) {
             type: EDIT_REQUEST,
             requestText: JSON.stringify(getMock(state.method.fields), null, 2),
         });
-    }, [state.method.fields]);
+    }, [state.method ? state.method.fields : null]);
 
     const setMethodSearchText = useCallback(
         searchText => dispatch({ type: EDIT_METHOD_SEARCH, searchText }),
