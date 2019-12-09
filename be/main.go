@@ -95,6 +95,13 @@ type invokeRequest struct {
 	Body     json.RawMessage   `json:"body"`
 }
 
+type invokeResponse struct {
+	Response         interface{} `json:"response"`
+	GRPCRequestTime  int64       `json:"grpcRequestTime"`
+	ProtoMessageSize int         `json:"protoMessageSize"`
+	Error            bool        `json:"error"`
+}
+
 func invokeHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
 		errorResponse(w, "this endpoint only accepts POST requests")
@@ -120,20 +127,17 @@ func invokeHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer refclient.CloseConnection(conn)
 
-	resp, duration, size, err := invoke.Invoke(client, conn, json.NewDecoder(strings.NewReader(string(request.Body))), request.Metadata, request.Service, request.Method)
+	resp, duration, size, isError, err := invoke.Invoke(client, conn, json.NewDecoder(strings.NewReader(string(request.Body))), request.Metadata, request.Service, request.Method)
 	if err != nil {
 		errorResponse(w, "couldn't invoke method: %v", err)
 		return
 	}
 
-	respWithDuration := struct {
-		Response         interface{} `json:"response"`
-		GRPCRequestTime  int64       `json:"grpcRequestTime"`
-		ProtoMessageSize int         `json:"protoMessageSize"`
-	}{
+	respWithDuration := invokeResponse{
 		Response:         resp,
 		GRPCRequestTime:  duration.Nanoseconds() / 1e6,
 		ProtoMessageSize: size,
+		Error:            isError,
 	}
 
 	jsonResponse(w, respWithDuration)

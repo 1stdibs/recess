@@ -1,7 +1,7 @@
+import classnames from 'classnames';
 import React, { useContext } from 'react';
 import Inspector, { chromeDark } from 'react-inspector';
 import { RecessContext } from './RecessContext';
-
 import styles from './styles/Results.module.css';
 
 const inspectorTheme = {
@@ -15,19 +15,40 @@ const inspectorTheme = {
     BASE_BACKGROUND_COLOR: 'var(--color-request-bg)',
     BASE_COLOR: 'var(--color-code-text)',
     OBJECT_NAME_COLOR: 'var(--color-highlight)',
-    OBJECT_VALUE_STRING_COLOR: 'var(--color-code-string)',
 };
 
-export default function Results({ response }) {
+export default function Results({ response, error }) {
     const { viewParsed } = useContext(RecessContext);
+
+    let dynamicInspectorTheme;
+    if (error) {
+        dynamicInspectorTheme = {
+            ...inspectorTheme,
+            OBJECT_VALUE_STRING_COLOR: 'red',
+        };
+    } else {
+        dynamicInspectorTheme = {
+            ...inspectorTheme,
+            OBJECT_VALUE_STRING_COLOR: 'var(--color-code-string)',
+        };
+    }
+
     return (
         <div className={styles.wrapper}>
             {response !== null && (
                 <React.Fragment>
                     {viewParsed ? (
-                        <Inspector theme={inspectorTheme} expandLevel={1} data={response} />
+                        <Inspector theme={dynamicInspectorTheme} expandLevel={1} data={response} />
                     ) : (
-                        <code className={styles.code}>{JSON.stringify(response, null, 2)}</code>
+                        <code
+                            className={classnames({
+                                [styles.code]: true,
+                                [styles.success]: !error,
+                                [styles.error]: error,
+                            })}
+                        >
+                            {JSON.stringify(response, null, 2)}
+                        </code>
                     )}
                 </React.Fragment>
             )}
