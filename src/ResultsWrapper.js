@@ -1,12 +1,11 @@
-import React, { useContext } from 'react';
 import classNames from 'classnames';
-import { RecessContext } from './RecessContext';
-import ResultsToolbar from './ResultsToolbar';
-import Results from './Results';
-import ToolbarWrapper from './ToolbarWrapper';
+import React, { useContext } from 'react';
 import { ReactComponent as PlayButton } from './icons/play.svg';
-
+import { RecessContext } from './RecessContext';
+import Results from './Results';
+import ResultsToolbar from './ResultsToolbar';
 import styles from './styles/ResultsWrapper.module.css';
+import ToolbarWrapper from './ToolbarWrapper';
 
 export default function EditorToolbar() {
     const { response, executeRequest, isLoadingRequest } = useContext(RecessContext);
@@ -28,7 +27,10 @@ export default function EditorToolbar() {
                     />
                 }
             >
-                <Results response={response ? response.response : null} />
+                <Results
+                    response={response ? response.response : null}
+                    error={response ? response.error : false}
+                />
             </ToolbarWrapper>
         </div>
     );
