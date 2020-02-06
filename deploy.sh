@@ -11,4 +11,4 @@ docker tag 1stdibs-recess:latest 268215509542.dkr.ecr.us-east-1.amazonaws.com/1s
 docker push 268215509542.dkr.ecr.us-east-1.amazonaws.com/1stdibs-recess:latest
 
 # ecs deploy one-liner from Joey
-aws --region us-east-1 ecs update-service --service 1stdibs-recess-service-lb2 --cluster recess-cluster --force-new-deployment
+aws --region us-east-1 ecs update-service --service recess-service --cluster recess-cluster --force-new-deployment
