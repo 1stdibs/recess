@@ -3,10 +3,10 @@ package autocomplete
 import (
 	"fmt"
 
-	"github.com/jhump/protoreflect/desc"
-	"github.com/jhump/protoreflect/grpcreflect"
 	"github.com/1stdibs/recess/be/camel"
 	"github.com/1stdibs/recess/be/recess"
+	"github.com/jhump/protoreflect/desc"
+	"github.com/jhump/protoreflect/grpcreflect"
 
 	"github.com/golang/protobuf/protoc-gen-go/descriptor"
 )
@@ -28,12 +28,25 @@ func GetAutocompleteData(client *grpcreflect.Client, service, method string, isC
 	}
 
 	inputTypeDescriptor := md.GetInputType()
-	fields := processMessageDescriptor(inputTypeDescriptor, isCamel)
+	fields, err := processMessageDescriptor(inputTypeDescriptor, isCamel)
+	if err != nil {
+		return nil, err
+	}
 
 	return fields, nil
 }
 
-func processMessageDescriptor(messageDescriptor *desc.MessageDescriptor, isCamel bool) []*recess.Field {
+func processMessageDescriptor(messageDescriptor *desc.MessageDescriptor, isCamel bool) ([]*recess.Field, error) {
+	return _processMessageDescriptor(messageDescriptor, isCamel, make(map[string]bool))
+}
+
+func _processMessageDescriptor(messageDescriptor *desc.MessageDescriptor, isCamel bool, alreadySeen map[string]bool) ([]*recess.Field, error) {
+	if alreadySeen[messageDescriptor.GetFullyQualifiedName()] {
+		return nil, fmt.Errorf("message %s not supported due to infinite field loop", messageDescriptor.GetFullyQualifiedName())
+	}
+
+	alreadySeen[messageDescriptor.GetFullyQualifiedName()] = true
+
 	fields := messageDescriptor.GetFields()
 
 	result := make([]*recess.Field, len(fields))
@@ -66,9 +79,13 @@ func processMessageDescriptor(messageDescriptor *desc.MessageDescriptor, isCamel
 		}
 
 		if message != nil {
-			result[i].Children = processMessageDescriptor(message, isCamel)
+			var err error
+			result[i].Children, err = _processMessageDescriptor(message, isCamel, alreadySeen)
+			if err != nil {
+				return nil, err
+			}
 		}
 	}
 
-	return result
+	return result, nil
 }
