@@ -51,7 +51,7 @@ func listServicesHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response := make([]recess.Service, len(services))
+	response := make([]recess.Type, len(services))
 	for i, s := range services {
 		response[i].Name = s
 		methods, err := listmethods.ListMethods(client, s)
@@ -60,7 +60,7 @@ func listServicesHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		response[i].Methods = methods
+		response[i].Fields = methods
 	}
 
 	autocompleteData := r.URL.Query().Get("autocompleteData")
@@ -70,17 +70,14 @@ func listServicesHandler(w http.ResponseWriter, r *http.Request) {
 		if camelQuery == "y" || camelQuery == "Y" || camelQuery == "true" {
 			isCamel = true
 		}
-		for _, service := range response {
-			for _, method := range service.Methods {
-				fields, err := autocomplete.GetAutocompleteData(client, service.Name, method.Name, isCamel)
-				if err != nil {
-					errorResponse(w, "couldn't get autocomplete data: %v", err)
-					return
-				}
-
-				method.Fields = fields
-			}
+		data, err := autocomplete.GetAutocompleteData(client, response, isCamel)
+		if err != nil {
+			errorResponse(w, "couldn't get autocomplete data: %v", err)
+			return
 		}
+
+		jsonResponse(w, data)
+		return
 	}
 
 	jsonResponse(w, response)
@@ -143,43 +140,6 @@ func invokeHandler(w http.ResponseWriter, r *http.Request) {
 	jsonResponse(w, respWithDuration)
 }
 
-type autocompleteDataRequest struct {
-	Server  string `json:"server"`
-	Port    string `json:"port"`
-	Service string `json:"service"`
-	Method  string `json:"method"`
-}
-
-func autocompleteDataHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "POST" {
-		errorResponse(w, "this endpoint only accepts POST requests")
-		return
-	}
-
-	var request autocompleteDataRequest
-	json.NewDecoder(r.Body).Decode(&request)
-
-	client, conn, err := refclient.GetRefClient(request.Server, request.Port)
-	if err != nil {
-		errorResponse(w, "couldn't get grpc reflection client: %v", err)
-	}
-	defer refclient.CloseConnection(conn)
-
-	camelQuery := r.URL.Query().Get("camelCase")
-	var isCamel bool
-	if camelQuery == "y" || camelQuery == "Y" || camelQuery == "true" {
-		isCamel = true
-	}
-
-	fields, err := autocomplete.GetAutocompleteData(client, request.Service, request.Method, isCamel)
-	if err != nil {
-		errorResponse(w, "couldn't parse fields for %s/%s: %v", request.Service, request.Method, err)
-		return
-	}
-
-	jsonResponse(w, fields)
-}
-
 func healthCheckHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintln(w, "200")
 }
@@ -191,7 +151,6 @@ func main() {
 	mux := http.NewServeMux()
 	mux.Handle("/services", middleware.Logging(http.HandlerFunc(listServicesHandler)))
 	mux.Handle("/invoke", middleware.Logging(middleware.CamelCaseRequest(http.HandlerFunc(invokeHandler))))
-	mux.Handle("/autocompleteData", middleware.Logging(http.HandlerFunc(autocompleteDataHandler)))
 	mux.Handle("/health", middleware.Logging(http.HandlerFunc(healthCheckHandler)))
 
 	// fe server

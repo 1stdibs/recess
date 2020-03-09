@@ -4,10 +4,20 @@ import classNames from 'classnames';
 
 import styles from './styles/ClickableRow.module.css';
 
-export default function ClickableRow({ children, ActionIcon, onClickAction, onClick, isSelected, isGreyed }) {
+export default function ClickableRow({
+    children,
+    ActionIcon,
+    onClickAction,
+    onClick,
+    isSelected,
+    isGreyed,
+}) {
     return (
         <div
-            className={classNames(styles.row, { [styles.isSelected]: isSelected, [styles.isGreyed]: isGreyed })}
+            className={classNames(styles.row, {
+                [styles.isSelected]: isSelected,
+                [styles.isGreyed]: isGreyed,
+            })}
             onClick={onClick}
         >
             <div className={styles.label}>{children}</div>
@@ -30,6 +40,6 @@ ClickableRow.propTypes = {
     children: PropTypes.node.isRequired,
     onClick: PropTypes.func.isRequired,
     onClickAction: PropTypes.func,
-    ActionIcon: PropTypes.func,
+    ActionIcon: PropTypes.elementType,
     isSelected: PropTypes.bool.isRequired,
 };

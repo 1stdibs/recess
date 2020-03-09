@@ -5,87 +5,134 @@ import (
 
 	"github.com/1stdibs/recess/be/camel"
 	"github.com/1stdibs/recess/be/recess"
+	"github.com/golang/protobuf/protoc-gen-go/descriptor"
 	"github.com/jhump/protoreflect/desc"
 	"github.com/jhump/protoreflect/grpcreflect"
-
-	"github.com/golang/protobuf/protoc-gen-go/descriptor"
 )
 
-func GetAutocompleteData(client *grpcreflect.Client, service, method string, isCamel bool) ([]*recess.Field, error) {
-	fd, err := client.FileContainingSymbol(service)
-	if err != nil {
-		return nil, fmt.Errorf("couldn't find service %s: %v", service, err)
+func GetAutocompleteData(client *grpcreflect.Client, services []recess.Type, isCamel bool) (recess.AutocompleteData, error) {
+	types := make(map[string]*recess.Type)
+	autocompleteServices := make([]recess.Service, len(services))
+	for serviceIndex, service := range services {
+		methods := make([]recess.Method, len(service.Fields))
+
+		for methodIndex, method := range service.Fields {
+			fd, err := client.FileContainingSymbol(service.Name)
+			if err != nil {
+				return recess.AutocompleteData{}, fmt.Errorf("couldn't find service %s: %v", service, err)
+			}
+
+			sd := fd.FindService(service.Name)
+			if sd == nil {
+				return recess.AutocompleteData{}, fmt.Errorf("couldn't find service %s", service)
+			}
+
+			md := sd.FindMethodByName(method.Name)
+			if md == nil {
+				return recess.AutocompleteData{}, fmt.Errorf("couldn't find method %s", method)
+			}
+
+			inputTypeDescriptor := md.GetInputType()
+			t := processType(inputTypeDescriptor, inputTypeDescriptor.GetFullyQualifiedName(), "MESSAGE", isCamel, nil, types)
+			methods[methodIndex] = recess.Method{
+				Name:      method.Name,
+				InputType: t,
+			}
+		}
+
+		autocompleteServices[serviceIndex] = recess.Service{
+			Name:    service.Name,
+			Methods: methods,
+		}
 	}
 
-	sd := fd.FindService(service)
-	if sd == nil {
-		return nil, fmt.Errorf("couldn't find service %s", service)
+	typesList := make([]recess.Type, len(types))
+	count := 0
+	for _, v := range types {
+		typesList[count] = *v
+		count++
 	}
 
-	md := sd.FindMethodByName(method)
-	if md == nil {
-		return nil, fmt.Errorf("couldn't find method %s", method)
-	}
-
-	inputTypeDescriptor := md.GetInputType()
-	fields, err := processMessageDescriptor(inputTypeDescriptor, isCamel)
-	if err != nil {
-		return nil, err
-	}
-
-	return fields, nil
+	return recess.AutocompleteData{
+		Services: autocompleteServices,
+		Types:    typesList,
+	}, nil
 }
 
-func processMessageDescriptor(messageDescriptor *desc.MessageDescriptor, isCamel bool) ([]*recess.Field, error) {
-	return _processMessageDescriptor(messageDescriptor, isCamel, make(map[string]bool))
-}
+func processType(messageDescriptor *desc.MessageDescriptor, name, kind string, isCamel bool, enumValueStrings []string, types map[string]*recess.Type) recess.Type {
+	if messageDescriptor == nil {
+		t, ok := types[name]
+		if !ok {
+			t = &recess.Type{
+				Name: name[5:], // removing the `TYPE_` prefix (ex. TYPE_ENUM -> ENUM)
+				Kind: kind,
+			}
 
-func _processMessageDescriptor(messageDescriptor *desc.MessageDescriptor, isCamel bool, alreadySeen map[string]bool) ([]*recess.Field, error) {
-	if alreadySeen[messageDescriptor.GetFullyQualifiedName()] {
-		return nil, fmt.Errorf("message %s not supported due to infinite field loop", messageDescriptor.GetFullyQualifiedName())
+			if kind == "ENUM" {
+				t.EnumValues = enumValueStrings
+			}
+
+			types[name] = t
+		}
+
+		return *t
 	}
 
-	alreadySeen[messageDescriptor.GetFullyQualifiedName()] = true
+	if t, ok := types[name]; ok {
+		return *t
+	}
 
-	fields := messageDescriptor.GetFields()
+	resultType := recess.Type{
+		Name: name,
+		Kind: kind,
+	}
 
-	result := make([]*recess.Field, len(fields))
-	for i, field := range fields {
-		message := field.GetMessageType()
+	types[name] = &resultType
+
+	descriptorFields := messageDescriptor.GetFields()
+
+	recessFields := make([]recess.Field, len(descriptorFields))
+	for i, descriptorField := range descriptorFields {
+		message := descriptorField.GetMessageType()
 
 		var name string
 		if isCamel {
-			name = camel.Camel(field.GetName())
+			name = camel.Camel(descriptorField.GetName())
 		} else {
-			name = field.GetName()
+			name = descriptorField.GetName()
 		}
 
-		result[i] = &recess.Field{
+		var innerType recess.Type
+		if message == nil {
+			if descriptorField.GetType() == descriptor.FieldDescriptorProto_TYPE_ENUM {
+				valueDescriptors := descriptorField.GetEnumType().GetValues()
+
+				valueStrings := make([]string, len(valueDescriptors))
+				for i, v := range valueDescriptors {
+					valueStrings[i] = v.GetName()
+				}
+
+				innerType = processType(nil, descriptorField.GetEnumType().GetFullyQualifiedName(), "ENUM", isCamel, valueStrings, types)
+			} else {
+				innerType = processType(nil, descriptorField.GetType().String(), "SCALAR", isCamel, nil, types)
+			}
+		} else {
+			innerType = processType(message, message.GetFullyQualifiedName(), "MESSAGE", isCamel, nil, types)
+		}
+
+		recessFields[i] = recess.Field{
 			Name:       name,
-			IsRepeated: field.IsRepeated(),
-			Type:       field.GetType().String(),
-			IsRequired: field.IsRequired(),
-		}
-
-		if field.GetType() == descriptor.FieldDescriptorProto_TYPE_ENUM {
-			valueDescriptors := field.GetEnumType().GetValues()
-
-			valueStrings := make([]string, len(valueDescriptors))
-			for i, v := range valueDescriptors {
-				valueStrings[i] = v.GetName()
-			}
-
-			result[i].EnumValues = valueStrings
-		}
-
-		if message != nil {
-			var err error
-			result[i].Children, err = _processMessageDescriptor(message, isCamel, alreadySeen)
-			if err != nil {
-				return nil, err
-			}
+			IsRepeated: descriptorField.IsRepeated(),
+			Type:       recess.Type{Name: innerType.Name},
+			IsRequired: descriptorField.IsRequired(),
 		}
 	}
 
-	return result, nil
+	resultType.Fields = recessFields
+
+	cleanResultType := resultType
+
+	cleanResultType.Fields = nil
+
+	return cleanResultType
 }

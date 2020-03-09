@@ -6,7 +6,7 @@ export default async function executeRequest(state, dispatch) {
     try {
         const response = await invokeRPC({
             ...state.selectedServer,
-            service: state.service.serviceName,
+            service: state.service.name,
             method: state.method.name,
             requestText: state.requestText,
             metadata: state.metadata,

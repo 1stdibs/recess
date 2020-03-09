@@ -1,5 +1,5 @@
 export function includesService(serverData, service) {
-    return !!(serverData || []).find(({ serviceName }) => serviceName === service.serviceName);
+    return !!(serverData?.services || []).find(({ name }) => name === service.name);
 }
 
 export function includesMethod(service, method) {

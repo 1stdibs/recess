@@ -34,7 +34,7 @@ export function RecessContextManager({ children }) {
             JSON.stringify({
                 ...state,
                 // don't store data fetched from back end
-                serverData: [],
+                serverData: null,
                 response: null,
             })
         );
@@ -84,12 +84,15 @@ export function RecessContextManager({ children }) {
         }
     }, [state.requestText]);
 
+    const inputType = state.method.inputType;
+    const types = state.serverData?.types;
+
     const insertMock = useCallback(() => {
         dispatch({
             type: EDIT_REQUEST,
-            requestText: JSON.stringify(getMock(state.method.fields), null, 2),
+            requestText: JSON.stringify(getMock({ inputType, types }), null, 2),
         });
-    }, [state.method ? state.method.fields : null]);
+    }, [inputType, types]);
 
     const setMethodSearchText = useCallback(
         searchText => dispatch({ type: EDIT_METHOD_SEARCH, searchText }),
