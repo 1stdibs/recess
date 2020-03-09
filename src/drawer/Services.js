@@ -33,9 +33,7 @@ export default function Servers() {
             {!!serverDataError ? (
                 <div className={styles.textWrapper}>{serverDataError}</div>
             ) : (
-                matchingServiceData.map(service => (
-                    <Service key={service.serviceName} service={service} />
-                ))
+                matchingServiceData.map(service => <Service key={service.name} service={service} />)
             )}
         </div>
     );

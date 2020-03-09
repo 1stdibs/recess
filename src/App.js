@@ -14,6 +14,7 @@ import styles from './styles/App.module.css';
 
 export default function App() {
     const {
+        serverData,
         requestText,
         setRequestText,
         executeRequest,
@@ -69,7 +70,8 @@ export default function App() {
                             }}
                         >
                             <Editor
-                                autoCompleteData={(selectedMethod && selectedMethod.fields) || []}
+                                selectedMethod={selectedMethod}
+                                types={serverData?.types}
                                 value={requestText}
                                 onEdit={setRequestText}
                                 onRunQuery={executeRequest}

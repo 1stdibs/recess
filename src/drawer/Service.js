@@ -12,7 +12,7 @@ export default function Service({ service }) {
         RecessContext
     );
     const [isExpanded, setIsExpanded] = useState(
-        !!selectedService && selectedService.serviceName === service.serviceName
+        !!selectedService && selectedService.name === service.name
     );
     const icon = !isExpanded ? (
         <OpenIcon className={styles.icon} />
@@ -24,7 +24,7 @@ export default function Service({ service }) {
     return (
         <div className={styles.wrapper} onClick={() => setIsExpanded(state => !state)}>
             <div className={styles.name}>
-                {icon} {service.serviceName}
+                {icon} {service.name}
             </div>
             {isExpanded && (
                 <div className={styles.methods}>
@@ -38,7 +38,7 @@ export default function Service({ service }) {
                             isSelected={
                                 !!selectedService &&
                                 selectedMethod.name === method.name &&
-                                selectedService.serviceName === service.serviceName
+                                selectedService.name === service.name
                             }
                         >
                             <span className={styles.indent}>{method.name}</span>

@@ -13,7 +13,7 @@ import {
 } from 'graphql';
 
 function getGrpcDisplayType(data) {
-    let displayType = (data.type.split('_')[1] || '').toLowerCase();
+    let displayType = (data.type?.name || '').toLowerCase();
     if (data.isRepeated) {
         displayType = `repeated ${displayType}`;
     } else if (data.isRequired) {
@@ -36,63 +36,76 @@ function wrap(data, type) {
     return resultType;
 }
 
-function getGraphQLTypeFromData(data) {
-    switch (data.type) {
-        case 'TYPE_MESSAGE':
-            // todo create input objet
-            let fields = {};
-            for (const child of data.children) {
-                fields[child.name] = {
-                    type: getGraphQLTypeFromData(child),
-                };
+function getGraphQLTypeFromData(field, types, visited) {
+    const matchingType = (types || []).find(type => field.type.name === type.name) || {};
+    if (matchingType.kind === 'SCALAR') {
+        switch (matchingType.name) {
+            case 'DOUBLE':
+            case 'FLOAT':
+                return wrap(field, GraphQLFloat);
+            case 'INT32':
+            case 'INT64':
+            case 'UINT32':
+            case 'UINT64':
+            case 'SINT32':
+            case 'SINT64':
+            case 'FIXED32':
+            case 'FIXED64':
+                return wrap(field, GraphQLInt);
+            case 'STRING':
+                return wrap(field, GraphQLString);
+            case 'BOOL':
+                return wrap(field, GraphQLBoolean);
+            default: {
+                throw new Error(`Unrecognized grpc type ${matchingType.name}`);
             }
-            return wrap(
-                data,
-                new GraphQLInputObjectType({
-                    name: getGrpcDisplayType(data),
-                    fields,
-                })
-            );
-        case 'TYPE_DOUBLE':
-        case 'TYPE_FLOAT':
-            return wrap(data, GraphQLFloat);
-        case 'TYPE_INT32':
-        case 'TYPE_INT64':
-        case 'TYPE_UINT32':
-        case 'TYPE_UINT64':
-        case 'TYPE_SINT32':
-        case 'TYPE_SINT64':
-        case 'TYPE_FIXED32':
-        case 'TYPE_FIXED64':
-            return wrap(data, GraphQLInt);
-        case 'TYPE_STRING':
-            return wrap(data, GraphQLString);
-        case 'TYPE_BOOL':
-            return wrap(data, GraphQLBoolean);
-        case 'TYPE_ENUM': {
-            const values = {};
-            for (const enumValue of data.enumValues) {
-                values[enumValue] = { value: enumValue };
-            }
-            return wrap(
-                data,
-                new GraphQLEnumType({
-                    name: getGrpcDisplayType(data),
-                    values,
-                })
-            );
         }
-        default: {
-            throw new Error(`Unrecognized grpc type ${data.type}`);
+    } else if (matchingType.kind === 'ENUM') {
+        const values = {};
+        for (const enumValue of matchingType.enumValues) {
+            values[enumValue] = { value: enumValue };
         }
+        return wrap(
+            field,
+            new GraphQLEnumType({
+                name: getGrpcDisplayType(field),
+                values,
+            })
+        );
+    } else if (matchingType.kind === 'MESSAGE') {
+        // don't recurse indefinitely
+        const numVisited = visited.get(matchingType) || 0;
+        if (numVisited > 25) {
+            return null;
+        }
+        visited.set(matchingType, numVisited + 1);
+        let fields = {};
+        for (const childField of matchingType.fields) {
+            fields[childField.name] = {
+                type: getGraphQLTypeFromData(childField, types, visited),
+            };
+        }
+        return wrap(
+            field,
+            new GraphQLInputObjectType({
+                name: getGrpcDisplayType(field),
+                fields,
+            })
+        );
     }
+    throw new Error(`Unrecognized grpc kind ${matchingType.kind}`);
 }
 
-export default function getVariableToType(autoCompletedata) {
-    let result = {};
+export default function getVariableToType(selectedMethod, types) {
+    if (!selectedMethod?.inputType) {
+        return {};
+    }
 
-    for (const data of autoCompletedata || []) {
-        result[data.name] = getGraphQLTypeFromData(data);
+    let result = {};
+    const matchingType =
+        (types || []).find(type => selectedMethod.inputType.name === type.name) || {};
+    for (const field of matchingType.fields || []) {
+        result[field.name] = getGraphQLTypeFromData(field, types, new Map());
     }
     return result;
 }

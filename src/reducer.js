@@ -68,24 +68,20 @@ export default function reducer(state, action) {
             if (!state.service || !includesService(action.serverData, state.service)) {
                 // select the first non-reflection service
                 // unless the reflection service is the only rpc
-                if (action.serverData.length === 1) {
+                if (action.serverData.services.length === 1) {
                     newService = action.serverData[0];
                     newMethod = newService.methods[0];
                 } else {
-                    newService = action.serverData.filter(
-                        s => s.serviceName !== 'grpc.reflection.v1alpha.ServerReflection'
+                    newService = action.serverData.services.filter(
+                        s => s.name !== 'grpc.reflection.v1alpha.ServerReflection'
                     )[0];
                     newMethod = newService.methods[0];
                 }
             } else if (!includesMethod(newService, newMethod)) {
-                newService = action.serverData.find(
-                    s => s.serviceName === state.service.serviceName
-                );
+                newService = action.serverData.services.find(s => s.name === state.service.name);
                 newMethod = newService.methods[0];
             } else {
-                newService = action.serverData.find(
-                    s => s.serviceName === state.service.serviceName
-                );
+                newService = action.serverData.services.find(s => s.name === state.service.name);
                 newMethod = newService.methods.find(m => m.name === state.method.name);
             }
             return {
@@ -95,8 +91,7 @@ export default function reducer(state, action) {
                 method: newMethod,
                 isLoadingServerData: false,
                 serverDataError: null,
-                requestText:
-                    state.requestTextByMethod[newService.serviceName + '/' + newMethod.name],
+                requestText: state.requestTextByMethod[newService.name + '/' + newMethod.name],
             };
         }
         case ERROR_LOADING_SERVER_DATA: {
@@ -113,9 +108,7 @@ export default function reducer(state, action) {
                 service: action.service,
                 method: action.method,
                 requestText:
-                    state.requestTextByMethod[
-                        action.service.serviceName + '/' + action.method.name
-                    ],
+                    state.requestTextByMethod[action.service.name + '/' + action.method.name],
             };
         case EDIT_REQUEST: {
             return {
@@ -123,7 +116,7 @@ export default function reducer(state, action) {
                 requestText: action.requestText,
                 requestTextByMethod: {
                     ...state.requestTextByMethod,
-                    [state.service.serviceName + '/' + state.method.name]: action.requestText,
+                    [state.service.name + '/' + state.method.name]: action.requestText,
                 },
             };
         }

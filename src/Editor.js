@@ -6,7 +6,8 @@ import styles from './styles/Editor.module.css';
 
 export default class Editor extends React.Component {
     static propTypes = {
-        autoCompleteData: PropTypes.array,
+        selectedMethod: PropTypes.object,
+        types: PropTypes.array,
         value: PropTypes.string,
         onEdit: PropTypes.func,
         readOnly: PropTypes.bool,
@@ -63,7 +64,7 @@ export default class Editor extends React.Component {
             lint: true,
             hintOptions: {
                 // hint,
-                variableToType: getVariableToType(this.props.autoCompleteData),
+                variableToType: getVariableToType(this.props.selectedMethod, this.props.types),
                 closeOnUnfocus: false,
                 completeSingle: false,
             },
@@ -111,10 +112,11 @@ export default class Editor extends React.Component {
         // user-input changes which could otherwise result in an infinite
         // event loop.
         this.ignoreChangeEvent = true;
-        if (this.props.autoCompleteData !== prevProps.autoCompleteData) {
-            // this.editor.options.lint.autoCompleteData = this.props.autoCompleteData;
+        if (this.props.selectedMethod !== prevProps.selectedMethod) {
+            // this.editor.options.lint.selectedMethod = this.props.selectedMethod;
             this.editor.options.hintOptions.variableToType = getVariableToType(
-                this.props.autoCompleteData
+                this.props.selectedMethod,
+                this.props.types
             );
             CodeMirror.signal(this.editor, 'change', this.editor);
         }

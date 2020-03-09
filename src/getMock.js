@@ -6,41 +6,50 @@ function wrap(data, type) {
     return resultType;
 }
 
-function getMockTypeFromData(data) {
-    switch (data.type) {
-        case 'TYPE_MESSAGE':
-            // todo create input objet
-            let fields = {};
-            for (const child of data.children) {
-                fields[child.name] = getMockTypeFromData(child);
+function getMockTypeFromData(field, types, visited) {
+    const matchingType = (types || []).find(type => field.type.name === type.name) || {};
+    if (matchingType.kind === 'SCALAR') {
+        switch (matchingType.name) {
+            case 'DOUBLE':
+            case 'FLOAT':
+                return wrap(field, 3.14);
+            case 'INT64':
+            case 'UINT64':
+            case 'INT32':
+            case 'UINT32':
+                return wrap(field, 5);
+            case 'STRING':
+                return wrap(field, 'Hello, World!');
+            case 'BOOL':
+                return wrap(field, true);
+            default: {
+                throw new Error(`Unrecognized grpc type ${matchingType.name}`);
             }
-            return wrap(data, fields);
-        case 'TYPE_DOUBLE':
-        case 'TYPE_FLOAT':
-            return wrap(data, 3.14);
-        case 'TYPE_INT64':
-        case 'TYPE_UINT64':
-        case 'TYPE_INT32':
-        case 'TYPE_UINT32':
-            return wrap(data, 5);
-        case 'TYPE_STRING':
-            return wrap(data, 'Hello, World!');
-        case 'TYPE_BOOL':
-            return wrap(data, true);
-        case 'TYPE_ENUM': {
-            return wrap(data, data.enumValues[0]);
         }
-        default: {
-            throw new Error(`Unrecognized grpc type ${data.type}`);
+    } else if (matchingType.kind === 'ENUM') {
+        return wrap(field, matchingType.enumValues[0]);
+    } else if (matchingType.kind === 'MESSAGE') {
+        // don't recurse indefinitely
+        const numVisited = visited.get(matchingType) || 0;
+        if (numVisited > 2) {
+            return null;
         }
+        visited.set(matchingType, numVisited + 1);
+        // todo create input objet
+        let fields = {};
+        for (const childField of matchingType.fields) {
+            fields[childField.name] = getMockTypeFromData(childField, types, visited);
+        }
+        return wrap(field, fields);
     }
+    throw new Error(`Unrecognized grpc kind ${matchingType.kind}`);
 }
 
-export default function getMock(autoCompletedata) {
+export default function getMock({ inputType, types }) {
     let result = {};
-
-    for (const data of autoCompletedata || []) {
-        result[data.name] = getMockTypeFromData(data);
+    const matchingType = (types || []).find(type => inputType.name === type.name) || {};
+    for (const data of matchingType.fields || []) {
+        result[data.name] = getMockTypeFromData(data, types, new Map());
     }
     return result;
 }

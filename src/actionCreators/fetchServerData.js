@@ -11,12 +11,10 @@ export default async function fetchServerData(selectedServer, useCamelCase, disp
                 useCamelCase,
             });
 
-            if (!Array.isArray(serverData)) {
+            if (!Array.isArray(serverData.services)) {
                 dispatch({
                     type: ERROR_LOADING_SERVER_DATA,
-                    error: `Could not fetch server data for ${selectedServer.name}:${
-                        selectedServer.port
-                    }`,
+                    error: `Could not fetch server data for ${selectedServer.name}:${selectedServer.port}`,
                 });
             } else {
                 dispatch({ type: LOADED_SERVER_DATA, serverData });
@@ -24,9 +22,7 @@ export default async function fetchServerData(selectedServer, useCamelCase, disp
         } catch (e) {
             dispatch({
                 type: ERROR_LOADING_SERVER_DATA,
-                error: `Could not fetch server data for ${selectedServer.name}:${
-                    selectedServer.port
-                }`,
+                error: `Could not fetch server data for ${selectedServer.name}:${selectedServer.port}`,
             });
         }
     }
