@@ -84,7 +84,7 @@ export function RecessContextManager({ children }) {
         }
     }, [state.requestText]);
 
-    const inputType = state.method.inputType;
+    const inputType = state.method?.inputType;
     const types = state.serverData?.types;
 
     const insertMock = useCallback(() => {
