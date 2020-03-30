@@ -7,13 +7,13 @@ import { ReactComponent as PlusIcon } from '../icons/plus-icon.svg';
 import { ReactComponent as TrashIcon } from '../icons/trashcan.svg';
 
 import styles from './styles/Servers.module.css';
-
+const defaultPort = '5300';
 export default function Servers() {
     const { servers, selectedServer, selectServer, addServer, deleteServer } = useContext(
         RecessContext
     );
     const [editName, setEditName] = useState('');
-    const [editPort, setEditPort] = useState('');
+    const [editPort, setEditPort] = useState(defaultPort);
     const [isEditing, setIsEditing] = useState(false);
 
     function onKeyDown(e) {
@@ -22,14 +22,14 @@ export default function Servers() {
             e.preventDefault();
             addServer({ name: editName, port: editPort });
             setEditName('');
-            setEditPort('');
+            setEditPort(defaultPort);
             setIsEditing(false);
             selectServer({ name: editName, port: editPort });
         } else if (e.keyCode === 27) {
             // escape
             e.preventDefault();
             setEditName('');
-            setEditPort('');
+            setEditPort(defaultPort);
             setIsEditing(false);
         }
     }
