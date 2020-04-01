@@ -12,6 +12,9 @@
 .isSelected {
     background-color: var(--color-highlight);
 }
+.isSelected :global(.st0) {
+    fill: white;
+}
 
 .isGreyed {
     color: #aaa;
