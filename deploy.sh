@@ -1,5 +1,5 @@
 #!/bin/bash
-
+set -e
 # make sure docker is running
 
 yarn build
