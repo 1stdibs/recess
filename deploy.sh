@@ -3,7 +3,7 @@ set -e
 # make sure docker is running
 
 yarn build
-
+docker pull golang
 # copied from ecr instructions
 $(aws ecr get-login --no-include-email --region us-east-1)
 docker build -t 1stdibs-recess .
