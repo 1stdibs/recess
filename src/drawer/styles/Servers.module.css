@@ -1,5 +1,4 @@
 .wrapper {
-    border-left: 10px solid var(--color-dividers);
     background: var(--color-servers-bg);
     color: var(--color-text);
     height: 100%;

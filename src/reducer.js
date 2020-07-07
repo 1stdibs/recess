@@ -16,6 +16,10 @@ export const DELETE_METADATA = 'DELETE_METADATA';
 export const USE_CAMEL_CASE = 'USE_CAMEL_CASE';
 export const EDIT_METHOD_SEARCH = 'EDIT_METHOD_SEARCH';
 export const VIEW_PARSED = 'VIEW_PARSED';
+export const ADD_HISTORY = 'ADD_HISTORY';
+export const DELETE_HISTORY = 'DELETE_HISTORY';
+export const DELETE_ALL_HISTORY = 'DELETE_ALL_HISTORY';
+export const EDIT_HISTORY_SEARCH = 'EDIT_HISTORY_SEARCH';
 
 export const initialState = {
     servers: [],
@@ -33,6 +37,9 @@ export const initialState = {
     viewParsed: true,
     requestTextByMethod: {},
     methodSearchText: '',
+    historySearchText: '',
+    history: [],
+    false: false,
 };
 
 export default function reducer(state, action) {
@@ -63,26 +70,26 @@ export default function reducer(state, action) {
             };
         }
         case LOADED_SERVER_DATA: {
-            let newService = state.service;
-            let newMethod = state.method;
-            if (!state.service || !includesService(action.serverData, state.service)) {
+            let newService = action.newService || state.service;
+            let newMethod = action.newMethod || state.method;
+            if (!newService || !includesService(action.serverData, newService)) {
                 // select the first non-reflection service
                 // unless the reflection service is the only rpc
                 if (action.serverData.services.length === 1) {
                     newService = action.serverData[0];
                     newMethod = newService.methods[0];
-                } else {
+                } else if (action.serverData.services.length > 1) {
                     newService = action.serverData.services.filter(
-                        s => s.name !== 'grpc.reflection.v1alpha.ServerReflection'
+                        (s) => s.name !== 'grpc.reflection.v1alpha.ServerReflection'
                     )[0];
                     newMethod = newService.methods[0];
                 }
             } else if (!includesMethod(newService, newMethod)) {
-                newService = action.serverData.services.find(s => s.name === state.service.name);
+                newService = action.serverData.services.find((s) => s.name === newService.name);
                 newMethod = newService.methods[0];
             } else {
-                newService = action.serverData.services.find(s => s.name === state.service.name);
-                newMethod = newService.methods.find(m => m.name === state.method.name);
+                newService = action.serverData.services.find((s) => s.name === newService.name);
+                newMethod = newService.methods.find((m) => m.name === newMethod.name);
             }
             return {
                 ...state,
@@ -91,7 +98,10 @@ export default function reducer(state, action) {
                 method: newMethod,
                 isLoadingServerData: false,
                 serverDataError: null,
-                requestText: state.requestTextByMethod[newService.name + '/' + newMethod.name],
+                metadata: action.metadata || state.metadata,
+                requestText:
+                    action.requestText ||
+                    state.requestTextByMethod[newService.name + '/' + newMethod.name],
             };
         }
         case ERROR_LOADING_SERVER_DATA: {
@@ -103,6 +113,7 @@ export default function reducer(state, action) {
             };
         }
         case SELECT_METHOD:
+            console.log(JSON.stringify(action.service, null, 2));
             return {
                 ...state,
                 service: action.service,
@@ -174,6 +185,37 @@ export default function reducer(state, action) {
             return {
                 ...state,
                 viewParsed: action.viewParsed,
+            };
+        case ADD_HISTORY:
+            const dateString = new Date().toLocaleString();
+            return {
+                ...state,
+                history: [
+                    {
+                        server: action.server,
+                        serviceName: action.serviceName,
+                        methodName: action.methodName,
+                        requestText: action.requestText,
+                        metadata: action.metadata,
+                        date: dateString,
+                        id: dateString,
+                    },
+                ].concat(state.history),
+            };
+        case DELETE_HISTORY:
+            return {
+                ...state,
+                history: state.history.filter((entry) => entry.id !== action.entryId),
+            };
+        case DELETE_ALL_HISTORY:
+            return {
+                ...state,
+                history: [],
+            };
+        case EDIT_HISTORY_SEARCH:
+            return {
+                ...state,
+                historySearchText: action.searchText,
             };
         default:
             throw new Error(`invalid action ${action.type}`);

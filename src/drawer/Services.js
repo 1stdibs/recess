@@ -27,8 +27,6 @@ export default function Servers() {
                         onClick={reloadServerData}
                     />
                 }
-                onClickAction={reloadServerData}
-                ActionIcon={ReloadIcon}
             />
             {!!serverDataError ? (
                 <div className={styles.textWrapper}>{serverDataError}</div>

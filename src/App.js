@@ -9,6 +9,7 @@ import ServiceToolbar from './drawer/ServiceToolbar';
 import Metadata from './Metadata';
 import { RecessContext } from './RecessContext';
 import ToolbarWrapper from './ToolbarWrapper';
+import History from './History';
 
 import styles from './styles/App.module.css';
 
@@ -24,8 +25,9 @@ export default function App() {
     return (
         <div className={styles.wrapper}>
             <SplitPane
-                defaultSize="30%"
+                defaultSize="20%"
                 split="vertical"
+                minSize={150}
                 paneStyle={{ overflow: 'auto' }}
                 resizerStyle={{
                     backgroundColor: 'var(--color-dividers)',
@@ -33,53 +35,72 @@ export default function App() {
                     cursor: 'col-resize',
                 }}
             >
-                <ToolbarWrapper toolbar={<ServiceToolbar onChange={setMethodSearchText} />}>
-                    <SplitPane
-                        defaultSize="40%"
-                        split="vertical"
-                        paneStyle={{ overflow: 'auto' }}
-                        resizerStyle={{
-                            backgroundColor: 'var(--color-dividers)',
-                            width: 4,
-                            cursor: 'col-resize',
-                        }}
-                    >
-                        <Servers />
-                        <Services />
-                    </SplitPane>
-                </ToolbarWrapper>
-
+                <History />
                 <SplitPane
-                    defaultSize="50%"
+                    defaultSize="35%"
                     split="vertical"
+                    paneStyle={{ overflow: 'auto' }}
                     resizerStyle={{
                         backgroundColor: 'var(--color-dividers)',
                         width: 4,
                         cursor: 'col-resize',
                     }}
                 >
-                    <ToolbarWrapper toolbar={<EditorToolbar />}>
+                    <ToolbarWrapper
+                        toolbar={
+                            <ServiceToolbar
+                                onChange={setMethodSearchText}
+                                placeholder="Search services"
+                            />
+                        }
+                    >
                         <SplitPane
-                            defaultSize="80%"
-                            split="horizontal"
+                            defaultSize="40%"
+                            split="vertical"
                             paneStyle={{ overflow: 'auto' }}
                             resizerStyle={{
                                 backgroundColor: 'var(--color-dividers)',
-                                height: 4,
-                                cursor: 'row-resize',
+                                width: 4,
+                                cursor: 'col-resize',
                             }}
                         >
-                            <Editor
-                                selectedMethod={selectedMethod}
-                                types={serverData?.types}
-                                value={requestText}
-                                onEdit={setRequestText}
-                                onRunQuery={executeRequest}
-                            />
-                            <Metadata />
+                            <Servers />
+                            <Services />
                         </SplitPane>
                     </ToolbarWrapper>
-                    <ResultsWrapper />
+
+                    <SplitPane
+                        defaultSize="50%"
+                        split="vertical"
+                        resizerStyle={{
+                            backgroundColor: 'var(--color-dividers)',
+                            width: 4,
+                            cursor: 'col-resize',
+                        }}
+                    >
+                        <ToolbarWrapper toolbar={<EditorToolbar />}>
+                            <SplitPane
+                                defaultSize="80%"
+                                split="horizontal"
+                                paneStyle={{ overflow: 'auto' }}
+                                resizerStyle={{
+                                    backgroundColor: 'var(--color-dividers)',
+                                    height: 4,
+                                    cursor: 'row-resize',
+                                }}
+                            >
+                                <Editor
+                                    selectedMethod={selectedMethod}
+                                    types={serverData?.types}
+                                    value={requestText}
+                                    onEdit={setRequestText}
+                                    onRunQuery={executeRequest}
+                                />
+                                <Metadata />
+                            </SplitPane>
+                        </ToolbarWrapper>
+                        <ResultsWrapper />
+                    </SplitPane>
                 </SplitPane>
             </SplitPane>
         </div>
