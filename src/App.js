@@ -29,7 +29,7 @@ export default function App() {
                 defaultSize="35%"
                 split="vertical"
                 paneStyle={{ overflow: 'auto' }}
-                pane1Style={{ paddingLeft: '10px' }}
+                style={{ paddingLeft: '10px' }}
                 resizerStyle={{
                     backgroundColor: 'var(--color-dividers)',
                     width: 4,
