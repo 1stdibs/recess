@@ -9,6 +9,7 @@ import ServiceToolbar from './drawer/ServiceToolbar';
 import Metadata from './Metadata';
 import { RecessContext } from './RecessContext';
 import ToolbarWrapper from './ToolbarWrapper';
+import History from './History';
 
 import styles from './styles/App.module.css';
 
@@ -20,32 +21,56 @@ export default function App() {
         executeRequest,
         setMethodSearchText,
         selectedMethod,
+        historyVisible,
     } = useContext(RecessContext);
     return (
         <div className={styles.wrapper}>
             <SplitPane
-                defaultSize="30%"
+                defaultSize="35%"
                 split="vertical"
                 paneStyle={{ overflow: 'auto' }}
+                style={{ paddingLeft: '10px' }}
                 resizerStyle={{
                     backgroundColor: 'var(--color-dividers)',
                     width: 4,
                     cursor: 'col-resize',
                 }}
             >
-                <ToolbarWrapper toolbar={<ServiceToolbar onChange={setMethodSearchText} />}>
+                <ToolbarWrapper
+                    toolbar={
+                        <ServiceToolbar
+                            onChange={setMethodSearchText}
+                            placeholder="Search Services"
+                        />
+                    }
+                >
                     <SplitPane
-                        defaultSize="40%"
-                        split="vertical"
+                        defaultSize="55%"
+                        size={historyVisible ? '50%' : '95%'}
+                        maxSize={-55}
+                        split="horizontal"
                         paneStyle={{ overflow: 'auto' }}
                         resizerStyle={{
                             backgroundColor: 'var(--color-dividers)',
-                            width: 4,
-                            cursor: 'col-resize',
+                            height: 10,
+                            cursor: 'row-resize',
                         }}
                     >
-                        <Servers />
-                        <Services />
+                        <SplitPane
+                            defaultSize="40%"
+                            split="vertical"
+                            paneStyle={{ overflow: 'auto' }}
+                            resizerStyle={{
+                                backgroundColor: 'var(--color-dividers)',
+                                width: 4,
+                                cursor: 'col-resize',
+                            }}
+                        >
+                            <Servers />
+                            <Services />
+                        </SplitPane>
+
+                        <History />
                     </SplitPane>
                 </ToolbarWrapper>
 

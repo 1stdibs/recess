@@ -1,0 +1,54 @@
+.wrapper {
+    position: relative;
+    top: -10px;
+    background: var(--color-services-bg);
+    height: calc(100% + 10px);
+    width: 100%;
+    overflow-x: hidden;
+    color: var(--color-text);
+}
+
+.toolbarWrapper {
+    background: var(--color-dividers);
+    padding: 10px 0;
+    display: flex;
+}
+
+.titleBar {
+    display: flex;
+    padding: 10px;
+    border-bottom: 1px solid var(--color-dividers);
+    align-items: center;
+}
+
+.title {
+    color: var(--color-text);
+    font-weight: bold;
+    flex: 1;
+}
+
+.clearButton {
+    color: var(--color-highlight);
+    border: none;
+    outline: none;
+    background: transparent;
+    cursor: pointer;
+}
+
+.hideButtonWrapper {
+    margin-right: 6px;
+}
+
+.entriesContainer {
+    width: 100%;
+    text-overflow: ellipsis;
+    line-height: 1.5;
+}
+
+.date {
+    color: var(--color-code-string);
+}
+
+.methodName {
+    font-weight: bold;
+}

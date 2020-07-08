@@ -14,6 +14,10 @@ import reducer, {
     USE_CAMEL_CASE,
     EDIT_METHOD_SEARCH,
     VIEW_PARSED,
+    DELETE_HISTORY,
+    EDIT_HISTORY_SEARCH,
+    DELETE_ALL_HISTORY,
+    EDIT_HISTORY_VISIBLE,
 } from './reducer';
 
 export const RecessContext = React.createContext();
@@ -25,7 +29,11 @@ export function RecessContextManager({ children }) {
     });
 
     useEffect(() => {
-        fetchServerData(state.selectedServer, state.useCamelCase, dispatch);
+        fetchServerData({
+            selectedServer: state.selectedServer,
+            useCamelCase: state.useCamelCase,
+            dispatch,
+        });
     }, [state.selectedServer, state.useCamelCase]);
 
     useEffect(() => {
@@ -40,7 +48,7 @@ export function RecessContextManager({ children }) {
         );
     }, [state]);
 
-    const selectServer = useCallback(server => dispatch({ type: SELECT_SERVER, server }), []);
+    const selectServer = useCallback((server) => dispatch({ type: SELECT_SERVER, server }), []);
 
     const selectMethod = useCallback(
         (service, method) => dispatch({ type: SELECT_METHOD, service, method }),
@@ -48,7 +56,12 @@ export function RecessContextManager({ children }) {
     );
 
     const reloadServerData = useCallback(
-        () => fetchServerData(state.selectedServer, state.useCamelCase, dispatch),
+        () =>
+            fetchServerData({
+                selectedServer: state.selectedServer,
+                useCamelCase: state.useCamelCase,
+                dispatch,
+            }),
         [state.selectedServer, state.useCamelCase]
     );
 
@@ -57,9 +70,9 @@ export function RecessContextManager({ children }) {
         []
     );
 
-    const deleteServer = useCallback(i => dispatch({ type: DELETE_SERVER, i }), [dispatch]);
+    const deleteServer = useCallback((i) => dispatch({ type: DELETE_SERVER, i }), [dispatch]);
     const setRequestText = useCallback(
-        requestText => dispatch({ type: EDIT_REQUEST, requestText }),
+        (requestText) => dispatch({ type: EDIT_REQUEST, requestText }),
         []
     );
 
@@ -71,7 +84,7 @@ export function RecessContextManager({ children }) {
     const deleteMetadata = useCallback(({ key }) => dispatch({ type: DELETE_METADATA, key }), []);
 
     const setCamelCase = useCallback(
-        useCamelCase => dispatch({ type: USE_CAMEL_CASE, useCamelCase }),
+        (useCamelCase) => dispatch({ type: USE_CAMEL_CASE, useCamelCase }),
         []
     );
 
@@ -95,12 +108,53 @@ export function RecessContextManager({ children }) {
     }, [inputType, types]);
 
     const setMethodSearchText = useCallback(
-        searchText => dispatch({ type: EDIT_METHOD_SEARCH, searchText }),
+        (searchText) => dispatch({ type: EDIT_METHOD_SEARCH, searchText }),
         [dispatch]
     );
 
     const setViewParsed = useCallback(
-        viewParsed => dispatch({ type: VIEW_PARSED, viewParsed }),
+        (viewParsed) => dispatch({ type: VIEW_PARSED, viewParsed }),
+        []
+    );
+
+    const deleteHistoryEntry = useCallback(
+        (entryId) => dispatch({ type: DELETE_HISTORY, entryId }),
+        []
+    );
+
+    const selectHistory = useCallback(
+        (entry) => {
+            const { name: serverName, port } = entry.server;
+            const foundServer = state.servers.find(
+                (server) => server.name === serverName && server.port === port
+            );
+            if (!foundServer) {
+                dispatch({ type: ADD_SERVER, name: serverName, port });
+            }
+            dispatch({ type: SELECT_SERVER, server: entry.server });
+
+            fetchServerData({
+                selectedServer: entry.server,
+                useCamelCase: state.useCamelCase,
+                dispatch,
+                newService: { name: entry.serviceName },
+                newMethod: { name: entry.methodName },
+                requestText: entry.requestText,
+                metadata: entry.metadata,
+            });
+        },
+        [state.servers, state.useCamelCase]
+    );
+
+    const setHistorySearchText = useCallback(
+        (searchText) => dispatch({ type: EDIT_HISTORY_SEARCH, searchText }),
+        []
+    );
+
+    const clearAllHistory = useCallback(() => dispatch({ type: DELETE_ALL_HISTORY }), []);
+
+    const setHistoryVisible = useCallback(
+        (historyVisible) => dispatch({ type: EDIT_HISTORY_VISIBLE, historyVisible }),
         []
     );
 
@@ -133,6 +187,14 @@ export function RecessContextManager({ children }) {
         methodSearchText: state.methodSearchText,
         viewParsed: state.viewParsed,
         setViewParsed,
+        history: state.history,
+        deleteHistoryEntry,
+        selectHistory,
+        historySearchText: state.historySearchText,
+        setHistorySearchText,
+        clearAllHistory,
+        setHistoryVisible,
+        historyVisible: state.historyVisible,
     };
 
     return <RecessContext.Provider value={value}>{children}</RecessContext.Provider>;
