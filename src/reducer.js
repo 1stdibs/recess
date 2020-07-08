@@ -114,7 +114,6 @@ export default function reducer(state, action) {
             };
         }
         case SELECT_METHOD:
-            console.log(JSON.stringify(action.service, null, 2));
             return {
                 ...state,
                 service: action.service,
