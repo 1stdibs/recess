@@ -17,6 +17,7 @@ import reducer, {
     DELETE_HISTORY,
     EDIT_HISTORY_SEARCH,
     DELETE_ALL_HISTORY,
+    EDIT_HISTORY_VISIBLE,
 } from './reducer';
 
 export const RecessContext = React.createContext();
@@ -152,6 +153,11 @@ export function RecessContextManager({ children }) {
 
     const clearAllHistory = useCallback(() => dispatch({ type: DELETE_ALL_HISTORY }), []);
 
+    const setHistoryVisible = useCallback(
+        (historyVisible) => dispatch({ type: EDIT_HISTORY_VISIBLE, historyVisible }),
+        []
+    );
+
     const value = {
         serverData: state.serverData,
         isLoadingServerData: state.isLoadingServerData,
@@ -187,6 +193,8 @@ export function RecessContextManager({ children }) {
         historySearchText: state.historySearchText,
         setHistorySearchText,
         clearAllHistory,
+        setHistoryVisible,
+        historyVisible: state.historyVisible,
     };
 
     return <RecessContext.Provider value={value}>{children}</RecessContext.Provider>;

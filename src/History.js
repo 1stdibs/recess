@@ -2,8 +2,8 @@ import React, { useContext } from 'react';
 import { RecessContext } from './RecessContext';
 import ClickableRow from './drawer/ClickableRow';
 import { ReactComponent as TrashIcon } from './icons/trashcan.svg';
-import ToolbarWrapper from './ToolbarWrapper';
 import ServiceToolbar from './drawer/ServiceToolbar';
+import Button from './Button';
 
 import styles from './styles/History.module.css';
 
@@ -26,15 +26,20 @@ export default function History() {
         historySearchText,
         setHistorySearchText,
         clearAllHistory,
+        historyVisible,
+        setHistoryVisible,
     } = useContext(RecessContext);
     const matchingHistory = getMatchingHistory(history, historySearchText);
-    return (
-        <ToolbarWrapper
-            toolbar={
-                <ServiceToolbar onChange={setHistorySearchText} placeholder="Search history" />
-            }
-        >
+    if (historyVisible) {
+        return (
             <div className={styles.wrapper}>
+                <div className={styles.toolbarWrapper}>
+                    <div className={styles.hideButtonWrapper}>
+                        <Button onClick={() => setHistoryVisible(false)}>Hide History</Button>
+                    </div>
+                    <ServiceToolbar onChange={setHistorySearchText} placeholder="Search History" />
+                </div>
+
                 <div className={styles.titleBar}>
                     <div className={styles.title}>History</div>
                     <button
@@ -73,6 +78,12 @@ export default function History() {
                     })}
                 </div>
             </div>
-        </ToolbarWrapper>
-    );
+        );
+    } else {
+        return (
+            <div className={styles.showButtonWrapper}>
+                <Button onClick={() => setHistoryVisible(true)}>Show History</Button>
+            </div>
+        );
+    }
 }

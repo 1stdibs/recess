@@ -20,6 +20,7 @@ export const ADD_HISTORY = 'ADD_HISTORY';
 export const DELETE_HISTORY = 'DELETE_HISTORY';
 export const DELETE_ALL_HISTORY = 'DELETE_ALL_HISTORY';
 export const EDIT_HISTORY_SEARCH = 'EDIT_HISTORY_SEARCH';
+export const EDIT_HISTORY_VISIBLE = 'EDIT_HISTORY_VISIBLE';
 
 export const initialState = {
     servers: [],
@@ -39,7 +40,7 @@ export const initialState = {
     methodSearchText: '',
     historySearchText: '',
     history: [],
-    false: false,
+    historyVisible: true,
 };
 
 export default function reducer(state, action) {
@@ -216,6 +217,11 @@ export default function reducer(state, action) {
             return {
                 ...state,
                 historySearchText: action.searchText,
+            };
+        case EDIT_HISTORY_VISIBLE:
+            return {
+                ...state,
+                historyVisible: action.historyVisible,
             };
         default:
             throw new Error(`invalid action ${action.type}`);
