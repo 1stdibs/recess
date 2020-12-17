@@ -1,6 +1,12 @@
 #!/bin/bash
 set -e
 # make sure docker is running
+shopt -s expand_aliases
+if [ "$JENKINS_BUILD" = "true" ]; then
+alias aws="${AWSCLIV2}"
+else
+echo "This isn't a Jenkins build, so we will use the local aws-cli version."
+fi
 
 yarn build
 docker --version
