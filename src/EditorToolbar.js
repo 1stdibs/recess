@@ -4,7 +4,13 @@ import Button from './Button';
 import styles from './styles/EditorToolbar.module.css';
 
 export default function EditorToolbar() {
-    const { useCamelCase, setCamelCase, formatRequest, insertMock } = useContext(RecessContext);
+    const {
+        useCamelCase,
+        setCamelCase,
+        formatRequest,
+        insertMock
+    } = useContext(RecessContext);
+    
     return (
         <React.Fragment>
             <div className={styles.buttonWrapper}>
@@ -22,4 +28,6 @@ export default function EditorToolbar() {
             </div>
         </React.Fragment>
     );
+
+
 }

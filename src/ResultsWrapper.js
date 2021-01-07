@@ -6,9 +6,25 @@ import Results from './Results';
 import ResultsToolbar from './ResultsToolbar';
 import styles from './styles/ResultsWrapper.module.css';
 import ToolbarWrapper from './ToolbarWrapper';
+import Button from './Button';
+import copyGrpcurlToClipboard from './exportAsGrpcurl';
 
 export default function EditorToolbar() {
-    const { response, executeRequest, isLoadingRequest } = useContext(RecessContext);
+    const {
+        response,
+        executeRequest,
+        isLoadingRequest,
+        selectedServer,
+        selectedService,
+        selectedMethod,
+        metadata,
+        requestText
+    } = useContext(RecessContext);
+
+    function handleGrpcurlClick() {
+        copyGrpcurlToClipboard(selectedServer, selectedService, selectedMethod, metadata, requestText);
+    }
+
     return (
         <div className={styles.wrapper}>
             <PlayButton
@@ -18,6 +34,13 @@ export default function EditorToolbar() {
                     [styles.isLoading]: isLoadingRequest,
                 })}
             />
+
+            <button
+                className={styles.copy}
+                onClick={() => handleGrpcurlClick()}
+                disabled={selectedServer==null || selectedService==null}>
+                Copy as gRPCurl
+            </button>
 
             <ToolbarWrapper
                 toolbar={

@@ -7,6 +7,7 @@ import Servers from './drawer/Servers';
 import Services from './drawer/Services';
 import ServiceToolbar from './drawer/ServiceToolbar';
 import Metadata from './Metadata';
+import Grpcurl from './Grpcurl';
 import { RecessContext } from './RecessContext';
 import ToolbarWrapper from './ToolbarWrapper';
 import History from './History';
