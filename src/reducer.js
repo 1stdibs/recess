@@ -130,7 +130,7 @@ export default function reducer(state, action) {
                 requestText: action.requestText,
                 requestTextByMethod: {
                     ...state.requestTextByMethod,
-                    [state.service.name + '/' + state.method.name]: action.requestText,
+                    [state.service?.name + '/' + state.method?.name]: action.requestText,
                 },
             };
         }
