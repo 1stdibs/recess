@@ -6,7 +6,7 @@ import Results from './Results';
 import ResultsToolbar from './ResultsToolbar';
 import styles from './styles/ResultsWrapper.module.css';
 import ToolbarWrapper from './ToolbarWrapper';
-import Button from './Button';
+import Toast from './Toast';
 import copyGrpcurlToClipboard from './exportAsGrpcurl';
 
 export default function EditorToolbar() {
@@ -18,11 +18,19 @@ export default function EditorToolbar() {
         selectedService,
         selectedMethod,
         metadata,
-        requestText
+        requestText,
+        servers,
+        serverData,
     } = useContext(RecessContext);
 
+    const [toastToggle, setToastToggle] = React.useState(false);
+    const [message, setMessage] = React.useState("");
+    const disableButtons = selectedServer==null || selectedService==null || toastToggle; 
+    
     function handleGrpcurlClick() {
-        copyGrpcurlToClipboard(selectedServer, selectedService, selectedMethod, metadata, requestText);
+        var grpcurl = copyGrpcurlToClipboard(selectedServer, selectedService, selectedMethod, metadata, requestText, servers, serverData);
+        setToastToggle(true);
+        setMessage(grpcurl);
     }
 
     return (
@@ -33,14 +41,21 @@ export default function EditorToolbar() {
                 className={classNames(styles.play, {
                     [styles.isLoading]: isLoadingRequest,
                 })}
+                disabled={disableButtons}
             />
 
             <button
                 className={styles.copy}
                 onClick={() => handleGrpcurlClick()}
-                disabled={selectedServer==null || selectedService==null}>
+                disabled={disableButtons}>
                 Copy as gRPCurl
             </button>
+
+            <Toast
+                onCloseClick={() => setToastToggle(false)}
+                isVisible={toastToggle}
+                message={message}
+            />
 
             <ToolbarWrapper
                 toolbar={

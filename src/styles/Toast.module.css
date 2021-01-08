@@ -1,0 +1,26 @@
+/* react components */
+.toastContainer {
+    position: fixed;
+    left: 40%;
+    transform: translateY(-110%);
+    visibility: hidden;
+    transition: 0.3s cubic-bezier(0, 0, 0.2, 1);
+    width: 300px;
+    color: var(--color-text);
+  }
+  .toastContainer[data-visible="true"] {
+    top: 10%;
+    transform: translateY(0);
+    visibility: visible;
+    transition: transform 0.5s cubic-bezier(0, 0, 0.2, 1);
+  }
+  .toast:focus {
+    outline: none;
+  }
+  .toast {
+    border-radius: 2px;
+    padding: 10px 20px;
+    overflow-wrap: break-word;
+    box-shadow: 1px 2px 8px 0 rgba(34, 34, 34, 0.25);
+    background: var(--color-dividers);
+  }

@@ -56,3 +56,8 @@
 .play.isLoading :global(.st1) {
     fill: var(--color-button-bg);
 }
+
+.play:disabled {
+    fill: var(--color-button-bg);
+    cursor: not-allowed;
+}

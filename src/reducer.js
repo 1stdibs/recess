@@ -51,9 +51,12 @@ export default function reducer(state, action) {
                 servers: [...state.servers, { name: action.name, port: action.port }],
             };
         case DELETE_SERVER:
+            const updatedServers = state.servers.filter((_, i) => i !== action.i);
             return {
                 ...state,
-                servers: state.servers.filter((_, i) => i !== action.i),
+                servers: updatedServers,
+                selectedServer: updatedServers[0] || null,
+                serverData: null,
             };
 
         case SELECT_SERVER:
