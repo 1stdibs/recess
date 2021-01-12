@@ -6,8 +6,8 @@ import Results from './Results';
 import ResultsToolbar from './ResultsToolbar';
 import styles from './styles/ResultsWrapper.module.css';
 import ToolbarWrapper from './ToolbarWrapper';
-import Toast from './Toast';
-import copyGrpcUrlToClipboard from './exportAsGrpcurl';
+import GrpcUrlWindow from './GrpcUrlWindow';
+import { formatGrpcUrl, copyToClipboard } from './grpcUrlHelpers';
 
 export default function EditorToolbar() {
     const {
@@ -25,9 +25,9 @@ export default function EditorToolbar() {
     const [message, setMessage] = useState('');
     const areActionsDisabled =
         selectedServer === null || selectedService === null || grpcUrlPopupToggle;
-    
+
     function handleGrpcUrlClick() {
-        const grpcUrl = copyGrpcUrlToClipboard(
+        const grpcUrl = formatGrpcUrl(
             selectedServer,
             selectedService,
             selectedMethod,
@@ -35,6 +35,7 @@ export default function EditorToolbar() {
             requestText
         );
         setMessage(grpcUrl);
+        copyToClipboard(grpcUrl);
         setGrpcUrlPopupToggle(true);
     }
 
@@ -48,7 +49,6 @@ export default function EditorToolbar() {
                 })}
                 disabled={areActionsDisabled}
             />
-
             <button
                 className={styles.copy}
                 onClick={() => handleGrpcUrlClick()}
@@ -56,7 +56,7 @@ export default function EditorToolbar() {
             >
                 Copy as gRPCurl
             </button>
-            <Toast
+            <GrpcUrlWindow
                 onCloseClick={() => setGrpcUrlPopupToggle(false)}
                 isVisible={grpcUrlPopupToggle}
                 message={message}

@@ -1,4 +1,4 @@
-export default function copyGrpcUrlToClipboard(
+export function formatGrpcUrl(
     selectedServer,
     selectedService,
     selectedMethod,
@@ -18,11 +18,10 @@ export default function copyGrpcUrlToClipboard(
 \t${selectedService?.name}/${selectedMethod?.name} \\
 <<EOM\n'${requestText}'\nEOM`;
 
-    copyToClipboard(grpcurl);
     return grpcurl;
 }
 
-function copyToClipboard(copyText) {
+export function copyToClipboard(copyText) {
     const textArea = document.createElement('textarea');
     textArea.value = copyText;
     document.body.appendChild(textArea);

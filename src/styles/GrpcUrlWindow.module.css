@@ -1,0 +1,20 @@
+.clipboard {
+    box-sizing: border-box;
+    padding: var(--standard-padding);
+    border: none;
+    margin: 0 var(--standard-padding) var(--standard-padding);
+    font-family: monospace;
+    background: #b7d3be;
+    background: #e9f2ec;
+    background: #d4e5d8;
+    width: 500px;
+    min-width: 300px;
+    /* --x and --y set in MovableWindow  */
+    max-width: calc(100vw - 20px - var(--x, 0));
+    min-height: 6em;
+    max-height: calc(100vh - 67px - var(--y, 0));
+}
+.clipboard:focus,
+.clipboard:active {
+    outline: none;
+}

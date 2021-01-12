@@ -1,0 +1,101 @@
+.window {
+    /* mimic nice macos window shadows */
+    box-shadow: 0 26px 43px #00000066, 0 0 3px #00000080;
+    background: var(--color-servers-bg);
+    border-radius: 2px;
+    overflow-wrap: break-word;
+    display: flex;
+    flex-direction: column;
+    color: var(--color-text);
+    visibility: hidden;
+    /* #overlay layer disables pointer events. enable them in window */
+    pointer-events: auto;
+    min-width: 300px;
+    max-width: 100%;
+}
+
+.window[data-visible='true'] {
+    visibility: visible;
+}
+
+.window:focus {
+    outline: none;
+}
+
+.transition {
+    transition: all 0.1s cubic-bezier(0, 0, 0.2, 1);
+    transform: scale(0.8);
+    opacity: 0;
+}
+
+.transition[data-visible='true'] {
+    transform: scale(1);
+    opacity: 1;
+}
+
+.position {
+    position: fixed;
+    order: calc(var(--popupStackOrder, 0) * -1);
+    z-index: calc(0 - var(--popupStackOrder, 0));
+    --x: 10%;
+    --y: 40%;
+    transform: translate(var(--x), var(--y));
+}
+
+.titleBar {
+    font-size: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-sizing: border-box;
+    padding: 0 0 0 var(--standard-padding);
+    margin: 0 0 20px 0;
+    user-select: none;
+    width: 100%;
+    border-bottom: 1px solid var(--color-dividers);
+    background: var(--color-servers-bg);
+    filter: brightness(70%);
+}
+.titleBar::before {
+    content: counter(window, numeric);
+}
+.window:focus .titleBar,
+.window:focus-within .titleBar {
+    filter: unset;
+}
+
+.closeButton {
+    align-self: flex-end;
+    background: none;
+    border: none;
+    appearance: none;
+    color: #fff;
+    padding: var(--standard-padding);
+    cursor: pointer;
+}
+
+.closeIcon {
+    display: block;
+    stroke: currentColor;
+    width: 16px;
+    height: 16px;
+    stroke-width: 3px;
+}
+
+.closeButton:focus:not(:focus-visible) {
+    outline: none;
+}
+
+.closeButton:focus,
+.closeButton:hover {
+    background: #ffffff20;
+}
+
+.closeButton:active {
+    background: #ffffff10;
+}
+
+.closeButton:focus .closeIcon,
+.closeButton:hover .closeIcon {
+    stroke-width: 4px;
+}
