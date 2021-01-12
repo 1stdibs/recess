@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { ReactComponent as PlayButton } from './icons/play.svg';
 import { RecessContext } from './RecessContext';
 import Results from './Results';
@@ -7,7 +7,7 @@ import ResultsToolbar from './ResultsToolbar';
 import styles from './styles/ResultsWrapper.module.css';
 import ToolbarWrapper from './ToolbarWrapper';
 import Toast from './Toast';
-import copyGrpcurlToClipboard from './exportAsGrpcurl';
+import copyGrpcUrlToClipboard from './exportAsGrpcurl';
 
 export default function EditorToolbar() {
     const {
@@ -19,18 +19,23 @@ export default function EditorToolbar() {
         selectedMethod,
         metadata,
         requestText,
-        servers,
-        serverData,
     } = useContext(RecessContext);
 
-    const [toastToggle, setToastToggle] = React.useState(false);
-    const [message, setMessage] = React.useState("");
-    const disableButtons = selectedServer==null || selectedService==null || toastToggle; 
+    const [grpcUrlPopupToggle, setGrpcUrlPopupToggle] = useState(false);
+    const [message, setMessage] = useState('');
+    const areActionsDisabled =
+        selectedServer === null || selectedService === null || grpcUrlPopupToggle;
     
-    function handleGrpcurlClick() {
-        var grpcurl = copyGrpcurlToClipboard(selectedServer, selectedService, selectedMethod, metadata, requestText, servers, serverData);
-        setToastToggle(true);
-        setMessage(grpcurl);
+    function handleGrpcUrlClick() {
+        const grpcUrl = copyGrpcUrlToClipboard(
+            selectedServer,
+            selectedService,
+            selectedMethod,
+            metadata,
+            requestText
+        );
+        setMessage(grpcUrl);
+        setGrpcUrlPopupToggle(true);
     }
 
     return (
@@ -41,22 +46,21 @@ export default function EditorToolbar() {
                 className={classNames(styles.play, {
                     [styles.isLoading]: isLoadingRequest,
                 })}
-                disabled={disableButtons}
+                disabled={areActionsDisabled}
             />
 
             <button
                 className={styles.copy}
-                onClick={() => handleGrpcurlClick()}
-                disabled={disableButtons}>
+                onClick={() => handleGrpcUrlClick()}
+                disabled={areActionsDisabled}
+            >
                 Copy as gRPCurl
             </button>
-
             <Toast
-                onCloseClick={() => setToastToggle(false)}
-                isVisible={toastToggle}
+                onCloseClick={() => setGrpcUrlPopupToggle(false)}
+                isVisible={grpcUrlPopupToggle}
                 message={message}
             />
-
             <ToolbarWrapper
                 toolbar={
                     <ResultsToolbar

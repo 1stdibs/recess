@@ -1,6 +1,6 @@
 .wrapper {
     display: flex;
-    padding: 10px;
+    padding: var(--standard-padding);
     border-bottom: 1px solid var(--color-dividers);
     align-items: center;
 }

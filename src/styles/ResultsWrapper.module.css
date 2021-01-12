@@ -2,7 +2,7 @@
     display: flex;
     flex: 1;
     height: 100%;
-    border-right: 10px solid var(--color-dividers);
+    border-right: var(--standard-padding) solid var(--color-dividers);
 }
 
 .play {
@@ -13,32 +13,6 @@
     top: 25%;
     width: 70px;
     height: 70px;
-}
-
-.copy {
-    cursor: pointer;
-    position: absolute;
-    z-index: 100;
-    left: -38px;
-    top: 50%;
-    border-radius: 35px;
-    color: var(--color-text);
-    font-size: 13px;
-    background-color: var(--color-highlight);
-    width: 70px;
-    height: 70px;
-    border:none;
-    outline: none;
-    box-shadow: none;
-}
-
-.copy:active {
-    background-color: var(--color-button-bg);
-}
-
-.copy:disabled {
-    background-color: var(--color-button-bg);
-    cursor: not-allowed;
 }
 
 .play :global(.st0) {

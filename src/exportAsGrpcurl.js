@@ -1,16 +1,32 @@
-export default function copyGrpcurlToClipboard(selectedServer, selectedService, selectedMethod, metaData, requestText, servers, serverData) {
-	// alert(JSON.stringify(servers) + "\n" + JSON.stringify(selectedServer) + "\n" + JSON.stringify(serverData));
-	var {name, port} = selectedServer;
-	// var alertMessage="name=" + name + ", port=" + port;// + ", service=" + selectedService.name + ", method=" + selectedMethod.name + ", metadata=" + JSON.stringify(metaData) + ", requestText=" + requestText;
-	var grpcurl = `grpcurl -H '${JSON.stringify(metaData)}' -plaintext -d '${requestText || ""}' ${name}:${port} ${selectedService.name}/${selectedMethod.name}`;
-	// var grpcurlWithNewlines = `grpcurl /\n -H '${JSON.stringify(metaData)}' /\n -plaintext -d '${requestText || ""}' /\n ${name}:${port} /\n ${selectedService.name}/${selectedMethod.name}`;
+export default function copyGrpcUrlToClipboard(
+    selectedServer,
+    selectedService,
+    selectedMethod,
+    metaData,
+    requestText
+) {
+    // trim whitespace at end of lines
+    requestText = requestText?.replaceAll(/(?:[ \t]+)(\n)/g, '$1') || '';
 
-	var el = document.createElement('textarea');
-	el.value = grpcurl;
-	document.body.appendChild(el);
-	el.select();
-	document.execCommand('copy');
-	document.body.removeChild(el);
-	// alert("gRPCurl command has been copied to clipboard: \n\n" + grpcurl);
-	return grpcurl;
+    // format grpcurl one arg per line and read request from stdin so it can sit at
+    // the end of the command without requiring a string literal
+    const grpcurl = `grpcurl \\
+\t-H '${JSON.stringify(metaData)}' \\
+\t-plaintext \\
+\t-d @ \\
+\t${selectedServer?.name}:${selectedServer?.port} \\
+\t${selectedService?.name}/${selectedMethod?.name} \\
+<<EOM\n'${requestText}'\nEOM`;
+
+    copyToClipboard(grpcurl);
+    return grpcurl;
+}
+
+function copyToClipboard(copyText) {
+    const textArea = document.createElement('textarea');
+    textArea.value = copyText;
+    document.body.appendChild(textArea);
+    textArea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textArea);
 }

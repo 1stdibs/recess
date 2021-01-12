@@ -7,7 +7,7 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     font-size: 13px;
-
+    --standard-padding: 10px;
     --color-dividers: #555;
     --color-servers-bg: #444;
     --color-services-bg: #373737;
@@ -29,6 +29,9 @@ body {
     background: var(--color-dividers);
 }
 
+button {
+    transition: background 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
 code {
     font-family: monospace;
 }
@@ -51,4 +54,18 @@ code {
 .cm-s-monokai.CodeMirror,
 .cm-s-monokai .CodeMirror-gutters {
     background: var(--color-request-bg) !important;
+}
+
+#overlay {
+    /* z-index + position: absolute -> create new stacking context separate from the
+       editor, which has elements with z-index up to 100 */
+    z-index: 200;
+    position: absolute;
+    /* use display: flex + order (on children) to allow z-stack placement to be controlled by order */
+    display: flex;
+    pointer-events: none;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
 }

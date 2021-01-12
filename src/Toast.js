@@ -14,7 +14,7 @@ const Toast = ({ onCloseClick, message, isVisible }) => {
         <div className={styles.toastContainer} data-visible={isVisible}>
             <div tabindex="-1" ref={toastRef} className={styles.toast}>
                 <h2>Command copied to clipboard:</h2>
-                <textarea readOnly className={styles.code} value={message} />
+                <textarea rows={10} readOnly className={styles.code} value={message} />
                 <Button className={styles.closeButton} onClick={onCloseClick}>
                     Close
                 </Button>
