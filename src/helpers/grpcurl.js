@@ -8,8 +8,8 @@ export function formatGrpcUrl(
     // trim whitespace at end of lines
     requestText = requestText?.replaceAll(/(?:[ \t]+)(\n)/g, '$1') || '';
 
-    // format grpcurl one arg per line and read request from stdin so it can sit at
-    // the end of the command, not require defining in a string literal
+    // format grpcurl for ease of editing: one arg per line, read requestTest from
+    // stdin to allow requestText arg placement at end of command
     const grpcurl = `grpcurl \\
 \t-H '${JSON.stringify(metaData)}' \\
 \t-plaintext \\
