@@ -1,0 +1,35 @@
+.toggle {
+    composes: baseButton from './Button.module.css';
+    border-radius: 0;
+    flex: 1 1 auto;
+}
+
+.toggle:last-of-type {
+    border-top-right-radius: 2px;
+    border-bottom-right-radius: 2px;
+}
+
+.toggle:first-of-type {
+    border-top-left-radius: 2px;
+    border-bottom-left-radius: 2px;
+}
+
+.toggle:hover {
+    background-color: var(--color-button-hover);
+}
+
+.selected:hover,
+.selected {
+    background-color: var(--color-button-selected);
+}
+
+.toggle:active {
+    background-color: var(--color-button-selected-active);
+}
+
+.container {
+    /* use flexbox to handle case when container cannot fit both toggles 
+      side-by-side */
+    display: flex;
+    flex-wrap: wrap;
+}

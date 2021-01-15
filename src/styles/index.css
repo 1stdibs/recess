@@ -13,7 +13,12 @@ body {
     --color-services-bg: #373737;
     --color-method-bg: #2e2e2e;
     --color-request-bg: #222;
-    --color-button-bg: #808080;
+    --color-button-bg: #8d8d8d;
+    --color-button-hover: #808080;
+    --color-button-active: #737373;
+    /* shades of color-highlight */
+    --color-button-selected: #5b9368;
+    --color-button-selected-active: #4c7b57;
     --color-highlight: #6fa67c;
     --color-text: #fff;
     --color-shadow: #adadad;
@@ -29,9 +34,6 @@ body {
     background: var(--color-dividers);
 }
 
-button {
-    transition: background 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-}
 code {
     font-family: monospace;
 }
@@ -56,16 +58,23 @@ code {
     background: var(--color-request-bg) !important;
 }
 
-#overlay {
-    /* z-index + position: absolute -> create new stacking context separate from the
-       editor, which has elements with z-index up to 100 */
-    z-index: 200;
+/* increase clickable area of resizers */
+.Resizer {
+    display: block;
+    position: relative;
+}
+.Resizer:after {
+    content: '';
     position: absolute;
-    /* use display: flex + order (on children) to allow z-stack placement to be controlled by order */
-    display: flex;
-    pointer-events: none;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    left: 0;
+    z-index: 1;
+}
+.Resizer.vertical:after {
+    height: 100%;
+    left: -2px;
+    right: -2px;
+}
+.Resizer.horizontal:after {
+    width: 100%;
+    top: -1px;
+    bottom: -1px;
 }

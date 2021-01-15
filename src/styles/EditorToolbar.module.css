@@ -1,3 +1,39 @@
-.buttonWrapper {
-    padding: 0 5px;
+.emojiIcon {
+    position: relative;
+    display: inline-block;
+}
+
+.copyOverlay {
+    position: absolute;
+    left: 13%;
+    bottom: 12%;
+}
+
+.copy,
+.copyOverlay {
+    /* chain drop-shadow to intensify outline created by blur-radius */
+    filter: drop-shadow(0 0 0.25px #000) drop-shadow(0 0 0.25px #000) drop-shadow(0 0 0.25px #000);
+}
+
+.checkmarkOverlay {
+    color: #30e55b;
+    position: relative;
+    left: -40%;
+    opacity: 0;
+    font-weight: bolder;
+}
+
+.copy,
+.copyOverlay,
+.checkmarkOverlay {
+    transition: all 0.1s linear;
+}
+
+.checkmarkVisible > .checkmarkOverlay {
+    opacity: 1;
+}
+
+.checkmarkVisible > .copy,
+.checkmarkVisible > .copyOverlay {
+    opacity: 0;
 }

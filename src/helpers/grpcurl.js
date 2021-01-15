@@ -9,7 +9,7 @@ export function formatGrpcUrl(
     requestText = requestText?.replaceAll(/(?:[ \t]+)(\n)/g, '$1') || '';
 
     // format grpcurl one arg per line and read request from stdin so it can sit at
-    // the end of the command without requiring a string literal
+    // the end of the command, not require defining in a string literal
     const grpcurl = `grpcurl \\
 \t-H '${JSON.stringify(metaData)}' \\
 \t-plaintext \\

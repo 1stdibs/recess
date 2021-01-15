@@ -1,6 +1,6 @@
 .wrapper {
     position: relative;
-    top: calc(var(--standard-padding) * -1);
+    margin-top: calc(var(--standard-padding) * -1);
     background: var(--color-services-bg);
     height: calc(100% + var(--standard-padding));
     width: 100%;

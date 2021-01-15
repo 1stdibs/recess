@@ -8,15 +8,15 @@
 
 .toolbar {
     background: var(--color-dividers);
-    padding: var(--standard-padding) 0;
+    margin: var(--standard-padding) 0;
     display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
 }
 
 .containerWrapper {
     position: relative;
-    flex-grow: 1;
-    flex-basis: 0;
-    flex-shrink: 1;
+    flex: 1 1 0;
     overflow: auto;
     display: flex;
 }
