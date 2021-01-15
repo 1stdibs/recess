@@ -16,7 +16,7 @@ export function formatGrpcUrl(
 \t-d @ \\
 \t${selectedServer?.name}:${selectedServer?.port} \\
 \t${selectedService?.name}/${selectedMethod?.name} \\
-<<EOM\n'${requestText}'\nEOM`;
+<<EOM\n${requestText}\nEOM`;
 
     return grpcurl;
 }

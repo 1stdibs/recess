@@ -105,7 +105,7 @@ export default function reducer(state, action) {
                 metadata: action.metadata || state.metadata,
                 requestText:
                     action.requestText ||
-                    state.requestTextByMethod[newService.name + '/' + newMethod.name],
+                    state.requestTextByMethod[newService?.name + '/' + newMethod?.name],
             };
         }
         case ERROR_LOADING_SERVER_DATA: {
