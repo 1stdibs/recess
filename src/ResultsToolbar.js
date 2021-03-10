@@ -1,32 +1,33 @@
-import React, { useContext, Fragment } from 'react';
+import React, { useContext } from 'react';
 import { RecessContext } from './RecessContext';
-import Button from './Button';
+import Toggle from './Toggle';
 
 import styles from './styles/ResultsToolbar.module.css';
 
-export default function ResultsToolbar({ service, onChange, grpcRequestTime, protoMessageSize }) {
+export default function ResultsToolbar({ grpcRequestTime, protoMessageSize }) {
     const { viewParsed, setViewParsed } = useContext(RecessContext);
     return (
-        <div className={styles.toolbarWrapper}>
-            <React.Fragment>
-                {viewParsed ? (
-                    <Button onClick={() => setViewParsed(false)}>View Raw</Button>
-                ) : (
-                    <Button onClick={() => setViewParsed(true)}>View Parsed</Button>
-                )}
-                {!!grpcRequestTime && (
-                    <Fragment>
-                        <div className={styles.responseSize}>
-                            Proto Message Size:{' '}
-                            <span className={styles.sizeValue}>{protoMessageSize} bytes</span>
-                        </div>
-                        <div className={styles.responseTime}>
-                            Response Time:{' '}
-                            <span className={styles.timeValue}>{grpcRequestTime}ms</span>
-                        </div>
-                    </Fragment>
-                )}
-            </React.Fragment>
-        </div>
+        <>
+            <Toggle
+                selected={viewParsed}
+                onChange={setViewParsed}
+                options={[
+                    { label: 'Raw', value: false },
+                    { label: 'Parsed', value: true },
+                ]}
+            />
+
+            {!!grpcRequestTime && (
+                <>
+                    <div className={styles.responseSize}>
+                        Proto Message Size:{' '}
+                        <span className={styles.sizeValue}>{protoMessageSize} bytes</span>
+                    </div>
+                    <div className={styles.responseTime}>
+                        Response Time: <span className={styles.timeValue}>{grpcRequestTime}ms</span>
+                    </div>
+                </>
+            )}
+        </>
     );
 }

@@ -1,4 +1,4 @@
-import React, { useReducer, useEffect, useCallback } from 'react';
+import React, { useReducer, useEffect, useCallback, useState } from 'react';
 import fetchServerData from './actionCreators/fetchServerData';
 import executeRequest from './actionCreators/executeRequest';
 import getMock from './getMock';
@@ -158,6 +158,33 @@ export function RecessContextManager({ children }) {
         []
     );
 
+    const [popupOrder, setPopupOrder] = useState([]);
+
+    const onPopupFocus = useCallback(
+        (popupRef) => {
+            if (!popupRef || popupOrder[0] === popupRef) return;
+
+            setPopupOrder((prev) => {
+                const popupOrderCopy = [...prev];
+                const targetIndex = popupOrderCopy.indexOf(popupRef);
+                if (targetIndex !== -1) {
+                    popupOrderCopy.splice(targetIndex, 1);
+                }
+                popupOrderCopy.unshift(popupRef);
+                return popupOrderCopy;
+            });
+        },
+        [popupOrder]
+    );
+
+    const getPopupOrder = useCallback(
+        (popupRef) => {
+            const order = popupOrder.indexOf(popupRef);
+            return order >= 0 ? order : undefined;
+        },
+        [popupOrder]
+    );
+
     const value = {
         serverData: state.serverData,
         isLoadingServerData: state.isLoadingServerData,
@@ -195,6 +222,8 @@ export function RecessContextManager({ children }) {
         clearAllHistory,
         setHistoryVisible,
         historyVisible: state.historyVisible,
+        onPopupFocus,
+        getPopupOrder,
     };
 
     return <RecessContext.Provider value={value}>{children}</RecessContext.Provider>;

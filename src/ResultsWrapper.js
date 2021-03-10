@@ -8,7 +8,16 @@ import styles from './styles/ResultsWrapper.module.css';
 import ToolbarWrapper from './ToolbarWrapper';
 
 export default function EditorToolbar() {
-    const { response, executeRequest, isLoadingRequest } = useContext(RecessContext);
+    const {
+        response,
+        executeRequest,
+        isLoadingRequest,
+        selectedServer,
+        selectedService,
+    } = useContext(RecessContext);
+
+    const isPlayDisabled = selectedServer === null || selectedService === null;
+
     return (
         <div className={styles.wrapper}>
             <PlayButton
@@ -17,8 +26,8 @@ export default function EditorToolbar() {
                 className={classNames(styles.play, {
                     [styles.isLoading]: isLoadingRequest,
                 })}
+                disabled={isPlayDisabled}
             />
-
             <ToolbarWrapper
                 toolbar={
                     <ResultsToolbar

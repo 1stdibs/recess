@@ -1,7 +1,7 @@
 .row {
     cursor: pointer;
     display: flex;
-    padding: 10px;
+    padding: var(--standard-padding);
     color: white;
 }
 

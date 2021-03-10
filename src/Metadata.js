@@ -29,7 +29,7 @@ export default function Metadata() {
             setIsEditing(false);
         }
     }
-
+    
     return (
         <div className={styles.wrapper}>
             <SectionTitle

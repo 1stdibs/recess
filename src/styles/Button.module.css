@@ -1,7 +1,8 @@
-.button {
+.baseButton {
     background: var(--color-button-bg);
     border: none;
-    padding: 5px 30px;
+    border-radius: 2px;
+    padding: 5px var(--standard-padding);
     height: 30px;
     vertical-align: middle;
     color: var(--color-text);
@@ -9,8 +10,28 @@
     line-height: 20px;
     cursor: pointer;
     white-space: nowrap;
+    position: relative;
+    margin: 0;
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.button:hover {
-    background: var(--color-hover);
+.baseButton:focus {
+    outline: none;
+}
+
+.baseButton:focus-visible {
+    outline: auto;
+}
+
+.button {
+    composes: baseButton;
+}
+
+.button:focus-visible:not(:disabled),
+.button:hover:not(:disabled) {
+    background-color: var(--color-button-hover);
+}
+
+.button:active {
+    background-color: var(--color-button-active);
 }
