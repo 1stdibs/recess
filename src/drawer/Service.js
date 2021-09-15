@@ -8,9 +8,8 @@ import styles from './styles/Service.module.css';
 import { getMatchingMethods } from '../MatchingServiceDataHelper';
 
 export default function Service({ service }) {
-    const { selectedService, selectedMethod, selectMethod, methodSearchText } = useContext(
-        RecessContext
-    );
+    const { selectedService, selectedMethod, selectMethod, methodSearchText } =
+        useContext(RecessContext);
     const [isExpanded, setIsExpanded] = useState(
         !!selectedService && selectedService.name === service.name
     );
@@ -22,16 +21,22 @@ export default function Service({ service }) {
     const matchingMethods = getMatchingMethods(service, methodSearchText);
 
     return (
-        <div className={styles.wrapper} onClick={() => setIsExpanded(state => !state)}>
+        <div
+            className={styles.wrapper}
+            onClick={(e) => {
+                e.stopPropagation();
+                setIsExpanded((state) => !state);
+            }}
+        >
             <div className={styles.name}>
-                {icon} {service.name}
+                {icon} {service.name.split('.')[1]}
             </div>
             {isExpanded && (
                 <div className={styles.methods}>
-                    {matchingMethods.map(method => (
+                    {matchingMethods.map((method) => (
                         <ClickableRow
                             key={method.name}
-                            onClick={e => {
+                            onClick={(e) => {
                                 e.stopPropagation();
                                 selectMethod(service, method);
                             }}

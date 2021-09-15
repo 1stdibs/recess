@@ -6,8 +6,7 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    padding: 15px 25px;
-    background: var(--color-service-name-bg);
+    padding: 15px 10px;
 }
 
 .name:hover {

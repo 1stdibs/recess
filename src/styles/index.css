@@ -11,6 +11,7 @@ body {
     --color-dividers: #555;
     --color-servers-bg: #444;
     --color-services-bg: #373737;
+    --color-service-name-bg: #333333;
     --color-method-bg: #2e2e2e;
     --color-request-bg: #222;
     --color-button-bg: #808080;
