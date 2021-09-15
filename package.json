@@ -8,7 +8,6 @@
         "codemirror": "^5.42.0",
         "codemirror-graphql": "^0.12.2",
         "graphql": "^15.3.0",
-        "lodash.debounce": "^4.0.8",
         "prop-types": "^15.6.2",
         "react": "^16.10.0",
         "react-dom": "^16.10.0",
