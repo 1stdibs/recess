@@ -6,8 +6,7 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    padding: 15px 25px;
-    background: var(--color-service-name-bg);
+    padding: 15px 10px;
 }
 
 .name:hover {
@@ -30,7 +29,7 @@
 }
 .icon {
     vertical-align: middle;
-    padding-right: var(--standard-padding);
+    padding-right: 10px;
     fill: var(--color-text);
     width: 10px;
     height: 10px;

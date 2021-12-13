@@ -12,7 +12,19 @@ export async function fetchServerInfo({ name, port, useCamelCase }) {
         throw Error(res.statusText);
     }
 
-    return await res.json();
+    const data = await res.json();
+    const sortedServices = data.services
+        .sort((a, b) => a.name.localeCompare(b.name))
+        .map((service) => {
+            return {
+                ...service,
+                methods: service.methods.sort((a, b) => a.name.localeCompare(b.name)),
+            };
+        });
+    return {
+        types: data.types,
+        services: sortedServices,
+    };
 }
 
 export async function invokeRPC({
