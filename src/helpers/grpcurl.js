@@ -8,7 +8,7 @@ export function formatGrpcUrl(
     // trim whitespace at end of lines
     requestText = requestText?.replaceAll(/(?:[ \t]+)(\n)/g, '$1') || '';
 
-    var headers = '';
+    let headers = '';
     for (const [key, value] of Object.entries(metaData)) {
         headers += `\t-H '${key}: ${value}' \\\n`
     }      
