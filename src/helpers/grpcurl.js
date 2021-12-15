@@ -8,11 +8,15 @@ export function formatGrpcUrl(
     // trim whitespace at end of lines
     requestText = requestText?.replaceAll(/(?:[ \t]+)(\n)/g, '$1') || '';
 
+    var headers = '';
+    for (const [key, value] of Object.entries(metaData)) {
+        headers += `\t-H '${key}: ${value}' \\\n`
+    }      
+
     // format grpcurl for ease of editing: one arg per line, read requestTest from
     // stdin to allow requestText arg placement at end of command
     const grpcurl = `grpcurl \\
-\t-H '${JSON.stringify(metaData)}' \\
-\t-plaintext \\
+${headers}\t-plaintext \\
 \t-d @ \\
 \t${selectedServer?.name}:${selectedServer?.port} \\
 \t${selectedService?.name}/${selectedMethod?.name} \\
