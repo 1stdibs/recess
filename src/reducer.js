@@ -51,9 +51,12 @@ export default function reducer(state, action) {
                 servers: [...state.servers, { name: action.name, port: action.port }],
             };
         case DELETE_SERVER:
+            const updatedServers = state.servers.filter((_, i) => i !== action.i);
             return {
                 ...state,
-                servers: state.servers.filter((_, i) => i !== action.i),
+                servers: updatedServers,
+                selectedServer: updatedServers[0] || null,
+                serverData: null,
             };
 
         case SELECT_SERVER:
@@ -102,7 +105,7 @@ export default function reducer(state, action) {
                 metadata: action.metadata || state.metadata,
                 requestText:
                     action.requestText ||
-                    state.requestTextByMethod[newService.name + '/' + newMethod.name],
+                    state.requestTextByMethod[newService?.name + '/' + newMethod?.name],
             };
         }
         case ERROR_LOADING_SERVER_DATA: {
@@ -127,7 +130,7 @@ export default function reducer(state, action) {
                 requestText: action.requestText,
                 requestTextByMethod: {
                     ...state.requestTextByMethod,
-                    [state.service.name + '/' + state.method.name]: action.requestText,
+                    [state.service?.name + '/' + state.method?.name]: action.requestText,
                 },
             };
         }

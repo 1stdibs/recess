@@ -2,7 +2,7 @@
     display: flex;
     flex: 1;
     height: 100%;
-    border-right: 10px solid var(--color-dividers);
+    border-right: var(--standard-padding) solid var(--color-dividers);
 }
 
 .play {
@@ -29,4 +29,9 @@
 
 .play.isLoading :global(.st1) {
     fill: var(--color-button-bg);
+}
+
+.play:disabled {
+    fill: var(--color-button-bg);
+    cursor: not-allowed;
 }
