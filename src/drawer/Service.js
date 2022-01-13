@@ -42,6 +42,7 @@ export default function Service({ service }) {
                             }}
                             isSelected={
                                 !!selectedService &&
+                                !!selectedMethod &&
                                 selectedMethod.name === method.name &&
                                 selectedService.name === service.name
                             }
