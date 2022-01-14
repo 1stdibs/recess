@@ -10457,7 +10457,7 @@ __metadata:
 "require-from-string@npm:^2.0.2":
   version: 2.0.2
   resolution: "require-from-string@npm:2.0.2"
-  checksum: c84c348a0eb26ec586746567754e39f53e40e63381844d6c337cfe804835d5511e15f6affedbe53b0fbfee10585427f832bb3a48a41af2275d6bea347395490b
+  checksum: a03ef6895445f33a4015300c426699bc66b2b044ba7b670aa238610381b56d3f07c686251740d575e22f4c87531ba662d06937508f0f3c0f1ddc04db3130560b
   languageName: node
   linkType: hard
 
