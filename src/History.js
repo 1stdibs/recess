@@ -11,7 +11,8 @@ function getMatchingHistory(history = [], historySearchText = '') {
     const lowerCaseSearchText = historySearchText.toLowerCase();
     if (historySearchText) {
         return history.filter((h) => {
-            const textToSearch = `${h.server.name}:${h.server.port} ${h.serviceName}.${h.methodName}`.toLowerCase();
+            const textToSearch =
+                `${h.server.name}:${h.server.port} ${h.serviceName}.${h.methodName}`.toLowerCase();
             return textToSearch.includes(lowerCaseSearchText);
         });
     }
@@ -57,6 +58,7 @@ export default function History() {
                     {matchingHistory.map((h) => {
                         return (
                             <ClickableRow
+                                isSelected={false}
                                 key={h.id}
                                 onClick={() => {
                                     selectHistory(h);

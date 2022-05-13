@@ -190,7 +190,7 @@ export default function reducer(state, action) {
                 viewParsed: action.viewParsed,
             };
         case ADD_HISTORY:
-            const dateString = new Date().toLocaleString();
+            const date = new Date();
             return {
                 ...state,
                 history: [
@@ -200,8 +200,8 @@ export default function reducer(state, action) {
                         methodName: action.methodName,
                         requestText: action.requestText,
                         metadata: action.metadata,
-                        date: dateString,
-                        id: dateString,
+                        date: date.toLocaleString(),
+                        id: date.toISOString(),
                     },
                 ].concat(state.history),
             };
