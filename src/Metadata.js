@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { RecessContext } from './RecessContext';
 import Input from './Input';
+import Button from './Button';
 import SectionTitle from './drawer/SectionTitle';
 import { ReactComponent as PlusIcon } from './icons/plus-icon.svg';
 import { ReactComponent as TrashIcon } from './icons/trashcan.svg';
@@ -14,14 +15,7 @@ export default function Metadata() {
     const [isEditing, setIsEditing] = useState(false);
 
     function onKeyDown(e) {
-        if (e.keyCode === 13) {
-            // enter
-            e.preventDefault();
-            addMetadata({ key: editKey, value: editValue });
-            setEditKey('');
-            setEditValue('');
-            setIsEditing(false);
-        } else if (e.keyCode === 27) {
+        if (e.keyCode === 27) {
             // escape
             e.preventDefault();
             setEditKey('');
@@ -29,7 +23,15 @@ export default function Metadata() {
             setIsEditing(false);
         }
     }
-    
+
+    function handleSubmit(e) {
+        e.preventDefault();
+        addMetadata({ key: editKey, value: editValue });
+        setEditKey('');
+        setEditValue('');
+        setIsEditing(false);
+    }
+
     return (
         <div className={styles.wrapper}>
             <SectionTitle
@@ -47,20 +49,21 @@ export default function Metadata() {
             ))}
 
             {isEditing && (
-                <form className={styles.form}>
+                <form className={styles.form} onSubmit={handleSubmit}>
                     <Input
                         onKeyDown={onKeyDown}
                         autoFocus
                         placeholder="Key"
                         value={editKey}
-                        onChange={e => setEditKey(e.target.value)}
+                        onChange={(e) => setEditKey(e.target.value)}
                     />
                     <Input
                         onKeyDown={onKeyDown}
                         placeholder="Value"
                         value={editValue}
-                        onChange={e => setEditValue(e.target.value)}
+                        onChange={(e) => setEditValue(e.target.value)}
                     />
+                    <Button type="submit">Submit</Button>
                 </form>
             )}
         </div>
