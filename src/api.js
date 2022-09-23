@@ -1,13 +1,13 @@
 const baseURL = process.env.REACT_APP_API || '';
 
-export async function fetchServerInfo({ name, port, useCamelCase }) {
+export async function fetchServerInfo({ name, port, useCamelCase, signal }) {
     const params = new URLSearchParams({
         server: name,
         port,
         autocompleteData: true,
         camelCase: useCamelCase,
     }).toString();
-    const res = await fetch(`${baseURL}/services?${params}`);
+    const res = await fetch(`${baseURL}/services?${params}`, { signal });
     if (!res.ok) {
         throw Error(res.statusText);
     }
@@ -35,6 +35,7 @@ export async function invokeRPC({
     requestText,
     metadata,
     useCamelCase,
+    signal,
 }) {
     if (!requestText) {
         requestText = '{}';
@@ -49,6 +50,7 @@ export async function invokeRPC({
             metadata,
             body: JSON.parse(requestText),
         }),
+        signal,
     });
 
     let responseText = await res.text();

@@ -9,6 +9,7 @@ export default async function fetchServerData({
     newMethod,
     requestText,
     metadata,
+    signal,
 }) {
     if (selectedServer) {
         dispatch({ type: LOADING_SERVER_DATA });
@@ -17,6 +18,7 @@ export default async function fetchServerData({
                 name: selectedServer.name,
                 port: selectedServer.port,
                 useCamelCase,
+                signal,
             });
 
             if (!Array.isArray(serverData.services)) {
@@ -35,10 +37,12 @@ export default async function fetchServerData({
                 });
             }
         } catch (e) {
-            dispatch({
-                type: ERROR_LOADING_SERVER_DATA,
-                error: `Could not fetch server data for ${selectedServer.name}:${selectedServer.port}`,
-            });
+            if (e.name !== 'AbortError') {
+                dispatch({
+                    type: ERROR_LOADING_SERVER_DATA,
+                    error: `Could not fetch server data for ${selectedServer.name}:${selectedServer.port}`,
+                });
+            }
         }
     }
 }

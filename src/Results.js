@@ -1,6 +1,6 @@
 import classnames from 'classnames';
 import React, { useContext } from 'react';
-import Inspector, { chromeDark } from 'react-inspector';
+import { Inspector, chromeDark } from 'react-inspector';
 import { RecessContext } from './RecessContext';
 import styles from './styles/Results.module.css';
 

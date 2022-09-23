@@ -2,7 +2,11 @@ import { invokeRPC } from '../api';
 import { STARTING_REQUEST, COMPLETED_REQUEST, ADD_HISTORY } from '../reducer';
 
 export default async function executeRequest(state, dispatch) {
-    dispatch({ type: STARTING_REQUEST });
+    if (state.requestAbortController) {
+        state.requestAbortController.abort?.();
+    }
+    const newAbortController = new AbortController();
+    dispatch({ type: STARTING_REQUEST, abortController: newAbortController });
     dispatch({
         type: ADD_HISTORY,
         server: state.selectedServer,
@@ -19,9 +23,12 @@ export default async function executeRequest(state, dispatch) {
             requestText: state.requestText,
             metadata: state.metadata,
             useCamelCase: state.useCamelCase,
+            signal: newAbortController.signal,
         });
         dispatch({ type: COMPLETED_REQUEST, response });
     } catch (e) {
-        dispatch({ type: COMPLETED_REQUEST, response: e.toString() });
+        if (e.name !== 'AbortError') {
+            dispatch({ type: COMPLETED_REQUEST, response: e.toString() });
+        }
     }
 }

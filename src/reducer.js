@@ -137,6 +137,7 @@ export default function reducer(state, action) {
         case STARTING_REQUEST: {
             return {
                 ...state,
+                requestAbortController: action.abortController,
                 isLoadingRequest: true,
             };
         }

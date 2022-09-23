@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import App from './App';
 import { RecessContextManager } from './RecessContext';
 
@@ -9,9 +9,9 @@ import 'codemirror/addon/hint/show-hint.css';
 import 'codemirror/addon/lint/lint.css';
 import 'codemirror/theme/monokai.css';
 
-ReactDOM.render(
+const root = createRoot(document.getElementById('root'));
+root.render(
     <RecessContextManager>
         <App />
-    </RecessContextManager>,
-    document.getElementById('root')
+    </RecessContextManager>
 );

@@ -29,11 +29,16 @@ export function RecessContextManager({ children }) {
     });
 
     useEffect(() => {
+        const abortController = new AbortController();
         fetchServerData({
             selectedServer: state.selectedServer,
             useCamelCase: state.useCamelCase,
             dispatch,
+            signal: abortController.signal,
         });
+        return () => {
+            abortController.abort();
+        };
     }, [state.selectedServer, state.useCamelCase]);
 
     useEffect(() => {
@@ -44,6 +49,7 @@ export function RecessContextManager({ children }) {
                 // don't store data fetched from back end
                 serverData: null,
                 response: null,
+                requestAbortController: null,
             })
         );
     }, [state]);
