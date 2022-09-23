@@ -204,7 +204,9 @@ export default function reducer(state, action) {
                         date: date.toLocaleString(),
                         id: date.toISOString(),
                     },
-                ].concat(state.history),
+                ]
+                    .concat(state.history)
+                    .slice(0, 50),
             };
         case DELETE_HISTORY:
             return {
