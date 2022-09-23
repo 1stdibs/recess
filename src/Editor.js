@@ -139,7 +139,7 @@ export default class Editor extends React.Component {
         return (
             <div
                 className={styles.wrapper}
-                ref={node => {
+                ref={(node) => {
                     this._node = node;
                 }}
             />
@@ -168,7 +168,6 @@ export default class Editor extends React.Component {
     };
 
     _onHasCompletion = (cm, data) => {
-        console.log('_onHasCompletion', cm, data);
         onHasCompletion(cm, data, this.props.onHintInformationRender);
     };
 }
