@@ -1,5 +1,4 @@
-import React, { useContext, useState } from 'react';
-import { RecessContext } from './RecessContext';
+import React, { useState } from 'react';
 import Input from './Input';
 import Button from './Button';
 import SectionTitle from './drawer/SectionTitle';
@@ -7,9 +6,12 @@ import { ReactComponent as PlusIcon } from './icons/plus-icon.svg';
 import { ReactComponent as TrashIcon } from './icons/trashcan.svg';
 
 import styles from './styles/Metadata.module.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { addMetadata, deleteMetadata } from './actionCreators/metadataActions';
 
 export default function Metadata() {
-    const { metadata, addMetadata, deleteMetadata } = useContext(RecessContext);
+    const dispatch = useDispatch();
+    const metadata = useSelector((state) => state.metadata);
     const [editKey, setEditKey] = useState('');
     const [editValue, setEditValue] = useState('');
     const [isEditing, setIsEditing] = useState(false);
@@ -26,7 +28,7 @@ export default function Metadata() {
 
     function handleSubmit(e) {
         e.preventDefault();
-        addMetadata({ key: editKey, value: editValue });
+        addMetadata({ dispatch, key: editKey, value: editValue });
         setEditKey('');
         setEditValue('');
         setIsEditing(false);
@@ -42,7 +44,10 @@ export default function Metadata() {
                 <div key={key} className={styles.row}>
                     <div className={styles.key}>{key}</div>
                     <div className={styles.value}>{value}</div>
-                    <div className={styles.iconWrapper} onClick={() => deleteMetadata({ key })}>
+                    <div
+                        className={styles.iconWrapper}
+                        onClick={() => deleteMetadata({ dispatch, key })}
+                    >
                         <TrashIcon className={styles.icon} />
                     </div>
                 </div>

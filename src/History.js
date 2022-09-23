@@ -1,9 +1,16 @@
-import React, { useContext } from 'react';
-import { RecessContext } from './RecessContext';
+import React from 'react';
+import { useDispatch, useSelector, useStore } from 'react-redux';
 import ClickableRow from './drawer/ClickableRow';
 import { ReactComponent as TrashIcon } from './icons/trashcan.svg';
 import ServiceToolbar from './drawer/ServiceToolbar';
 import Button from './Button';
+import {
+    clearAllHistory,
+    deleteHistoryEntry,
+    selectHistory,
+    setHistorySearchText,
+    setHistoryVisible,
+} from './actionCreators/historyActions';
 
 import styles from './styles/History.module.css';
 
@@ -20,25 +27,27 @@ function getMatchingHistory(history = [], historySearchText = '') {
 }
 
 export default function History() {
-    const {
-        history,
-        selectHistory,
-        deleteHistoryEntry,
-        historySearchText,
-        setHistorySearchText,
-        clearAllHistory,
-        historyVisible,
-        setHistoryVisible,
-    } = useContext(RecessContext);
+    const store = useStore();
+    const dispatch = useDispatch();
+    const history = useSelector((state) => state.history);
+    const historySearchText = useSelector((state) => state.historySearchText);
+    const historyVisible = useSelector((state) => state.historyVisible);
     const matchingHistory = getMatchingHistory(history, historySearchText);
     if (historyVisible) {
         return (
             <div className={styles.wrapper}>
                 <div className={styles.toolbarWrapper}>
                     <div className={styles.hideButtonWrapper}>
-                        <Button onClick={() => setHistoryVisible(false)}>Hide History</Button>
+                        <Button
+                            onClick={() => setHistoryVisible({ dispatch, historyVisible: false })}
+                        >
+                            Hide History
+                        </Button>
                     </div>
-                    <ServiceToolbar onChange={setHistorySearchText} placeholder="Search History" />
+                    <ServiceToolbar
+                        onChange={(searchText) => setHistorySearchText({ dispatch, searchText })}
+                        placeholder="Search History"
+                    />
                 </div>
 
                 <div className={styles.titleBar}>
@@ -47,7 +56,7 @@ export default function History() {
                         className={styles.clearButton}
                         onClick={() => {
                             if (window.confirm('Are you sure you want to delete all history?')) {
-                                clearAllHistory();
+                                clearAllHistory({ dispatch });
                             }
                         }}
                     >
@@ -61,10 +70,12 @@ export default function History() {
                                 isSelected={false}
                                 key={h.id}
                                 onClick={() => {
-                                    selectHistory(h);
+                                    selectHistory({ store, dispatch, entry: h });
                                 }}
                                 ActionIcon={TrashIcon}
-                                onClickAction={() => deleteHistoryEntry(h.id)}
+                                onClickAction={() =>
+                                    deleteHistoryEntry({ dispatch, entryId: h.id })
+                                }
                             >
                                 <span className={styles.date}>{h.date}</span>
                                 <br />

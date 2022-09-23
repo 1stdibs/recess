@@ -1,15 +1,18 @@
-import React, { useState, useContext } from 'react';
-import { RecessContext } from '../RecessContext';
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import ClickableRow from './ClickableRow';
 import { ReactComponent as ClosedIcon } from '../icons/dropdown-closed.svg';
 import { ReactComponent as OpenIcon } from '../icons/dropdown-open.svg';
 
 import styles from './styles/Service.module.css';
 import { getMatchingMethods } from '../MatchingServiceDataHelper';
+import { selectMethod } from '../actionCreators/servicesActions';
 
 export default function Service({ service }) {
-    const { selectedService, selectedMethod, selectMethod, methodSearchText } =
-        useContext(RecessContext);
+    const dispatch = useDispatch();
+    const selectedService = useSelector((state) => state.selectedService);
+    const selectedMethod = useSelector((state) => state.selectedMethod);
+    const methodSearchText = useSelector((state) => state.methodSearchText);
     const [isExpanded, setIsExpanded] = useState(
         !!selectedService && selectedService.name === service.name
     );
@@ -38,7 +41,7 @@ export default function Service({ service }) {
                             key={method.name}
                             onClick={(e) => {
                                 e.stopPropagation();
-                                selectMethod(service, method);
+                                selectMethod({ dispatch, service, method });
                             }}
                             isSelected={
                                 !!selectedService &&

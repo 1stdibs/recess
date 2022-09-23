@@ -1,5 +1,5 @@
-import React, { useState, useContext } from 'react';
-import { RecessContext } from '../RecessContext';
+import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { ReactComponent as ClosedIcon } from '../icons/dropdown-closed.svg';
 import { ReactComponent as OpenIcon } from '../icons/dropdown-open.svg';
 import Service from './Service';
@@ -7,7 +7,7 @@ import Service from './Service';
 import styles from './styles/Package.module.css';
 
 export default function Package({ pkg, services }) {
-    const { selectedService } = useContext(RecessContext);
+    const selectedService = useSelector((state) => state.selectedService);
     const [isExpanded, setIsExpanded] = useState(
         !!selectedService && selectedService.name.startsWith(`${pkg}.`)
     );

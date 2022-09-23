@@ -1,16 +1,18 @@
-import React, { useContext } from 'react';
-import { RecessContext } from './RecessContext';
+import React from 'react';
 import Toggle from './Toggle';
 
 import styles from './styles/ResultsToolbar.module.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { VIEW_PARSED } from './reducer';
 
 export default function ResultsToolbar({ grpcRequestTime, protoMessageSize }) {
-    const { viewParsed, setViewParsed } = useContext(RecessContext);
+    const dispatch = useDispatch();
+    const viewParsed = useSelector((state) => state.viewParsed);
     return (
         <>
             <Toggle
                 selected={viewParsed}
-                onChange={setViewParsed}
+                onChange={(val) => dispatch({ type: VIEW_PARSED, viewParsed: val })}
                 options={[
                     { label: 'Raw', value: false },
                     { label: 'Parsed', value: true },

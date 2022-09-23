@@ -229,6 +229,6 @@ export default function reducer(state, action) {
                 historyVisible: action.historyVisible,
             };
         default:
-            throw new Error(`invalid action ${action.type}`);
+            return state;
     }
 }

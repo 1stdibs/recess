@@ -1,25 +1,26 @@
-import React, { useContext, useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import classnames from 'classnames';
-import { RecessContext } from './RecessContext';
 import Button from './Button';
 import Toggle from './Toggle';
 import { copyToClipboard, formatGrpcUrl } from './helpers/grpcurl';
 import styles from './styles/EditorToolbar.module.css';
+import { insertMock } from './actionCreators/insertMock';
+import { formatRequest } from './actionCreators/formatRequest';
+import { USE_CAMEL_CASE } from './reducer';
 
 export default function EditorToolbar() {
     const [grpcurlClicked, setGrpcurlClicked] = useState(false);
+    const inputType = useSelector((state) => state.method?.inputType);
+    const types = useSelector((state) => state.serverData?.types);
+    const requestText = useSelector((state) => state.requestText);
+    const useCamelCase = useSelector((state) => state.useCamelCase);
+    const selectedServer = useSelector((state) => state.selectedServer);
+    const selectedService = useSelector((state) => state.selectedService);
+    const selectedMethod = useSelector((state) => state.selectedMethod);
+    const metadata = useSelector((state) => state.metadata);
+    const dispatch = useDispatch();
     const grpcurlClickedRef = useRef();
-    const {
-        useCamelCase,
-        setCamelCase,
-        formatRequest,
-        insertMock,
-        selectedServer,
-        selectedService,
-        selectedMethod,
-        metadata,
-        requestText,
-    } = useContext(RecessContext);
 
     useEffect(
         () => () => {
@@ -43,10 +44,10 @@ export default function EditorToolbar() {
 
     return (
         <>
-            <Button onClick={formatRequest}>Format</Button>{' '}
-            <Button onClick={insertMock}>Insert Mock</Button>
+            <Button onClick={() => formatRequest({ dispatch, requestText })}>Format</Button>{' '}
+            <Button onClick={() => insertMock({ dispatch, inputType, types })}>Insert Mock</Button>
             <Toggle
-                onChange={setCamelCase}
+                onChange={(val) => dispatch({ type: USE_CAMEL_CASE, useCamelCase: val })}
                 selected={useCamelCase}
                 options={[
                     { label: 'snake_case', value: false },

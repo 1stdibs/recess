@@ -1,7 +1,8 @@
 import { invokeRPC } from '../api';
 import { STARTING_REQUEST, COMPLETED_REQUEST, ADD_HISTORY } from '../reducer';
 
-export default async function executeRequest(state, dispatch) {
+export default async function executeRequest(store, dispatch) {
+    const state = store.getState();
     if (state.requestAbortController) {
         state.requestAbortController.abort?.();
     }

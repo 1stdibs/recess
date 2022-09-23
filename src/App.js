@@ -1,4 +1,5 @@
-import React, { useContext } from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector, useStore } from 'react-redux';
 import SplitPane from 'react-split-pane';
 import EditorToolbar from './EditorToolbar';
 import Editor from './Editor';
@@ -7,22 +8,39 @@ import Servers from './drawer/Servers';
 import Services from './drawer/Services';
 import ServiceToolbar from './drawer/ServiceToolbar';
 import Metadata from './Metadata';
-import { RecessContext } from './RecessContext';
 import ToolbarWrapper from './ToolbarWrapper';
 import History from './History';
+import { setMethodSearchText } from './actionCreators/servicesActions';
+import { EDIT_REQUEST } from './reducer';
+import executeRequest from './actionCreators/executeRequest';
+import fetchServerData from './actionCreators/fetchServerData';
 
 import styles from './styles/App.module.css';
 
 export default function App() {
-    const {
-        serverData,
-        requestText,
-        setRequestText,
-        executeRequest,
-        setMethodSearchText,
-        selectedMethod,
-        historyVisible,
-    } = useContext(RecessContext);
+    const store = useStore();
+    const dispatch = useDispatch();
+    const serverData = useSelector((state) => state.serverData);
+    const requestText = useSelector((state) => state.requestText);
+    const selectedMethod = useSelector((state) => state.selectedMethod);
+    const historyVisible = useSelector((state) => state.historyVisible);
+
+    const selectedServer = useSelector((state) => state.selectedServer);
+    const useCamelCase = useSelector((state) => state.useCamelCase);
+
+    useEffect(() => {
+        const abortController = new AbortController();
+        fetchServerData({
+            selectedServer,
+            useCamelCase,
+            dispatch,
+            signal: abortController.signal,
+        });
+        return () => {
+            abortController.abort();
+        };
+    }, [dispatch, selectedServer, useCamelCase]);
+
     return (
         <div className={styles.wrapper}>
             <SplitPane
@@ -39,7 +57,7 @@ export default function App() {
                 <ToolbarWrapper
                     toolbar={
                         <ServiceToolbar
-                            onChange={setMethodSearchText}
+                            onChange={(searchText) => setMethodSearchText({ dispatch, searchText })}
                             placeholder="Search Services"
                         />
                     }
@@ -98,8 +116,10 @@ export default function App() {
                                 selectedMethod={selectedMethod}
                                 types={serverData?.types}
                                 value={requestText}
-                                onEdit={setRequestText}
-                                onRunQuery={executeRequest}
+                                onEdit={(requestText) =>
+                                    dispatch({ type: EDIT_REQUEST, requestText })
+                                }
+                                onRunQuery={() => executeRequest(store, dispatch)}
                             />
                             <Metadata />
                         </SplitPane>

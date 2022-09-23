@@ -1,16 +1,22 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import classNames from 'classnames';
-import { RecessContext } from '../RecessContext';
 import Package from './Package';
 import SectionTitle from './SectionTitle';
 import { ReactComponent as ReloadIcon } from '../icons/reload.svg';
 
 import styles from './styles/Services.module.css';
 import { getMatchingServices } from '../MatchingServiceDataHelper';
+import { useDispatch, useSelector } from 'react-redux';
+import { reloadServerData } from '../actionCreators/servicesActions';
 
 export default function Services() {
-    const { serverData, serverDataError, reloadServerData, isLoadingServerData, methodSearchText } =
-        useContext(RecessContext);
+    const dispatch = useDispatch();
+    const selectedServer = useSelector((state) => state.selectedServer);
+    const useCamelCase = useSelector((state) => state.useCamelCase);
+    const serverData = useSelector((state) => state.serverData);
+    const serverDataError = useSelector((state) => state.serverDataError);
+    const isLoadingServerData = useSelector((state) => state.isLoadingServerData);
+    const methodSearchText = useSelector((state) => state.methodSearchText);
     const matchingServiceData = getMatchingServices(serverData, methodSearchText);
     const pkgs = new Set();
     for (const service of matchingServiceData) {
@@ -24,7 +30,7 @@ export default function Services() {
                 action={
                     <ReloadIcon
                         className={classNames({ [styles.isLoading]: isLoadingServerData })}
-                        onClick={reloadServerData}
+                        onClick={() => reloadServerData({ dispatch, selectedServer, useCamelCase })}
                     />
                 }
             />

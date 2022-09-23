@@ -1,7 +1,7 @@
 import classnames from 'classnames';
-import React, { useContext } from 'react';
+import React from 'react';
+import { useSelector } from 'react-redux';
 import { Inspector, chromeDark } from 'react-inspector';
-import { RecessContext } from './RecessContext';
 import styles from './styles/Results.module.css';
 
 const inspectorTheme = {
@@ -18,7 +18,7 @@ const inspectorTheme = {
 };
 
 export default function Results({ response, error }) {
-    const { viewParsed } = useContext(RecessContext);
+    const viewParsed = useSelector((state) => state.viewParsed);
 
     let dynamicInspectorTheme;
     if (error) {
