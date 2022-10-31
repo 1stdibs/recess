@@ -55,7 +55,11 @@ export async function invokeRPC({
 
     let responseText = await res.text();
     try {
-        responseText = JSON.parse(responseText);
+        if (!res.ok) {
+            responseText = { error: JSON.parse(responseText).message };
+        } else {
+            responseText = JSON.parse(responseText);
+        }
     } catch (e) {
         // fallback to text response
     }

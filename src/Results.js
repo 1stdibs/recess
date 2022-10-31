@@ -20,12 +20,14 @@ const inspectorTheme = {
 export default function Results({ response, error }) {
     const { viewParsed } = useContext(RecessContext);
 
+    let obj = response;
     let dynamicInspectorTheme;
     if (error) {
         dynamicInspectorTheme = {
             ...inspectorTheme,
             OBJECT_VALUE_STRING_COLOR: 'red',
         };
+        obj = error;
     } else {
         dynamicInspectorTheme = {
             ...inspectorTheme,
@@ -35,10 +37,10 @@ export default function Results({ response, error }) {
 
     return (
         <div className={styles.wrapper}>
-            {response !== null && (
+            {obj !== null && (
                 <React.Fragment>
                     {viewParsed ? (
-                        <Inspector theme={dynamicInspectorTheme} expandLevel={1} data={response} />
+                        <Inspector theme={dynamicInspectorTheme} expandLevel={1} data={obj} />
                     ) : (
                         <code
                             className={classnames({
@@ -47,7 +49,7 @@ export default function Results({ response, error }) {
                                 [styles.error]: error,
                             })}
                         >
-                            {JSON.stringify(response, null, 2)}
+                            {JSON.stringify(obj, null, 2)}
                         </code>
                     )}
                 </React.Fragment>
