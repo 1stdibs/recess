@@ -27,7 +27,9 @@ export default function Results({ response, error }) {
             ...inspectorTheme,
             OBJECT_VALUE_STRING_COLOR: 'red',
         };
-        obj = error;
+        if (typeof error !== 'boolean') {
+            obj = error;
+        }
     } else {
         dynamicInspectorTheme = {
             ...inspectorTheme,
