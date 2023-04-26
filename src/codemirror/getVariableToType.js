@@ -37,7 +37,7 @@ function wrap(data, type) {
 }
 
 function getGraphQLTypeFromData(field, types, visited) {
-    const matchingType = (types || []).find(type => field.type.name === type.name) || {};
+    const matchingType = (types || []).find((type) => field.type.name === type.name) || {};
     if (matchingType.kind === 'SCALAR') {
         switch (matchingType.name) {
             case 'DOUBLE':
@@ -80,7 +80,7 @@ function getGraphQLTypeFromData(field, types, visited) {
         }
         visited.set(matchingType, numVisited + 1);
         let fields = {};
-        for (const childField of matchingType.fields) {
+        for (const childField of matchingType.fields || []) {
             fields[childField.name] = {
                 type: getGraphQLTypeFromData(childField, types, visited),
             };
@@ -103,7 +103,7 @@ export default function getVariableToType(selectedMethod, types) {
 
     let result = {};
     const matchingType =
-        (types || []).find(type => selectedMethod.inputType.name === type.name) || {};
+        (types || []).find((type) => selectedMethod.inputType.name === type.name) || {};
     for (const field of matchingType.fields || []) {
         result[field.name] = getGraphQLTypeFromData(field, types, new Map());
     }

@@ -7,7 +7,7 @@ function wrap(data, type) {
 }
 
 function getMockTypeFromData(field, types, visited) {
-    const matchingType = (types || []).find(type => field.type.name === type.name) || {};
+    const matchingType = (types || []).find((type) => field.type.name === type.name) || {};
     if (matchingType.kind === 'SCALAR') {
         switch (matchingType.name) {
             case 'DOUBLE':
@@ -37,7 +37,7 @@ function getMockTypeFromData(field, types, visited) {
         visited.set(matchingType, numVisited + 1);
         // todo create input objet
         let fields = {};
-        for (const childField of matchingType.fields) {
+        for (const childField of matchingType.fields || []) {
             fields[childField.name] = getMockTypeFromData(childField, types, visited);
         }
         return wrap(field, fields);
@@ -47,7 +47,7 @@ function getMockTypeFromData(field, types, visited) {
 
 export default function getMock({ inputType, types }) {
     let result = {};
-    const matchingType = (types || []).find(type => inputType.name === type.name) || {};
+    const matchingType = (types || []).find((type) => inputType.name === type.name) || {};
     for (const data of matchingType.fields || []) {
         result[data.name] = getMockTypeFromData(data, types, new Map());
     }
