@@ -33,13 +33,17 @@ func listServicesHandler(w http.ResponseWriter, r *http.Request) {
 
 	server := r.URL.Query().Get("server")
 	port := r.URL.Query().Get("port")
+	ssl := false
+	if (r.URL.Query().Get("ssl") == "true") {
+		ssl = true
+	}
 
 	if server == "" || port == "" {
 		errorResponse(w, "request must contain server and port query params")
 		return
 	}
 
-	client, conn, err := refclient.GetRefClient(server, port)
+	client, conn, err := refclient.GetRefClient(server, port, ssl)
 	if err != nil {
 		errorResponse(w, "couldn't get grpc reflection client: %v", err)
 	}
@@ -90,6 +94,7 @@ type invokeRequest struct {
 	Method   string            `json:"method"`
 	Metadata map[string]string `json:"metadata"`
 	Body     json.RawMessage   `json:"body"`
+	SSL     bool               `json:"ssl"`
 }
 
 type invokeResponse struct {
@@ -112,12 +117,18 @@ func invokeHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	ssl := false
+
+	if request.SSL {
+		ssl = true
+	}
+
 	if request.Server == "" || request.Port == "" || request.Service == "" || request.Method == "" {
 		errorResponse(w, "server, port, service and method are required in POST body")
 		return
 	}
 
-	client, conn, err := refclient.GetRefClient(request.Server, request.Port)
+	client, conn, err := refclient.GetRefClient(request.Server, request.Port, ssl)
 	if err != nil {
 		errorResponse(w, "couldn't get grpc reflection client: %v", err)
 		return

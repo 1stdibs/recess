@@ -48,7 +48,7 @@ export default function reducer(state, action) {
         case ADD_SERVER:
             return {
                 ...state,
-                servers: [...state.servers, { name: action.name, port: action.port }],
+                servers: [...state.servers, { name: action.name, port: action.port, ssl: action.ssl }],
             };
         case DELETE_SERVER:
             const updatedServers = state.servers.filter((_, i) => i !== action.i);

@@ -17,6 +17,7 @@ export default async function fetchServerData({
             const serverData = await fetchServerInfo({
                 name: selectedServer.name,
                 port: selectedServer.port,
+                ssl: selectedServer.ssl,
                 useCamelCase,
                 signal,
             });
