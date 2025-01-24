@@ -72,7 +72,7 @@ export function RecessContextManager({ children }) {
     );
 
     const addServer = useCallback(
-        ({ name, port }) => dispatch({ type: ADD_SERVER, name, port }),
+        ({ name, port, ssl }) => dispatch({ type: ADD_SERVER, name, port, ssl }),
         []
     );
 

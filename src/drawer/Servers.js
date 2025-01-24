@@ -6,6 +6,7 @@ import Button from '../Button';
 import SectionTitle from './SectionTitle';
 import { ReactComponent as PlusIcon } from '../icons/plus-icon.svg';
 import { ReactComponent as TrashIcon } from '../icons/trashcan.svg';
+import { ReactComponent as Lock } from '../icons/lock.svg';
 
 import styles from './styles/Servers.module.css';
 const defaultPort = '5300';
@@ -14,6 +15,7 @@ export default function Servers() {
         useContext(RecessContext);
     const [editName, setEditName] = useState('');
     const [editPort, setEditPort] = useState(defaultPort);
+    const [editSsl, setEditSsl] = useState(true);
     const [isEditing, setIsEditing] = useState(false);
 
     function onKeyDown(e) {
@@ -22,16 +24,18 @@ export default function Servers() {
             e.preventDefault();
             setEditName('');
             setEditPort(defaultPort);
+            setEditSsl(true);
             setIsEditing(false);
         }
     }
     function handleSubmit(e) {
         e.preventDefault();
-        addServer({ name: editName, port: editPort });
+        addServer({ name: editName, port: editPort, ssl: editSsl });
         setEditName('');
         setEditPort(defaultPort);
+        setEditSsl(true);
         setIsEditing(false);
-        selectServer({ name: editName, port: editPort });
+        selectServer({ name: editName, port: editPort, ssl: editSsl });
     }
     return (
         <div className={styles.wrapper}>
@@ -39,18 +43,20 @@ export default function Servers() {
                 title="Servers"
                 action={<PlusIcon onClick={() => setIsEditing(true)} />}
             />
-            {servers.map(({ name, port }, i) => (
+            {servers.map(({ name, port, ssl }, i) => (
                 <ClickableRow
-                    key={`${name}:${port}`}
-                    onClick={() => selectServer({ name, port })}
+                    key={`${name}:${port}:${ssl}`}
+                    onClick={() => selectServer({ name, port, ssl })}
                     isSelected={
                         !!selectedServer &&
                         selectedServer.name === name &&
-                        selectedServer.port === port
+                        selectedServer.port === port &&
+                        selectedServer.ssl === ssl
                     }
                     ActionIcon={TrashIcon}
                     onClickAction={() => deleteServer(i)}
                 >
+                    {ssl && <Lock className={styles.lock} />}
                     {name}:{port}
                 </ClickableRow>
             ))}
@@ -67,8 +73,13 @@ export default function Servers() {
                         onKeyDown={onKeyDown}
                         placeholder="Port"
                         value={editPort}
+                        style={{flex: .5}}
                         onChange={(e) => setEditPort(e.target.value)}
                     />
+                    <label className={styles.checkboxLabel}>
+                        <input type="checkbox" checked={editSsl} onChange={e => setEditSsl(e.target.checked)} />
+                        <div>SSL</div>
+                    </label>
                     <Button type="submit">Submit</Button>
                 </form>
             )}

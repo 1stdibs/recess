@@ -1,11 +1,12 @@
 const baseURL = process.env.REACT_APP_API || '';
 
-export async function fetchServerInfo({ name, port, useCamelCase, signal }) {
+export async function fetchServerInfo({ name, port, ssl, useCamelCase, signal }) {
     const params = new URLSearchParams({
         server: name,
         port,
         autocompleteData: true,
         camelCase: useCamelCase,
+        ssl,
     }).toString();
     const res = await fetch(`${baseURL}/services?${params}`, { signal });
     if (!res.ok) {
@@ -30,6 +31,7 @@ export async function fetchServerInfo({ name, port, useCamelCase, signal }) {
 export async function invokeRPC({
     name,
     port,
+    ssl,
     service,
     method,
     requestText,
@@ -48,6 +50,7 @@ export async function invokeRPC({
             service,
             method,
             metadata,
+            ssl,
             body: JSON.parse(requestText),
         }),
         signal,
