@@ -16,8 +16,7 @@ export function formatGrpcUrl(
     // format grpcurl for ease of editing: one arg per line, read requestTest from
     // stdin to allow requestText arg placement at end of command
     const grpcurl = `grpcurl \\
-${headers}\t-plaintext \\
-\t-d @ \\
+${headers}${selectedServer?.ssl ? '' : '\t-plaintext \\\n'}\t-d @ \\
 \t${selectedServer?.name}:${selectedServer?.port} \\
 \t${selectedService?.name}/${selectedMethod?.name} \\
 <<EOM\n${requestText}\nEOM`;
