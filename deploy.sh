@@ -1,13 +1,18 @@
 #!/bin/bash
 set -e
-# make sure docker is running
-shopt -s expand_aliases
+
 if [ "$JENKINS_BUILD" = "true" ]; then
-alias aws="${AWSCLIV2}"
-type aws
+  WS="${WORKSPACE:-$(pwd)}"
+  export AWS_DEFAULT_REGION="${AWS_DEFAULT_REGION:-us-east-1}"
+  echo "Jenkins build: using amazon/aws-cli via Docker (EC2 instance role; no local creds). Workspace at /aws in container."
+  aws() {
+    docker run --rm --network host \
+      -v "${WS}:/aws" \
+      -e AWS_DEFAULT_REGION \
+      amazon/aws-cli "$@"
+  }
 else
-echo "This isn't a Jenkins build, so we will use the local aws-cli version."
-type aws
+  echo "This isn't a Jenkins build, so we will use the local aws-cli version."
 fi
 
 yarn build
